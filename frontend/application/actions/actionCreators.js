@@ -61,3 +61,11 @@ export function removeUnit(unitId) {
     unitId,
   };
 }
+
+export function removeUnitRow(rowId, unitTitle) {
+  return {
+    type: actionTypes.REMOVE_UNIT_ROW,
+    rowId,
+    unitTitle,
+  };
+}

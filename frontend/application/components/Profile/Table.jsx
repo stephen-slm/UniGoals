@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 import { Dialog, Button } from '@blueprintjs/core';
+import toaster from '../../utils/toaster';
 
-import _ from 'lodash';
 
 export default class Table extends React.Component {
   constructor(props) {
@@ -13,6 +14,8 @@ export default class Table extends React.Component {
     this.editOrLockTable = this.editOrLockTable.bind(this);
     this.showRowDeleteBox = this.showRowDeleteBox.bind(this);
     this.removeRowByIdAndTitle = this.removeRowByIdAndTitle.bind(this);
+
+    debugger;
 
     this.state = {
       edit: false,
@@ -25,8 +28,14 @@ export default class Table extends React.Component {
     };
   }
 
-  removeRowByIdAndTitle(title, rowIndex) {
-
+  removeRowByIdAndTitle() {
+    if (_.isNil(this.state.activeIndex)) {
+      toaster.danger('Cannot remove row because of no active index!');
+    } else if (_.isNil(this.state.activeContent)) {
+      toaster.danger('Cannot remove row because of no active unit content!');
+    } else {
+      this.props.removeUnitRow(this.state.activeIndex, this.props.unit.title);
+    }
   }
 
 
@@ -34,7 +43,7 @@ export default class Table extends React.Component {
     this.setState({
       showRowDeleteBox: !this.state.showRowDeleteBox,
       activeContent: unitContent,
-      activeIndex: index + 1,
+      activeIndex: index,
     });
   }
 
@@ -90,7 +99,7 @@ export default class Table extends React.Component {
                     <span onClick={() => this.showRowDeleteBox(unitContent, index)} className="pt-icon-standard pt-icon-cross" />
                     <Dialog
                       iconName="pt-icon-trash"
-                      title={`Removing ${this.state.activeContent.name} - row ${this.state.activeIndex}`}
+                      title={`Removing ${this.state.activeContent.name} - row ${this.state.activeIndex + 1}`}
                       isOpen={this.state.showRowDeleteBox}
                       onClose={this.showRowDeleteBox}
                       canEscapeKeyClose={this.state.canEscapeKeyClose}
@@ -99,13 +108,13 @@ export default class Table extends React.Component {
                         Do you want to delete
                         <b> {this.state.activeContent.name} </b>
                         on
-                        <b> row {this.state.activeIndex} </b>
+                        <b> row {this.state.activeIndex + 1} </b>
                         from
                         <b> {this.props.unit.title}</b>?
                       </div>
                       <div className="pt-dialog-footer">
                         <div className="pt-dialog-footer-actions">
-                          <Button onClick={this.signOut} text="Yes" />
+                          <Button onClick={this.removeRowByIdAndTitle} text="Yes" />
                           <Button onClick={this.showRowDeleteBox} text="No" />
                         </div>
                       </div>
@@ -131,4 +140,5 @@ Table.propTypes = {
       achieved: PropTypes.string.isRequired,
     })).isRequired,
   }).isRequired,
+  removeUnitRow: PropTypes.func.isRequired,
 };

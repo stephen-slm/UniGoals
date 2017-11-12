@@ -53,7 +53,7 @@ export default class Tables extends React.Component {
       return (<div>No tables</div>);
     }
 
-    return _.map(this.props.units, (unit, index) => <Table key={index} unit={unit} />);
+    return _.map(this.props.units, (unit, index) => <Table key={index} removeUnitRow={this.props.removeUnitRow} unit={unit} />);
   }
 
   render() {

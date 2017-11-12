@@ -98,7 +98,7 @@ export default class Profile extends React.Component {
           notifications={this.props.notifications}
         />
         {this.ProfileCards()}
-        <Tables updateUnits={this.props.updateUnits} units={this.props.units} />
+        <Tables updateUnits={this.props.updateUnits} removeUnitRow={this.props.removeUnitRow} units={this.props.units} />
       </div>
     );
   }
@@ -109,6 +109,7 @@ Profile.propTypes = {
   updateUnits: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
   units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  removeUnitRow: PropTypes.func.isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
