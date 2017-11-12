@@ -15,8 +15,6 @@ export default class Table extends React.Component {
     this.showRowDeleteBox = this.showRowDeleteBox.bind(this);
     this.removeRowByIdAndTitle = this.removeRowByIdAndTitle.bind(this);
 
-    debugger;
-
     this.state = {
       edit: false,
       showRowDeleteBox: false,
@@ -29,6 +27,8 @@ export default class Table extends React.Component {
   }
 
   removeRowByIdAndTitle() {
+    this.showRowDeleteBox();
+
     if (_.isNil(this.state.activeIndex)) {
       toaster.danger('Cannot remove row because of no active index!');
     } else if (_.isNil(this.state.activeContent)) {
