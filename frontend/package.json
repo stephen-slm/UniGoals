@@ -1,0 +1,50 @@
+{
+    "name": "mercury-web-front",
+    "version": "0.0.1",
+    "author": "CodeDoesGood",
+    "description": "Merucry webapp front",
+    "scripts": {
+        "builddev": "webpack-dashboard -- webpack-dev-server --content-base ./public -d --hot --history-api-fallback true --config ./webpack.config.development.js",
+        "build": "webpack --config ./webpack.config.production.js",
+        "lint": "eslint -c ../.eslintrc.js --ext .js,.jsx --ignore-path ../.gitignore . || true"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@blueprintjs/core": "^1.32.0",
+        "babel-core": "^6.26.0",
+        "babel-loader": "^7.1.2",
+        "babel-preset-env": "^1.6.1",
+        "babel-preset-react": "^6.24.1",
+        "bluebird": "^3.5.1",
+        "body-parser": "^1.18.2",
+        "css-loader": "^0.28.7",
+        "express": "^4.16.2",
+        "less": "^2.7.3",
+        "less-loader": "^4.0.5",
+        "lodash": "^4.17.4",
+        "prop-types": "^15.6.0",
+        "react": "^16.1.0",
+        "react-addons-css-transition-group": "^15.6.2",
+        "react-dom": "^16.1.0",
+        "react-google-login": "^3.0.2",
+        "react-redux": "^5.0.6",
+        "react-router": "^4.2.0",
+        "react-router-dom": "^4.2.2",
+        "react-router-redux": "^5.0.0-alpha.8",
+        "redux": "^3.7.2",
+        "style-loader": "^0.18.2",
+        "superagent": "^3.8.0"
+    },
+    "devDependencies": {
+        "babel-eslint": "^8.0.1",
+        "eslint": "^4.10.0",
+        "eslint-config-airbnb": "^16.1.0",
+        "eslint-plugin-import": "^2.8.0",
+        "eslint-plugin-jsx-a11y": "^6.0.2",
+        "eslint-plugin-react": "^7.4.0",
+        "eslint-plugin-sort-requires": "^2.1.0",
+        "webpack": "^3.8.1",
+        "webpack-dashboard": "^1.0.0",
+        "webpack-dev-server": "^2.9.4"
+    }
+}

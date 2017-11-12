@@ -1,0 +1,49 @@
+import * as actionTypes from './actionTypes';
+
+
+// Authentication
+export function authenticating(authentication) {
+  return {
+    type: actionTypes.UPDATE_AUTHENTICATED,
+    authentication,
+  };
+}
+
+// Contact types
+export function updateContactInformation(contact = {}) {
+  return {
+    type: actionTypes.UPDATE_CONTACT_INFORMATION,
+    contact,
+  };
+}
+
+export function removeContactInformation(contact = {}) {
+  return {
+    type: actionTypes.REMOVE_CONTACT_INFORMATION,
+    contact,
+  };
+}
+
+// Profile
+export function updateProfile(profile) {
+  return {
+    type: actionTypes.UPDATE_PROFILE,
+    profile,
+  };
+}
+
+// Profile
+export function removeProfile() {
+  return {
+    type: actionTypes.REMOVE_PROFILE,
+  };
+}
+
+// Notifications
+// Profile
+export function updateNotifications(notifications) {
+  return {
+    type: actionTypes.UPDATE_NOTIFICATIONS,
+    notifications,
+  };
+}
