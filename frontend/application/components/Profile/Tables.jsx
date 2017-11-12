@@ -13,52 +13,53 @@ export default class Tables extends React.Component {
     this.createTables = this.createTables.bind(this);
     this.units = this.props.units;
 
-    // // TODO: remove this after backend is done
-    // this.props.updateUnits([{
-    //   title: 'Introduction to programming',
-    //   content: [{
-    //     name: 'Java CW',
-    //     weighting: '20',
-    //     achieved: '0',
-    //   }, {
-    //     name: 'Java CW',
-    //     weighting: '20',
-    //     achieved: '0',
-    //   }, {
-    //     name: 'Java CW',
-    //     weighting: '20',
-    //     achieved: '0',
-    //   }],
-    // },
-    // {
-    //   title: 'Computer Architecture',
-    //   content: [{
-    //     name: 'CW1',
-    //     weighting: '10',
-    //     achieved: '0',
-    //   }, {
-    //     name: 'CW2',
-    //     weighting: '10',
-    //     achieved: '0',
-    //   }, {
-    //     name: 'CW3',
-    //     weighting: '10',
-    //     achieved: '0',
-    //   }],
-    // }]);
+    // TODO: remove this after backend is done
+    this.props.updateUnits([{
+      title: 'Introduction to programming',
+      content: [{
+        name: 'Java CW',
+        weighting: '20',
+        achieved: '0',
+      }, {
+        name: 'Java CW',
+        weighting: '20',
+        achieved: '0',
+      }, {
+        name: 'Java CW',
+        weighting: '20',
+        achieved: '0',
+      }],
+    },
+    {
+      title: 'Computer Architecture',
+      content: [{
+        name: 'CW1',
+        weighting: '10',
+        achieved: '0',
+      }, {
+        name: 'CW2',
+        weighting: '10',
+        achieved: '0',
+      }, {
+        name: 'CW3',
+        weighting: '10',
+        achieved: '0',
+      }],
+    }]);
   }
 
   createTables() {
-    if (_.isNil(this.units) || _.isNil(this.units[0])) {
+    if (_.isNil(this.props.units) || _.isNil(this.props.units[0])) {
       return (<div>No tables</div>);
     }
-    return _.map(this.units, (unit, index) => <Table key={index} unit={unit} />);
+
+    return _.map(this.props.units, (unit, index) => <Table key={index} unit={unit} />);
   }
 
   render() {
     return (
       <div className={style.tablesSizing}>
-        <div className="pt-card .pt-elevation-4">
+        <div className="pt-card pt-elevation-3">
           {this.createTables()}
         </div>
       </div>

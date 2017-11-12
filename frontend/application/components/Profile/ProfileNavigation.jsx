@@ -149,7 +149,7 @@ export default class ProfileNavigation extends React.Component {
   render() {
     return (
       <div>
-        <nav className="pt-navbar .modifier">
+        <nav className="pt-navbar">
           <div className="pt-navbar-group pt-align-left">
             <div className="pt-navbar-heading">Uni Stats, Welcome {this.profile.name} - {this.profile.email.split("@")[0].toUpperCase()}</div>
           </div>
