@@ -21,7 +21,7 @@ export default class Profile extends React.Component {
     this.state = {
       isNew: true,
       canEscapeKeyClose: true,
-      currentWeek: 6
+      currentWeek: 6,
     };
   }
 
