@@ -15,15 +15,28 @@ export default class Profile extends React.Component {
 
     this.ProfileCards = this.ProfileCards.bind(this);
 
-
     this.profile = this.props.profile;
 
     this.state = {
       isNew: true,
       canEscapeKeyClose: true,
-      currentWeek: 6,
+      currentWeek: this.getCurrentYearWeek(),
     };
   }
+
+  getCurrentYearWeek() {
+    const uniStartWeek = 39;
+    let date = new Date();
+
+    date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay()||7));
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
+    const weekNo = Math.ceil(( ( (date - yearStart) / 86400000) + 1)/7);
+    const uniWeek = weekNo - uniStartWeek;
+
+    return Math.abs(uniWeek);
+  }
+
 
   isNoLongerNew(e) {
     e.preventDefault();
@@ -55,7 +68,7 @@ export default class Profile extends React.Component {
       <div className={style.profileCardsWrapper}>
         <div className={`pt-card .pt-interactive .pt-elevation-2 ${style.profileCards}`}>
           <h4>Uni Week</h4>
-          <h5>{this.state.currentWeek} / 24</h5>
+            <h5>{this.state.currentWeek} / 24</h5>
         </div>
         <div className={`pt-card .pt-interactive .pt-elevation-2 ${style.profileCards}`}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec dapibus et mauris,
