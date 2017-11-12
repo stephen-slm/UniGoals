@@ -40,10 +40,24 @@ export function removeProfile() {
 }
 
 // Notifications
-// Profile
 export function updateNotifications(notifications) {
   return {
     type: actionTypes.UPDATE_NOTIFICATIONS,
     notifications,
+  };
+}
+
+// Units
+export function updateUnits(units) {
+  return {
+    type: actionTypes.UPDATE_UNITS,
+    units,
+  };
+}
+
+export function removeUnit(unitId) {
+  return {
+    type: actionTypes.REMOVE_UNIT,
+    unitId,
   };
 }

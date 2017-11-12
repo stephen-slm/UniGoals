@@ -20,7 +20,14 @@ export default class Application extends React.Component {
   }
 
   render() {
-    const { removeProfile, client, profile, notifications } = this.props;
+    const {
+      removeProfile,
+      client,
+      profile,
+      notifications,
+      units,
+      updateUnits,
+    } = this.props;
 
     if (!_.isNil(profile.token)) {
       return (
@@ -34,6 +41,8 @@ export default class Application extends React.Component {
                 client={client}
                 profile={profile}
                 notifications={notifications}
+                units={units}
+                updateUnits={updateUnits}
               />)}
             />
             <Route
@@ -68,7 +77,9 @@ Application.propTypes = {
   authenticating: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   removeProfile: PropTypes.func.isRequired,
+  updateUnits: PropTypes.func.isRequired,
   client: PropTypes.shape().isRequired,
   profile: PropTypes.shape().isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
 };

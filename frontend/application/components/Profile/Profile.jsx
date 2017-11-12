@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Dialog, Classes } from '@blueprintjs/core';
 import ProfileNavigation from './ProfileNavigation';
+import Tables from './Tables';
 
 import style from './profile.less';
 
@@ -93,7 +94,7 @@ export default class Profile extends React.Component {
           notifications={this.props.notifications}
         />
         {this.ProfileCards()}
-        profile {this.props.profile.email}
+        <Tables units={this.props.units} />
       </div>
     );
   }
@@ -102,6 +103,7 @@ export default class Profile extends React.Component {
 Profile.propTypes = {
   client: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
+  units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
