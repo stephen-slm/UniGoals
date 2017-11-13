@@ -69,3 +69,12 @@ export function removeUnitRow(rowId, unitTitle) {
     unitTitle,
   };
 }
+
+export function insertUnitRow(rowId, unitTitle) {
+  return {
+    type: actionTypes.INSERT_UNIT_ROW,
+    rowId,
+    unitTitle,
+  };
+}
+

@@ -14,6 +14,7 @@ export default class Table extends React.Component {
     this.editOrLockTable = this.editOrLockTable.bind(this);
     this.showRowDeleteBox = this.showRowDeleteBox.bind(this);
     this.removeRowByIdAndTitle = this.removeRowByIdAndTitle.bind(this);
+    this.insertRowBelow = this.insertRowBelow.bind(this);
 
     this.state = {
       edit: false,
@@ -38,6 +39,9 @@ export default class Table extends React.Component {
     }
   }
 
+  insertRowBelow(unitTitle, rowIndex) {
+    this.props.insertUnitRow(rowIndex, unitTitle);
+  }
 
   showRowDeleteBox(unitContent = { name: null }, index = 0) {
     this.setState({
@@ -86,6 +90,7 @@ export default class Table extends React.Component {
               <th>Weighting</th>
               <th>% Achieved</th>
               {this.editOrLockTable()}
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -95,31 +100,34 @@ export default class Table extends React.Component {
                   <td>{unitContent.name}</td>
                   <td>{unitContent.weighting}</td>
                   <td>{unitContent.achieved}</td>
-                  <td style={{ display: (this.state.edit) ? 'block' : 'none' }}>
-                    <span onClick={() => this.showRowDeleteBox(unitContent, index)} className="pt-icon-standard pt-icon-cross" />
-                    <Dialog
-                      iconName="pt-icon-trash"
-                      title={`Removing ${this.state.activeContent.name} - row ${this.state.activeIndex + 1}`}
-                      isOpen={this.state.showRowDeleteBox}
-                      onClose={this.showRowDeleteBox}
-                      canEscapeKeyClose={this.state.canEscapeKeyClose}
-                    >
-                      <div className="pt-dialog-body">
-                        Do you want to delete
-                        <b> {this.state.activeContent.name} </b>
-                        on
-                        <b> row {this.state.activeIndex + 1} </b>
-                        from
-                        <b> {this.props.unit.title}</b>?
+                  <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+                  <span onClick={() => this.showRowDeleteBox(unitContent, index)} className="pt-icon-standard pt-icon-cross" />
+                  <Dialog
+                    iconName="pt-icon-trash"
+                    title={`Removing ${this.state.activeContent.name} - row ${this.state.activeIndex + 1}`}
+                    isOpen={this.state.showRowDeleteBox}
+                    onClose={this.showRowDeleteBox}
+                    canEscapeKeyClose={this.state.canEscapeKeyClose}
+                  >
+                    <div className="pt-dialog-body">
+                      Do you want to delete
+                      <b> {this.state.activeContent.name} </b>
+                      on
+                      <b> row {this.state.activeIndex + 1} </b>
+                      from
+                      <b> {this.props.unit.title}</b>?
+                    </div>
+                    <div className="pt-dialog-footer">
+                      <div className="pt-dialog-footer-actions">
+                        <Button onClick={this.removeRowByIdAndTitle} text="Yes" />
+                        <Button onClick={this.showRowDeleteBox} text="No" />
                       </div>
-                      <div className="pt-dialog-footer">
-                        <div className="pt-dialog-footer-actions">
-                          <Button onClick={this.removeRowByIdAndTitle} text="Yes" />
-                          <Button onClick={this.showRowDeleteBox} text="No" />
-                        </div>
-                      </div>
-                    </Dialog>
-                  </td>
+                    </div>
+                  </Dialog>
+                </td>
+                <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+                  <span onClick={() => this.insertRowBelow(this.props.unit.title, index)} className="pt-icon-standard pt-icon-plus" />
+                </td>
                 </tr>
               );
             })}
@@ -141,4 +149,5 @@ Table.propTypes = {
     })).isRequired,
   }).isRequired,
   removeUnitRow: PropTypes.func.isRequired,
+  insertUnitRow: PropTypes.func.isRequired,
 };

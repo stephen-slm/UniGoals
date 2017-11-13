@@ -28,17 +28,51 @@ export default function units(state = [], action) {
       _.forEach(adjustedUnitRow, (unit, index) => {
         if (unit.title === unitTitle) {
           spliceIndex = index;
-          return;
         }
       });
 
       if (!_.isNil(spliceIndex)) {
+
         adjustedUnitRow[spliceIndex].content.splice(removingRowId, 1);
         return adjustedUnitRow;
       }
 
       return state;
     }
+
+    case actionTypes.INSERT_UNIT_ROW: {
+      const { unitTitle: insertingUnitTitle } = action;
+      let { rowId: insertingRowId } = action;
+
+      insertingRowId += 1;
+
+      if (_.isNil(insertingRowId) || !_.isInteger(insertingRowId)) {
+        return state;
+      } else if (_.isNil(insertingUnitTitle) || !_.isString(insertingUnitTitle)) {
+        return state;
+      }
+
+      const insertingUnitRow = state.slice();
+      let insertingIndex = null;
+
+      _.forEach(insertingUnitRow, (unit, index) => {
+        if (unit.title === insertingUnitTitle) {
+          insertingIndex = index;
+        }
+      });
+
+      if (!_.isNil(insertingIndex)) {
+        if (insertingRowId >= insertingUnitRow[insertingIndex].length) {
+          insertingRowId = 0;
+        }
+
+        insertingUnitRow[insertingIndex].content.splice(insertingRowId, 0, { name: '', weighting: '', achieved: '' });
+        return insertingUnitRow;
+      }
+
+      return state;
+    }
+
     default: {
       return state;
     }

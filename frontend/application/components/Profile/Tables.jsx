@@ -53,7 +53,7 @@ export default class Tables extends React.Component {
       return (<div>No tables</div>);
     }
 
-    return _.map(this.props.units, (unit, index) => <Table key={index} removeUnitRow={this.props.removeUnitRow} unit={unit} />);
+    return _.map(this.props.units, (unit, index) => <Table key={index} removeUnitRow={this.props.removeUnitRow} insertUnitRow={this.props.insertUnitRow} unit={unit} />);
   }
 
   render() {
@@ -70,4 +70,6 @@ export default class Tables extends React.Component {
 Tables.propTypes = {
   units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   updateUnits: PropTypes.func.isRequired,
+  insertUnitRow: PropTypes.func.isRequired,
+  removeUnitRow: PropTypes.func.isRequired,
 };

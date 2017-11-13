@@ -28,6 +28,7 @@ export default class Application extends React.Component {
       units,
       updateUnits,
       removeUnitRow,
+      insertUnitRow,
     } = this.props;
 
     if (!_.isNil(profile.token)) {
@@ -45,6 +46,7 @@ export default class Application extends React.Component {
                 units={units}
                 updateUnits={updateUnits}
                 removeUnitRow={removeUnitRow}
+                insertUnitRow={insertUnitRow}
               />)}
             />
             <Route
@@ -80,6 +82,7 @@ Application.propTypes = {
   removeProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
+  insertUnitRow: PropTypes.func.isRequired,
   client: PropTypes.shape().isRequired,
   profile: PropTypes.shape().isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,

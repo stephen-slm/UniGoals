@@ -17,3 +17,4 @@ export const UPDATE_UNITS = 'UPDATE_UNITS';
 export const REMOVE_UNIT = 'REMOVE_UNIT';
 export const REMOVE_UNITS = 'REMOVE_UNITS';
 export const REMOVE_UNIT_ROW = 'REMOVE_UNIT_ROW';
+export const INSERT_UNIT_ROW = 'INSERT_UNIT_ROW';

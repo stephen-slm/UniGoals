@@ -26,7 +26,7 @@ export default class Profile extends React.Component {
   }
 
   getCurrentYearWeek() {
-    const uniStartWeek = 39;
+    const uniStartWeek = 38;
     let date = new Date();
 
     date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -98,7 +98,7 @@ export default class Profile extends React.Component {
           notifications={this.props.notifications}
         />
         {this.ProfileCards()}
-        <Tables updateUnits={this.props.updateUnits} removeUnitRow={this.props.removeUnitRow} units={this.props.units} />
+        <Tables insertUnitRow={this.props.insertUnitRow} updateUnits={this.props.updateUnits} removeUnitRow={this.props.removeUnitRow} units={this.props.units} />
       </div>
     );
   }
@@ -110,6 +110,7 @@ Profile.propTypes = {
   history: PropTypes.shape().isRequired,
   units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   removeUnitRow: PropTypes.func.isRequired,
+  insertUnitRow: PropTypes.func.isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
