@@ -132,7 +132,7 @@ export default class Table extends React.Component {
           <Alert
             intent={Intent.DANGER}
             isOpen={this.state.isDeletingUnit}
-            confirmButtonText={`Delete ${this.state.tableTitle}`}
+            confirmButtonText={`Delete ${(this.state.tableTitle === null) ? '' : `${this.state.tableTitle}`}`}
             cancelButtonText="Cancel"
             onConfirm={this.deleteUnitTable}
             onCancel={this.showDeleteUnitBox}
