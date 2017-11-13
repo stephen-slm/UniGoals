@@ -59,7 +59,7 @@ export default class Table extends React.Component {
 
   deleteUnitTable() {
     this.showDeleteUnitBox();
-    toaster.success(`Deleted unit ${this.state.tableTitle} unit`);
+    toaster.success(`Deleted ${(this.state.tableTitle === null) ? 'the' : this.state.tableTitle} unit`);
     const unitTableIndex = this.props.tableIndex;
     this.props.removeUnitTable(unitTableIndex);
   }
