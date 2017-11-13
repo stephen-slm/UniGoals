@@ -18,6 +18,9 @@ export default class Table extends React.Component {
     this.updateRowContent = this.updateRowContent.bind(this);
     this.deleteUnitTable = this.deleteUnitTable.bind(this);
 
+    this.generateTableContents = this.generateTableContents.bind(this);
+    this.generateTableTopContent = this.generateTableTopContent.bind(this);
+
     const editMode = (!_.isNil(this.props.unit.new));
 
     this.state = {
@@ -96,12 +99,12 @@ export default class Table extends React.Component {
     );
   }
 
-  generateTableContents(content) {
-    return _.map(content, (unitContent, index) => (
+  generateTableContents() {
+    return _.map(this.props.unit.content, (unitContent, index) => (
       <tr key={index}>
         <td><EditableText placeholder="Section" maxLength="12" onChange={change => this.updateRowContent(change, index, 0)} disabled={!this.state.edit} value={_.defaultTo(unitContent[0], '')} /></td>
-        <td><EditableText placeholder="% Weighting" maxLength="3" onChange={change => this.updateRowContent(change, index, 1)} disabled={!this.state.edit} value={_.defaultTo(unitContent[1], '')} /></td>
-        <td><EditableText placeholder="% Achieved" maxLength="3" onChange={change => this.updateRowContent(change, index, 2)} disabled={!this.state.edit} value={_.defaultTo(unitContent[2], '')} /></td>
+        <td><EditableText placeholder="% Weighting" maxLength="4" onChange={change => this.updateRowContent(change, index, 1)} disabled={!this.state.edit} value={_.defaultTo(unitContent[1], '')} /></td>
+        <td><EditableText placeholder="% Achieved" maxLength="4" onChange={change => this.updateRowContent(change, index, 2)} disabled={!this.state.edit} value={_.defaultTo(unitContent[2], '')} /></td>
         <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
           <span onClick={() => this.removeRowById(index)} className="pt-icon-standard pt-icon-cross" />
         </td>
@@ -112,53 +115,65 @@ export default class Table extends React.Component {
     ));
   }
 
-  render() {
-    const { unit } = this.props;
-    const { content } = unit;
-
-    const tableContent = this.generateTableContents(content);
+  generateTableTopContent() {
+    const deleteUnitConfirmButtonText = (this.state.tableTitle === null) ? '' : `${this.state.tableTitle}`;
+    const showDeleteUnitButton = () => { this.showDeleteUnitBox(this.props.unit.title); };
+    const exitVisibilityStyle = { visibility: (this.state.edit) ? 'visible' : 'hidden' };
 
     return (
-      <div className={style.tablesWrapper}>
-        <h3>
-          <EditableText
-            placeholder="Unit title"
-            maxLength="32"
-            disabled={!this.state.edit}
-            onChange={change => this.updateUnitTitle(change)}
-            value={unit.title}
-          />
-          <Button className="pt-button pt-icon-trash pt-minimal" onClick={() => { this.showDeleteUnitBox(unit.title); }} style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }} />
-          <Alert
-            intent={Intent.DANGER}
-            isOpen={this.state.isDeletingUnit}
-            confirmButtonText={`Delete ${(this.state.tableTitle === null) ? '' : `${this.state.tableTitle}`}`}
-            cancelButtonText="Cancel"
-            onConfirm={this.deleteUnitTable}
-            onCancel={this.showDeleteUnitBox}
-          >
+      <h3>
+        <EditableText
+          placeholder="Unit title"
+          maxLength="32"
+          disabled={!this.state.edit}
+          onChange={change => this.updateUnitTitle(change)}
+          value={this.props.unit.title}
+        />
+        <Button className="pt-button pt-icon-trash pt-minimal" onClick={showDeleteUnitButton} style={exitVisibilityStyle} />
+        <Alert
+          intent={Intent.DANGER}
+          isOpen={this.state.isDeletingUnit}
+          confirmButtonText={`Delete ${deleteUnitConfirmButtonText}`}
+          cancelButtonText="Cancel"
+          onConfirm={this.deleteUnitTable}
+          onCancel={this.showDeleteUnitBox}
+        >
           <p>
             Are you sure you want to delete unit <b>{this.props.unit.title}</b>?
           </p>
         </Alert>
-        </h3>
-        <table className={`${style.tableWidths} pt-table pt-interactive`}>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>% Weighting</th>
-              <th>% Achieved</th>
-              {this.editOrLockTable()}
-              <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
-                <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
-              </td>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {tableContent}
-          </tbody>
-        </table>
+      </h3>
+    );
+  }
+
+  render() {
+    const topTableContent = this.generateTableTopContent();
+    const tableContent = this.generateTableContents();
+
+    const exitVisibilityStyle = { visibility: (this.state.edit) ? 'visible' : 'hidden' };
+
+    return (
+      <div>
+        <div className={style.tablesWrapper}>
+          {topTableContent}
+          <table className={`${style.tableWidths} pt-table pt-interactive`}>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>% Weighting</th>
+                <th>% Achieved</th>
+                {this.editOrLockTable()}
+                <td style={exitVisibilityStyle}>
+                  <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
+                </td>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {tableContent}
+            </tbody>
+          </table>
+        </div>
       </div>
     );
   }

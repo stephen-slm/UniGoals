@@ -14,44 +14,64 @@ export default class Tables extends React.Component {
 
     this.createTables = this.createTables.bind(this);
 
-    // TODO: remove this after backend is done
+
     this.props.updateUnits([{
-      title: 'Introduction to programming',
-      content: [[
-        'Java CW1',
-        '20',
-        '0',
-      ], [
-        'Java CW',
-        '20',
-        '0',
-      ], [
-        'Java CW',
-        '20',
-        '0',
-      ]],
-    },
-    {
+      title: 'Intro to Programming',
+      content: [
+        ['Java CW', '20', '0'],
+        ['PY CW', '20', '0'],
+        ['QUIZ', '10', '0'],
+        ['Math F Exam', '10', '0'],
+        ['Math 01', '1.43', '100'],
+        ['Math 02', '1.43', '100'],
+        ['Math 03', '1.43', '100'],
+        ['Math 04', '1.43', '100'],
+        ['Math 05', '1.43', '0'],
+        ['Math 06', '1.43', '0'],
+        ['Math 07', '1.43', '0'],
+        ['PY Exam 1', '5', '80'],
+        ['PY Exam 2', '5', '100'],
+        ['PY Exam 3', '5', '80'],
+        ['Java Exam 1', '5', '0'],
+        ['Java Exam 2', '5', '0'],
+        ['Java Exam 3', '5', '0'],
+      ],
+    }, {
       title: 'Computer Architecture',
-      content: [[
-        'CW1',
-        '10',
-        '0',
-      ], [
-        'CW2',
-        '10',
-        '0',
-      ], [
-        'CW3',
-        '10',
-        '0',
-      ]],
+      content: [
+        ['Coursework 1', '10', '0'],
+        ['Coursework 2', '10', '0'],
+        ['Coursework 3', '10', '0'],
+        ['Presentation', '10', '0'],
+        ['Exam', '60', '0'],
+      ],
+    }, {
+      title: 'Database Design',
+      content: [
+        ['Exam', '30', '0'],
+        ['Coursework 1', '15', '0'],
+        ['Coursework 2', '15', '0'],
+        ['Coursework 3', '40', '0'],
+      ],
+    }, {
+      title: 'Network Fundamentals',
+      content: [
+        ['CW', '50', '0'],
+        ['Eam', '50', '0'],
+      ],
+    }, {
+      title: 'Web Foundation',
+      content: [
+        ['Review', '30', '0'],
+        ['Website', '30', '0'],
+        ['Exam', '40', '0'],
+      ],
     }]);
   }
 
   createTables() {
     if (_.isNil(this.props.units) || _.isNil(this.props.units[0])) {
-      return (<div>No tables</div>);
+      return (<div />);
     }
 
     return _.map(this.props.units, (unit, index) => (
@@ -70,7 +90,7 @@ export default class Tables extends React.Component {
   render() {
     return (
       <div className={style.tablesSizing}>
-        <div className="pt-card pt-elevation-3">
+        <div className="pt-card pt-elevation-3" style={{ overflow: 'hidden' }}>
         <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.props.addUnitTable} />
           {this.createTables()}
         </div>
