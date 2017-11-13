@@ -14,63 +14,71 @@ export default function units(state = [], action) {
       return action.state;
     }
     case actionTypes.REMOVE_UNIT_ROW: {
-      const { rowId: removingRowId, unitTitle } = action;
+      const { rowId: removingRowId, tableIndex: removingTableIndex } = action;
 
       if (_.isNil(removingRowId) || !_.isInteger(removingRowId)) {
         return state;
-      } else if (_.isNil(unitTitle) || !_.isString(unitTitle)) {
+      } else if (_.isNil(removingTableIndex) || !_.isInteger(removingTableIndex)) {
         return state;
       }
 
       const adjustedUnitRow = state.slice();
-      let spliceIndex = null;
 
-      _.forEach(adjustedUnitRow, (unit, index) => {
-        if (unit.title === unitTitle) {
-          spliceIndex = index;
-        }
-      });
-
-      if (!_.isNil(spliceIndex)) {
-
-        adjustedUnitRow[spliceIndex].content.splice(removingRowId, 1);
-        return adjustedUnitRow;
-      }
-
-      return state;
+      adjustedUnitRow[removingTableIndex].content.splice(removingRowId, 1);
+      return adjustedUnitRow;
     }
 
     case actionTypes.INSERT_UNIT_ROW: {
-      const { unitTitle: insertingUnitTitle } = action;
-      let { rowId: insertingRowId } = action;
-
-      insertingRowId += 1;
+      const { tableIndex: insertingTableIndex, rowId: insertingRowId } = action;
 
       if (_.isNil(insertingRowId) || !_.isInteger(insertingRowId)) {
         return state;
-      } else if (_.isNil(insertingUnitTitle) || !_.isString(insertingUnitTitle)) {
+      } else if (_.isNil(insertingTableIndex) || !_.isInteger(insertingTableIndex)) {
         return state;
       }
 
       const insertingUnitRow = state.slice();
-      let insertingIndex = null;
+      insertingUnitRow[insertingTableIndex].content.splice(insertingRowId + 1, 0, [null, null, null]);
 
-      _.forEach(insertingUnitRow, (unit, index) => {
-        if (unit.title === insertingUnitTitle) {
-          insertingIndex = index;
-        }
-      });
+      return insertingUnitRow;
+    }
 
-      if (!_.isNil(insertingIndex)) {
-        if (insertingRowId >= insertingUnitRow[insertingIndex].length) {
-          insertingRowId = 0;
-        }
+    case actionTypes.UPDATE_UNIT_ROW_CONTENT: {
+      const {
+        change: updateUnitChange,
+        tableIndex: updateUnitTableIndex,
+        rowIndex: updateUnitRowIndex,
+        columnIndex: updateUnitColumnIndex,
+      } = action;
 
-        insertingUnitRow[insertingIndex].content.splice(insertingRowId, 0, { name: '', weighting: '', achieved: '' });
-        return insertingUnitRow;
+      if (_.isNil(updateUnitChange) || !_.isString(updateUnitChange)) {
+        return state;
+      } else if (_.isNil(updateUnitTableIndex) || !_.isInteger(updateUnitTableIndex)) {
+        return state;
+      } else if (_.isNil(updateUnitRowIndex) || !_.isInteger(updateUnitRowIndex)) {
+        return state;
+      } else if (_.isNil(updateUnitColumnIndex) || !_.isInteger(updateUnitColumnIndex)) {
+        return state;
       }
 
-      return state;
+      const updateUnitContent = state.slice();
+      updateUnitContent[updateUnitTableIndex].content[updateUnitRowIndex][updateUnitColumnIndex] = updateUnitChange;
+      return updateUnitContent;
+    }
+
+    case actionTypes.UPDATE_UNIT_TITLE: {
+      const { title: updateUnitTitle, tableIndex: updateTableIndex } = action;
+
+      if (_.isNil(updateTableIndex) || !_.isInteger(updateTableIndex)) {
+        return state;
+      } else if (_.isNil(updateUnitTitle) || !_.isString(updateUnitTitle) || updateUnitTitle.length > 30) {
+        return state;
+      }
+
+      const updateUnitTitleContent = state.slice();
+      updateUnitTitleContent[updateTableIndex].title = updateUnitTitle;
+
+      return updateUnitTitleContent;
     }
 
     default: {

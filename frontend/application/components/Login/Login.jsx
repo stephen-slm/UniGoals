@@ -44,7 +44,7 @@ export default class Login extends React.Component {
     const { google } = this.props;
 
     if (profile.email.split('@')[1] !== 'myport.ac.uk') {
-     toaster.danger('Sorry, currently only University of Portsmouth students allowed');
+      toaster.danger('Sorry, currently only University of Portsmouth students allowed');
     } else {
       this.props.updateProfile(profile);
     }

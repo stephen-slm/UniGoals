@@ -62,19 +62,37 @@ export function removeUnit(unitId) {
   };
 }
 
-export function removeUnitRow(rowId, unitTitle) {
+export function removeUnitRow(rowId, tableIndex) {
   return {
     type: actionTypes.REMOVE_UNIT_ROW,
     rowId,
-    unitTitle,
+    tableIndex,
   };
 }
 
-export function insertUnitRow(rowId, unitTitle) {
+export function insertUnitRow(rowId, tableIndex) {
   return {
     type: actionTypes.INSERT_UNIT_ROW,
     rowId,
-    unitTitle,
+    tableIndex,
+  };
+}
+
+export function updateUnitTitle(title, tableIndex) {
+  return {
+    type: actionTypes.UPDATE_UNIT_TITLE,
+    title,
+    tableIndex,
+  };
+}
+
+export function updateRowContent(change, tableIndex, rowIndex, columnIndex) {
+  return {
+    type: actionTypes.UPDATE_UNIT_ROW_CONTENT,
+    change,
+    tableIndex,
+    rowIndex,
+    columnIndex,
   };
 }
 

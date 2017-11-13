@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { Dialog, Button, EditableText } from '@blueprintjs/core';
-import toaster from '../../utils/toaster';
+import { EditableText } from '@blueprintjs/core';
 
+import toaster from '../../utils/toaster';
+import style from './tables.less';
 
 export default class Table extends React.Component {
   constructor(props) {
@@ -12,52 +13,42 @@ export default class Table extends React.Component {
 
     this.showEditButtons = this.showEditButtons.bind(this);
     this.editOrLockTable = this.editOrLockTable.bind(this);
-    this.showRowDeleteBox = this.showRowDeleteBox.bind(this);
-    this.removeRowByIdAndTitle = this.removeRowByIdAndTitle.bind(this);
     this.insertRowBelow = this.insertRowBelow.bind(this);
     this.updateRowContent = this.updateRowContent.bind(this);
 
     this.state = {
       edit: false,
-      showRowDeleteBox: false,
-      canEscapeKeyClose: true,
-      activeContent: {
-        name: '',
-      },
-      activeIndex: null,
     };
   }
 
-  removeRowByIdAndTitle() {
-    this.showRowDeleteBox();
-
-    if (_.isNil(this.state.activeIndex)) {
-      toaster.danger('Cannot remove row because of no active index!');
-    } else if (_.isNil(this.state.activeContent)) {
-      toaster.danger('Cannot remove row because of no active unit content!');
-    } else {
-      this.props.removeUnitRow(this.state.activeIndex, this.props.unit.title);
+  removeRowById(rowIndex) {
+    if (!_.isNil(rowIndex) && _.isInteger(rowIndex)) {
+      this.props.removeUnitRow(rowIndex, this.props.tableIndex);
     }
   }
 
-  insertRowBelow(unitTitle, rowIndex) {
-    this.props.insertUnitRow(rowIndex, unitTitle);
+  insertRowBelow(rowIndex) {
+    this.props.insertUnitRow(rowIndex, this.props.tableIndex);
   }
 
-  updateRowContent(change, index) {
-    const title = this.props.unit.title;
+  updateRowContent(change, rowIndex, columnIndex) {
+    if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
+      toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
+    }
 
-    debugger;
-
+    // This means that its the same content as was already there, so there is no need to update
+    // when it does not change.
+    if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
+      this.props.updateRowContent(change, this.props.tableIndex, rowIndex, columnIndex);
+    }
   }
 
-
-  showRowDeleteBox(unitContent = { name: null }, index = 0) {
-    this.setState({
-      showRowDeleteBox: !this.state.showRowDeleteBox,
-      activeContent: unitContent,
-      activeIndex: index,
-    });
+  updateUnitTitle(change) {
+    // This means that its the same content as was already there, so there is no need to update
+    // when it does not change.
+    if (!_.isNil(change) || change !== this.props.unit.title) {
+      this.props.updateUnitTitle(change, this.props.tableIndex);
+    }
   }
 
   showEditButtons() {
@@ -85,63 +76,47 @@ export default class Table extends React.Component {
     );
   }
 
+  generateTableContents(content) {
+    return _.map(content, (unitContent, index) => (
+      <tr key={index}>
+        <td><EditableText placeholder="Section" maxLength="10" onChange={change => this.updateRowContent(change, index, 0)} disabled={!this.state.edit} value={_.defaultTo(unitContent[0], '')} /></td>
+        <td><EditableText placeholder="% Weighting" maxLength="3" onChange={change => this.updateRowContent(change, index, 1)} disabled={!this.state.edit} value={_.defaultTo(unitContent[1], '')} /></td>
+        <td><EditableText placeholder="% Achieved" maxLength="3" onChange={change => this.updateRowContent(change, index, 2)} disabled={!this.state.edit} value={_.defaultTo(unitContent[2], '')} /></td>
+        <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+          <span onClick={() => this.removeRowById(index)} className="pt-icon-standard pt-icon-cross" />
+        </td>
+        <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+          <span onClick={() => this.insertRowBelow(index)} className="pt-icon-standard pt-icon-plus" />
+        </td>
+      </tr>
+    ));
+  }
+
   render() {
     const { unit } = this.props;
     const { content } = unit;
 
+    const tableContent = this.generateTableContents(content);
+
     return (
-      <div>
-        <h3>{unit.title}</h3>
-        <table className="pt-table pt-interactive">
+      <div className={style.tablesWrapper}>
+        <h3><EditableText placeholder="Unit title" maxLength="30" disabled={!this.state.edit} onChange={change => this.updateUnitTitle(change)} value={unit.title} /></h3>
+        <table className={`${style.tableWidths} pt-table pt-interactive`}>
           <thead>
             <tr>
               <th>Name</th>
-              <th>Weighting</th>
+              <th>% Weighting</th>
               <th>% Achieved</th>
               {this.editOrLockTable()}
-              <th></th>
+              <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+                <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
+              </td>
+              <th />
             </tr>
           </thead>
           <tbody>
-            {_.map(content, (unitContent, index) => {
-              return (
-                <tr key={index}>
-
-                  <td><EditableText defaultValue={unitContent.name} /></td>
-                  <td><EditableText defaultValue={unitContent.weighting} /></td>
-                  <td><EditableText onConfirm={change => this.updateRowContent(change, index)} defaultValue={unitContent.achieved} /></td>
-                  <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
-                  <span onClick={() => this.showRowDeleteBox(unitContent, index)} className="pt-icon-standard pt-icon-cross" />
-                  <Dialog
-                    iconName="pt-icon-trash"
-                    title={`Removing ${this.state.activeContent.name} - row ${this.state.activeIndex + 1}`}
-                    isOpen={this.state.showRowDeleteBox}
-                    onClose={this.showRowDeleteBox}
-                    canEscapeKeyClose={this.state.canEscapeKeyClose}
-                  >
-                    <div className="pt-dialog-body">
-                      Do you want to delete
-                      <b> {this.state.activeContent.name} </b>
-                      on
-                      <b> row {this.state.activeIndex + 1} </b>
-                      from
-                      <b> {this.props.unit.title}</b>?
-                    </div>
-                    <div className="pt-dialog-footer">
-                      <div className="pt-dialog-footer-actions">
-                        <Button onClick={this.removeRowByIdAndTitle} text="Yes" />
-                        <Button onClick={this.showRowDeleteBox} text="No" />
-                      </div>
-                    </div>
-                  </Dialog>
-                </td>
-                <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
-                  <span onClick={() => this.insertRowBelow(this.props.unit.title, index)} className="pt-icon-standard pt-icon-plus" />
-                </td>
-                </tr>
-              );
-            })}
-            </tbody>
+            {tableContent}
+          </tbody>
         </table>
       </div>
     );
@@ -152,12 +127,11 @@ export default class Table extends React.Component {
 Table.propTypes = {
   unit: PropTypes.shape({
     title: PropTypes.string.isRequired,
-    content: PropTypes.arrayOf(PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      weighting: PropTypes.string.isRequired,
-      achieved: PropTypes.string.isRequired,
-    })).isRequired,
+    content: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
   }).isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
+  updateUnitTitle: PropTypes.func.isRequired,
+  updateRowContent: PropTypes.func.isRequired,
+  tableIndex: PropTypes.number.isRequired,
 };

@@ -98,7 +98,14 @@ export default class Profile extends React.Component {
           notifications={this.props.notifications}
         />
         {this.ProfileCards()}
-        <Tables insertUnitRow={this.props.insertUnitRow} updateUnits={this.props.updateUnits} removeUnitRow={this.props.removeUnitRow} units={this.props.units} />
+        <Tables
+          insertUnitRow={this.props.insertUnitRow}
+          updateUnits={this.props.updateUnits}
+          updateRowContent={this.props.updateRowContent}
+          removeUnitRow={this.props.removeUnitRow}
+          units={this.props.units}
+          updateUnitTitle={this.props.updateUnitTitle}
+        />
       </div>
     );
   }
@@ -111,6 +118,8 @@ Profile.propTypes = {
   units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
+  updateRowContent: PropTypes.func.isRequired,
+  updateUnitTitle: PropTypes.func.isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
