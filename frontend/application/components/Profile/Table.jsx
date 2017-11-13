@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { Dialog, Button } from '@blueprintjs/core';
+import { Dialog, Button, EditableText } from '@blueprintjs/core';
 import toaster from '../../utils/toaster';
 
 
@@ -15,6 +15,7 @@ export default class Table extends React.Component {
     this.showRowDeleteBox = this.showRowDeleteBox.bind(this);
     this.removeRowByIdAndTitle = this.removeRowByIdAndTitle.bind(this);
     this.insertRowBelow = this.insertRowBelow.bind(this);
+    this.updateRowContent = this.updateRowContent.bind(this);
 
     this.state = {
       edit: false,
@@ -42,6 +43,14 @@ export default class Table extends React.Component {
   insertRowBelow(unitTitle, rowIndex) {
     this.props.insertUnitRow(rowIndex, unitTitle);
   }
+
+  updateRowContent(change, index) {
+    const title = this.props.unit.title;
+
+    debugger;
+
+  }
+
 
   showRowDeleteBox(unitContent = { name: null }, index = 0) {
     this.setState({
@@ -97,9 +106,10 @@ export default class Table extends React.Component {
             {_.map(content, (unitContent, index) => {
               return (
                 <tr key={index}>
-                  <td>{unitContent.name}</td>
-                  <td>{unitContent.weighting}</td>
-                  <td>{unitContent.achieved}</td>
+
+                  <td><EditableText defaultValue={unitContent.name} /></td>
+                  <td><EditableText defaultValue={unitContent.weighting} /></td>
+                  <td><EditableText onConfirm={change => this.updateRowContent(change, index)} defaultValue={unitContent.achieved} /></td>
                   <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
                   <span onClick={() => this.showRowDeleteBox(unitContent, index)} className="pt-icon-standard pt-icon-cross" />
                   <Dialog
