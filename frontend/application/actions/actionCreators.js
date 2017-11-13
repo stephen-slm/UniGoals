@@ -86,6 +86,19 @@ export function updateUnitTitle(title, tableIndex) {
   };
 }
 
+export function addUnitTable() {
+  return {
+    type: actionTypes.ADD_UNIT_TABLE,
+  };
+}
+
+export function removeUnitTable(unitTableIndex) {
+  return {
+    type: actionTypes.REMOVE_UNIT_TABLE,
+    unitTableIndex,
+  };
+}
+
 export function updateRowContent(change, tableIndex, rowIndex, columnIndex) {
   return {
     type: actionTypes.UPDATE_UNIT_ROW_CONTENT,

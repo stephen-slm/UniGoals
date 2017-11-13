@@ -83,12 +83,12 @@ export default class Login extends React.Component {
           <GoogleLogin
             ref={(googleButton) => { this.googleButton = googleButton; }}
             clientId="40609903553-c60s8f5l9b50hqg3gi4gu1a1t2hf83e6.apps.googleusercontent.com"
+            buttonText="Lets Get Started"
             className={style.googleButton}
             onSuccess={this.googleLogin}
             onFailure={this.googleLogin}
           />
         </div>
-
       </div>
     );
   }

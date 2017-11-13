@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
+import { Button, Position }  from '@blueprintjs/core';
+
 import Table from './Table';
 
 import style from './tables.less';
@@ -11,7 +13,6 @@ export default class Tables extends React.Component {
     super(props);
 
     this.createTables = this.createTables.bind(this);
-    this.units = this.props.units;
 
     // TODO: remove this after backend is done
     this.props.updateUnits([{
@@ -61,6 +62,7 @@ export default class Tables extends React.Component {
         removeUnitRow={this.props.removeUnitRow}
         insertUnitRow={this.props.insertUnitRow}
         updateUnitTitle={this.props.updateUnitTitle}
+        removeUnitTable={this.props.removeUnitTable}
         unit={unit}
       />));
   }
@@ -69,6 +71,7 @@ export default class Tables extends React.Component {
     return (
       <div className={style.tablesSizing}>
         <div className="pt-card pt-elevation-3">
+        <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.props.addUnitTable} />
           {this.createTables()}
         </div>
       </div>
@@ -81,6 +84,8 @@ Tables.propTypes = {
   updateUnits: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
+  addUnitTable: PropTypes.func.isRequired,
+  removeUnitTable: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
 };

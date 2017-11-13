@@ -31,6 +31,8 @@ export default class Application extends React.Component {
       insertUnitRow,
       updateRowContent,
       updateUnitTitle,
+      addUnitTable,
+      removeUnitTable
     } = this.props;
 
     if (!_.isNil(profile.token)) {
@@ -49,8 +51,10 @@ export default class Application extends React.Component {
                 updateUnits={updateUnits}
                 removeUnitRow={removeUnitRow}
                 insertUnitRow={insertUnitRow}
-                updateUnitTitle={updateUnitTitle}
                 updateRowContent={updateRowContent}
+                updateUnitTitle={updateUnitTitle}
+                addUnitTable={addUnitTable}
+                removeUnitTable={removeUnitTable}
               />)}
             />
             <Route
@@ -65,7 +69,6 @@ export default class Application extends React.Component {
     return (
       <Router>
         <div className={style.applicationStyle}>
-          <Header logo="/components/img/logo.png" />
           <Route
             exact
             path="/"
@@ -89,6 +92,8 @@ Application.propTypes = {
   insertUnitRow: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
+  addUnitTable: PropTypes.func.isRequired,
+  removeUnitTable: PropTypes.func.isRequired,
   client: PropTypes.shape().isRequired,
   profile: PropTypes.shape().isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,

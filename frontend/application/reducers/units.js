@@ -81,6 +81,26 @@ export default function units(state = [], action) {
       return updateUnitTitleContent;
     }
 
+    case actionTypes.ADD_UNIT_TABLE: {
+      const addUnitTableContent = state.slice();
+      addUnitTableContent[addUnitTableContent.length] = { new: true, title: null, content: [[null, null, null]] };
+      return addUnitTableContent;
+    }
+
+    case actionTypes.REMOVE_UNIT_TABLE: {
+      const removingTableIndex = action.unitTableIndex;
+
+      if (_.isNil(removingTableIndex) || !_.isInteger(removingTableIndex)) {
+        return state;
+      }
+
+      debugger;
+
+      const removingTableContent = state.slice();
+      removingTableContent.splice(removingTableIndex, 1);
+      return removingTableContent;
+    }
+
     default: {
       return state;
     }

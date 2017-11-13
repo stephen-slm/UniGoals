@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { EditableText } from '@blueprintjs/core';
+import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
 
 import toaster from '../../utils/toaster';
 import style from './tables.less';
@@ -12,12 +12,18 @@ export default class Table extends React.Component {
     super(props);
 
     this.showEditButtons = this.showEditButtons.bind(this);
+    this.showDeleteUnitBox = this.showDeleteUnitBox.bind(this);
     this.editOrLockTable = this.editOrLockTable.bind(this);
     this.insertRowBelow = this.insertRowBelow.bind(this);
     this.updateRowContent = this.updateRowContent.bind(this);
+    this.deleteUnitTable = this.deleteUnitTable.bind(this);
+
+    const editMode = (!_.isNil(this.props.unit.new));
 
     this.state = {
-      edit: false,
+      edit: editMode,
+      isDeletingUnit: false,
+      tableTitle: this.props.unit.title,
     };
   }
 
@@ -51,9 +57,23 @@ export default class Table extends React.Component {
     }
   }
 
+  deleteUnitTable() {
+    this.showDeleteUnitBox();
+    toaster.success(`Deleted unit ${this.state.tableTitle} unit`);
+    const unitTableIndex = this.props.tableIndex;
+    this.props.removeUnitTable(unitTableIndex);
+  }
+
   showEditButtons() {
     this.setState({
       edit: !this.state.edit,
+    });
+  }
+
+  showDeleteUnitBox(title) {
+    this.setState({
+      isDeletingUnit: !this.state.isDeletingUnit,
+      tableTitle: title,
     });
   }
 
@@ -79,7 +99,7 @@ export default class Table extends React.Component {
   generateTableContents(content) {
     return _.map(content, (unitContent, index) => (
       <tr key={index}>
-        <td><EditableText placeholder="Section" maxLength="10" onChange={change => this.updateRowContent(change, index, 0)} disabled={!this.state.edit} value={_.defaultTo(unitContent[0], '')} /></td>
+        <td><EditableText placeholder="Section" maxLength="12" onChange={change => this.updateRowContent(change, index, 0)} disabled={!this.state.edit} value={_.defaultTo(unitContent[0], '')} /></td>
         <td><EditableText placeholder="% Weighting" maxLength="3" onChange={change => this.updateRowContent(change, index, 1)} disabled={!this.state.edit} value={_.defaultTo(unitContent[1], '')} /></td>
         <td><EditableText placeholder="% Achieved" maxLength="3" onChange={change => this.updateRowContent(change, index, 2)} disabled={!this.state.edit} value={_.defaultTo(unitContent[2], '')} /></td>
         <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
@@ -100,7 +120,28 @@ export default class Table extends React.Component {
 
     return (
       <div className={style.tablesWrapper}>
-        <h3><EditableText placeholder="Unit title" maxLength="30" disabled={!this.state.edit} onChange={change => this.updateUnitTitle(change)} value={unit.title} /></h3>
+        <h3>
+          <EditableText
+            placeholder="Unit title"
+            maxLength="32"
+            disabled={!this.state.edit}
+            onChange={change => this.updateUnitTitle(change)}
+            value={unit.title}
+          />
+          <Button className="pt-button pt-icon-trash pt-minimal" onClick={() => { this.showDeleteUnitBox(unit.title); }} style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }} />
+          <Alert
+            intent={Intent.DANGER}
+            isOpen={this.state.isDeletingUnit}
+            confirmButtonText={`Delete ${this.state.tableTitle}`}
+            cancelButtonText="Cancel"
+            onConfirm={this.deleteUnitTable}
+            onCancel={this.showDeleteUnitBox}
+          >
+          <p>
+            Are you sure you want to delete unit <b>{this.props.unit.title}</b>?
+          </p>
+        </Alert>
+        </h3>
         <table className={`${style.tableWidths} pt-table pt-interactive`}>
           <thead>
             <tr>
@@ -126,12 +167,14 @@ export default class Table extends React.Component {
 
 Table.propTypes = {
   unit: PropTypes.shape({
-    title: PropTypes.string.isRequired,
+    title: PropTypes.string,
+    new: PropTypes.string,
     content: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
   }).isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
+  removeUnitTable: PropTypes.func.isRequired,
   tableIndex: PropTypes.number.isRequired,
 };

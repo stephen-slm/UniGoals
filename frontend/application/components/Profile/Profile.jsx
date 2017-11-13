@@ -103,8 +103,10 @@ export default class Profile extends React.Component {
           updateUnits={this.props.updateUnits}
           updateRowContent={this.props.updateRowContent}
           removeUnitRow={this.props.removeUnitRow}
-          units={this.props.units}
           updateUnitTitle={this.props.updateUnitTitle}
+          addUnitTable={this.props.addUnitTable}
+          removeUnitTable={this.props.removeUnitTable}
+          units={this.props.units}
         />
       </div>
     );
@@ -120,6 +122,8 @@ Profile.propTypes = {
   insertUnitRow: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
+  addUnitTable: PropTypes.func.isRequired,
+  removeUnitTable: PropTypes.func.isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
