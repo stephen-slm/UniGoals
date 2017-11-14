@@ -100,19 +100,39 @@ export default class Table extends React.Component {
   }
 
   generateTableContents() {
-    return _.map(this.props.unit.content, (unitContent, index) => (
-      <tr key={index}>
-        <td><EditableText placeholder="Section" maxLength="12" onChange={change => this.updateRowContent(change, index, 0)} disabled={!this.state.edit} value={_.defaultTo(unitContent[0], '')} /></td>
-        <td><EditableText placeholder="% Weighting" maxLength="4" onChange={change => this.updateRowContent(change, index, 1)} disabled={!this.state.edit} value={_.defaultTo(unitContent[1], '')} /></td>
-        <td><EditableText placeholder="% Achieved" maxLength="4" onChange={change => this.updateRowContent(change, index, 2)} disabled={!this.state.edit} value={_.defaultTo(unitContent[2], '')} /></td>
-        <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
-          <span onClick={() => this.removeRowById(index)} className="pt-icon-standard pt-icon-cross" />
-        </td>
-        <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
-          <span onClick={() => this.insertRowBelow(index)} className="pt-icon-standard pt-icon-plus" />
-        </td>
-      </tr>
-    ));
+    let total = 0;
+    let totalGained = 0;
+
+    const tables = _.map(this.props.unit.content, (unitContent, index) => {
+      if (parseFloat(unitContent[2]) > 0) {
+        total += parseFloat(unitContent[1]) * parseFloat(unitContent[2]);
+      }
+
+      totalGained += parseFloat(unitContent[1]);
+
+      return (
+        <tr key={index}>
+          <td><EditableText placeholder="Section" maxLength="12" onChange={change => this.updateRowContent(change, index, 0)} disabled={!this.state.edit} value={_.defaultTo(unitContent[0], '')} /></td>
+          <td><EditableText placeholder="% Weighting" maxLength="4" onChange={change => this.updateRowContent(change, index, 1)} disabled={!this.state.edit} value={_.defaultTo(unitContent[1], '')} /></td>
+          <td><EditableText placeholder="% Achieved" maxLength="4" onChange={change => this.updateRowContent(change, index, 2)} disabled={!this.state.edit} value={_.defaultTo(unitContent[2], '')} /></td>
+          <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+            <span onClick={() => this.removeRowById(index)} className="pt-icon-standard pt-icon-cross" />
+          </td>
+          <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+            <span onClick={() => this.insertRowBelow(index)} className="pt-icon-standard pt-icon-plus" />
+          </td>
+        </tr>
+      );
+    });
+
+    tables.push((
+      <tr key={tables.length}>
+        <td>Total</td>
+        <td>{parseInt(totalGained, 10)}</td>
+        <td>{parseFloat(total / 100).toFixed(2)}</td>
+      </tr>));
+
+    return tables;
   }
 
   generateTableTopContent() {
