@@ -75,26 +75,26 @@ export default class Tables extends React.Component {
     }
 
     return _.map(this.props.units, (unit, index) => (
-      <Table
-        key={index}
-        tableIndex={index}
-        updateRowContent={this.props.updateRowContent}
-        removeUnitRow={this.props.removeUnitRow}
-        insertUnitRow={this.props.insertUnitRow}
-        updateUnitTitle={this.props.updateUnitTitle}
-        removeUnitTable={this.props.removeUnitTable}
-        unit={unit}
-      />));
+      <div className={`pt-card pt-elevation-3 ${style.tableWrapper}`}>
+        <Table
+          key={index}
+          tableIndex={index}
+          updateRowContent={this.props.updateRowContent}
+          removeUnitRow={this.props.removeUnitRow}
+          insertUnitRow={this.props.insertUnitRow}
+          updateUnitTitle={this.props.updateUnitTitle}
+          removeUnitTable={this.props.removeUnitTable}
+          unit={unit}
+        />
+      </div>));
   }
 
   render() {
     return (
-      <div className={style.tablesSizing}>
-        <div className="pt-card pt-elevation-3" style={{ overflow: 'hidden' }}>
-        <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.props.addUnitTable} />
+        <div className={`pt-card pt-elevation-3 ${style.tablesWrapper}`}>
+          <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.props.addUnitTable} />
           {this.createTables()}
         </div>
-      </div>
     );
   }
 }

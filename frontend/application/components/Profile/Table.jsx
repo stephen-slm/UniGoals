@@ -104,11 +104,12 @@ export default class Table extends React.Component {
     let totalGained = 0;
 
     const tables = _.map(this.props.unit.content, (unitContent, index) => {
-      if (parseFloat(unitContent[2]) > 0) {
-        total += parseFloat(unitContent[1]) * parseFloat(unitContent[2]);
+      if (!_.isNil(unitContent[1]) && !_.isNil(unitContent[2])) {
+        if (parseFloat(unitContent[2]) > 0) {
+          total += parseFloat(unitContent[1]) * parseFloat(unitContent[2]);
+        }
+        totalGained += parseFloat(unitContent[1]);
       }
-
-      totalGained += parseFloat(unitContent[1]);
 
       return (
         <tr key={index}>
@@ -130,7 +131,8 @@ export default class Table extends React.Component {
         <td>Total</td>
         <td>{parseInt(totalGained, 10)}</td>
         <td>{parseFloat(total / 100).toFixed(2)}</td>
-      </tr>));
+      </tr>
+    ));
 
     return tables;
   }
@@ -173,10 +175,9 @@ export default class Table extends React.Component {
     const exitVisibilityStyle = { visibility: (this.state.edit) ? 'visible' : 'hidden' };
 
     return (
-      <div>
-        <div className={style.tablesWrapper}>
+        <div className={style.tableWrapper}>
           {topTableContent}
-          <table className={`${style.tableWidths} pt-table pt-interactive`}>
+          <table className="pt-table pt-interactive pt-condensed">
             <thead>
               <tr>
                 <th>Name</th>
@@ -194,7 +195,6 @@ export default class Table extends React.Component {
             </tbody>
           </table>
         </div>
-      </div>
     );
   }
 }

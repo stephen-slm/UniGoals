@@ -2,7 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Dialog } from '@blueprintjs/core';
+
 import ProfileNavigation from './ProfileNavigation';
+import ProfileSummary from './ProfileSummary';
 import Tables from './Tables';
 
 import style from './profile.less';
@@ -14,29 +16,15 @@ export default class Profile extends React.Component {
     this.isNoLongerNew = this.isNoLongerNew.bind(this);
     this.newUserDialog = this.newUserDialog.bind(this);
 
-    this.ProfileCards = this.ProfileCards.bind(this);
-
     this.profile = this.props.profile;
 
     this.state = {
       isNew: true,
       canEscapeKeyClose: true,
-      currentWeek: this.getCurrentYearWeek(),
     };
   }
 
-  getCurrentYearWeek() {
-    const uniStartWeek = 38;
-    let date = new Date();
 
-    date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay()||7));
-    const yearStart = new Date(Date.UTC(date.getUTCFullYear(),0,1));
-    const weekNo = Math.ceil(( ( (date - yearStart) / 86400000) + 1)/7);
-    const uniWeek = weekNo - uniStartWeek;
-
-    return Math.abs(uniWeek);
-  }
 
 
   isNoLongerNew(e) {
@@ -68,25 +56,6 @@ export default class Profile extends React.Component {
     );
   }
 
-  ProfileCards() {
-    return (
-      <div className={style.profileCardsWrapper}>
-        <div className={`pt-card pt-interactive pt-elevation-2 ${style.profileCards}`}>
-          <h4>Uni Week</h4>
-            <h5>{this.state.currentWeek} / 24</h5>
-        </div>
-        <div className={`pt-card pt-interactive pt-elevation-2 ${style.profileCards}`}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec dapibus et mauris,
-          vitae dictum metus.
-        </div>
-        <div className={`pt-card pt-interactive pt-elevation-2 ${style.profileCards}`}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec dapibus et mauris,
-          vitae dictum metus.
-        </div>
-      </div>
-    );
-  }
-
   render() {
     return (
       <div>
@@ -97,7 +66,10 @@ export default class Profile extends React.Component {
           profile={this.profile}
           notifications={this.props.notifications}
         />
-        {this.ProfileCards()}
+        <ProfileSummary
+          units={this.props.units}
+          profile={this.profile}
+        />
         <Tables
           insertUnitRow={this.props.insertUnitRow}
           updateUnits={this.props.updateUnits}

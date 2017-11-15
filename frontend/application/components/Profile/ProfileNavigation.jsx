@@ -101,7 +101,7 @@ export default class ProfileNavigation extends React.Component {
           title="Send Question / feedback"
         >
           <div className="pt-dialog-body">
-            <textarea ref={(ref) => { this.helpText = ref }} rows={10} cols={70} className="pt-input .pt-fill" dir="auto" defaultValue="If you have any problems or help please ask below and I will email you back!" />
+            <textarea ref={(ref) => { this.helpText = ref; }} rows={10} cols={70} className="pt-input .pt-fill" dir="auto" defaultValue="If you have any problems or help please ask below and I will email you back!" />
           </div>
           <div className="pt-dialog-footer">
             <div className="pt-dialog-footer-actions">
@@ -154,6 +154,7 @@ export default class ProfileNavigation extends React.Component {
             <div className="pt-navbar-heading">Uni Stats, Welcome {this.profile.name} - {this.profile.email.split("@")[0].toUpperCase()}</div>
           </div>
           <div className="pt-navbar-group pt-align-right">
+            <button className="pt-button pt-minimal pt-icon-user" />
             <span className="pt-navbar-divider" />
             {this.buildNotifications()}
             {this.helpButton()}
