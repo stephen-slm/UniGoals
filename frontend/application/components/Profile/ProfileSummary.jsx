@@ -36,7 +36,7 @@ export default class ProfileSummary extends React.Component {
 
   generateSummaryBarChartData() {
     const barChartData = _.map(this.props.units, (unit) => {
-      const name = unit.title;
+      const name = _.defaultTo(unit.title, 'Section');
       const shortaName = (!_.isNil(unit.shortName) ? unit.shortName : name.match(/\b(\w)/g).join('').toUpperCase());
 
       let total = 0;

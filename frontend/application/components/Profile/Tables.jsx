@@ -39,7 +39,7 @@ export default class Tables extends React.Component {
     }, {
       title: 'Computer Architecture',
       content: [
-        ['Coursework 1', '10', '0'],
+        ['Coursework 1', '10', '10'],
         ['Coursework 2', '10', '0'],
         ['Coursework 3', '10', '0'],
         ['Presentation', '10', '0'],
