@@ -56,12 +56,12 @@ export default class ProfileSummary extends React.Component {
 
   profileSummaryBarChart() {
     return (
-      <div className="pt-card pt-elevation-1" style={{ maxWidth: 75 * this.props.units.length }}>
-        <p>
-          <ComposedChart style={{ margin: '15px 0 -0 -50px' }} maxSize="100" width={75 * this.props.units.length} height={200} data={this.generateSummaryBarChartData()}>
-            <CartesianGrid strokeDasharray="3 3" />
+      <div className="pt-card pt-elevation-1" style={{ maxWidth: 75 * this.props.units.length, height: 'auto' }}>
+        <div>
+          <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} maxSize="100" width={75 * this.props.units.length} height={200} data={this.generateSummaryBarChartData()}>
+            <CartesianGrid strokeDasharray="3 3" style={{ paddingBottom: '10px' }} />
             <XAxis dataKey="name">
-              <Label value="Unit Process" offset={1} position="bottom" />
+              <Label value="Unit Progress" offset={0} position="bottom" />
             </XAxis>
             <YAxis dataKey="value" />
             <Tooltip />
@@ -69,7 +69,7 @@ export default class ProfileSummary extends React.Component {
             <Bar dataKey="target" fill="#621362" />
             <Line type="monotone" dataKey="value" stroke="#ff7300" />
           </ComposedChart>
-        </p>
+        </div>
       </div>
     );
   }
