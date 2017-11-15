@@ -21,11 +21,11 @@ export default class Login extends React.Component {
     // Using this to skip the login process TODO: Remove this at the end
     this.props.updateProfile({
       googleId: '102254737472284537992',
-      imageUrl: 'https://lh6.googleusercontent.com/-XDJleWPa82c/AAAAAAAAAAI/AAAAAAAAAAc/6lWzFna5fQc/s96-c/photo.jpg',
-      email: 'up840877@myport.ac.uk',
-      familyName: 'Lineker-miller',
-      name: 'Stephen Lineker-miller',
-      givenName: 'Stephen',
+      imageUrl: '',
+      email: 'up000000@myport.ac.uk',
+      familyName: 'Baker',
+      name: 'Robert Baker',
+      givenName: 'Robert',
       token: 'token',
     });
 
