@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
-import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line } from 'recharts';
+import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line, RadialBarChart, RadialBar, Legend } from 'recharts';
+
+
 
 import toaster from '../../utils/toaster';
 import style from './tables.less';
@@ -24,7 +26,9 @@ export default class Table extends React.Component {
 
     this.generateTableBarChartData = this.generateTableBarChartData.bind(this);
     this.generateTableBarChart = this.generateTableBarChart.bind(this);
-    
+
+    this.averageGradeForUnitBox = this.averageGradeForUnitBox.bind(this);
+
     const editMode = (!_.isNil(this.props.unit.new));
 
     this.state = {
@@ -130,19 +134,17 @@ export default class Table extends React.Component {
 
   generateTableBarChart() {
     return (
-      <div className="pt-card pt-elevation-1" style={{ maxWidth: (20 * this.props.unit.content.length < 200) ? 200 : 20 * this.props.unit.content.length, height: 'auto' }}>
-        <div>
+      <div className={`pt-card pt-elevation-1 ${style.tableCoreBarChart}`} style={{ maxWidth: (20 * this.props.unit.content.length < 200) ? 200 : 20 * this.props.unit.content.length, height: 'auto' }}>
           <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={(20 * this.props.unit.content.length < 200) ? 200 : 20 * this.props.unit.content.length} height={200} data={this.state.gradeData.tableGraphData}>
-            <CartesianGrid strokeDasharray="3 3" style={{ paddingBottom: '10px' }} />
+            <CartesianGrid stroke="#f5f5f5" />
             <XAxis dataKey="name">
               <Label value="Unit Progress" offset={0} position="bottom" />
             </XAxis>
-            <YAxis dataKey="value" />
+            <YAxis />
             <Tooltip />
             <Bar dataKey="value" fill={this.state.tableColor} />
             <Line type="monotone" dataKey="value" stroke="#ff7300" />
           </ComposedChart>
-        </div>
       </div>
     );
   }
@@ -216,6 +218,16 @@ export default class Table extends React.Component {
     );
   }
 
+  averageGradeForUnitBox() {
+    return (
+      <div className={`pt-card pt-elevation-1 ${style.tableCoreAverageGrade}`}>
+        <div>
+          content
+        </div>
+      </div>
+    );
+  }
+
   render() {
     const topTableContent = this.generateTableTopContent();
     const tableContent = this.generateTableContents();
@@ -223,27 +235,30 @@ export default class Table extends React.Component {
     const exitVisibilityStyle = { visibility: (this.state.edit) ? 'visible' : 'hidden' };
 
     return (
-        <div className={style.tableWrapper}>
+      <div className={style.tableWrapper}>
+        <div className={style.unitTable}>
           {topTableContent}
-          <table className="pt-table pt-interactive pt-condensed">
+          <table className={`pt-table pt-interactive pt-condensed ${style.tablesCoreTable}`}>
             <thead>
-              <tr>
-                <th>Name</th>
-                <th>% Weighting</th>
-                <th>% Achieved</th>
-                {this.editOrLockTable()}
-                <td style={exitVisibilityStyle}>
-                  <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
-                </td>
-                <th />
-              </tr>
+            <tr>
+              <th>Name</th>
+              <th>% Weighting</th>
+              <th>% Achieved</th>
+              {this.editOrLockTable()}
+              <td style={exitVisibilityStyle}>
+                <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
+              </td>
+              <th />
+            </tr>
             </thead>
             <tbody>
               {tableContent}
             </tbody>
           </table>
-          {this.generateTableBarChart()}
         </div>
+        {this.generateTableBarChart()}
+        {this.averageGradeForUnitBox()}
+      </div>
     );
   }
 }
