@@ -75,9 +75,8 @@ export default class Tables extends React.Component {
     }
 
     return _.map(this.props.units, (unit, index) => (
-      <div className={`pt-card pt-elevation-3 ${style.tableWrapper}`}>
+      <div key={index} className={`pt-card pt-elevation-3 ${style.tableWrapper}`}>
         <Table
-          key={index}
           tableIndex={index}
           updateRowContent={this.props.updateRowContent}
           removeUnitRow={this.props.removeUnitRow}

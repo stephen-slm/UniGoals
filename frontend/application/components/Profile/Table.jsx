@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
+import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line } from 'recharts';
 
 import toaster from '../../utils/toaster';
 import style from './tables.less';
@@ -21,12 +22,17 @@ export default class Table extends React.Component {
     this.generateTableContents = this.generateTableContents.bind(this);
     this.generateTableTopContent = this.generateTableTopContent.bind(this);
 
+    this.generateTableBarChartData = this.generateTableBarChartData.bind(this);
+    this.generateTableBarChart = this.generateTableBarChart.bind(this);
+    
     const editMode = (!_.isNil(this.props.unit.new));
 
     this.state = {
       edit: editMode,
       isDeletingUnit: false,
       tableTitle: this.props.unit.title,
+      tableColor: (this.props.tableIndex % 2 === 1) ? '#621362' : '#009FE3',
+      gradeData: this.generateTableBarChartData(),
     };
   }
 
@@ -96,6 +102,48 @@ export default class Table extends React.Component {
           <span className="pt-icon-standard pt-icon-build" />
         </span>
       </td>
+    );
+  }
+
+  generateTableBarChartData() {
+    let averageGrade = 0;
+
+    const tableGraphData = _.map(this.props.unit.content, (unit) => {
+
+      const name = _.defaultTo(unit[0], 'Section');
+      const { shortName: unitShortName } = unit;
+      let shortName = 'Section';
+
+      if (!_.isNil(unitShortName)) {
+        shortName = unitShortName;
+      } else if (!_.isNil(name) && name !== '') {
+        shortName = name.match(/\b(\w)/g).join('').toUpperCase();
+      }
+
+      averageGrade += parseFloat(unit[2]);
+
+      return { name: shortName, value: parseFloat(unit[2]) };
+    });
+
+    return { tableGraphData, averageGrade: parseFloat(averageGrade / this.props.unit.content.length).toFixed(2) };
+  }
+
+  generateTableBarChart() {
+    return (
+      <div className="pt-card pt-elevation-1" style={{ maxWidth: (20 * this.props.unit.content.length < 200) ? 200 : 20 * this.props.unit.content.length, height: 'auto' }}>
+        <div>
+          <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={(20 * this.props.unit.content.length < 200) ? 200 : 20 * this.props.unit.content.length} height={200} data={this.state.gradeData.tableGraphData}>
+            <CartesianGrid strokeDasharray="3 3" style={{ paddingBottom: '10px' }} />
+            <XAxis dataKey="name">
+              <Label value="Unit Progress" offset={0} position="bottom" />
+            </XAxis>
+            <YAxis dataKey="value" />
+            <Tooltip />
+            <Bar dataKey="value" fill={this.state.tableColor} />
+            <Line type="monotone" dataKey="value" stroke="#ff7300" />
+          </ComposedChart>
+        </div>
+      </div>
     );
   }
 
@@ -194,6 +242,7 @@ export default class Table extends React.Component {
               {tableContent}
             </tbody>
           </table>
+          {this.generateTableBarChart()}
         </div>
     );
   }

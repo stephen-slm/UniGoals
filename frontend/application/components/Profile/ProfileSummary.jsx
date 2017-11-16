@@ -35,9 +35,16 @@ export default class ProfileSummary extends React.Component {
 
 
   generateSummaryBarChartData() {
-    const barChartData = _.map(this.props.units, (unit) => {
-      const name = _.defaultTo(unit.title, 'Section');
-      const shortaName = (!_.isNil(unit.shortName) ? unit.shortName : name.match(/\b(\w)/g).join('').toUpperCase());
+    return _.map(this.props.units, (unit) => {
+      const name = _.defaultTo(unit.title, 'Unit');
+      const { shortName: unitShortName } = unit;
+      let shortName = 'Section';
+
+      if (!_.isNil(unitShortName)) {
+        shortName = unitShortName;
+      } else if (!_.isNil(name) && name !== '') {
+        shortName = name.match(/\b(\w)/g).join('').toUpperCase();
+      }
 
       let total = 0;
 
@@ -48,10 +55,8 @@ export default class ProfileSummary extends React.Component {
           }
         }
       });
-      return { name: shortaName, value: total / 100, target: 100 };
+      return { name: shortName, value: total / 100, target: 100 };
     });
-
-    return barChartData;
   }
 
   profileSummaryBarChart() {
@@ -61,7 +66,7 @@ export default class ProfileSummary extends React.Component {
           <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} maxSize="100" width={75 * this.props.units.length} height={200} data={this.generateSummaryBarChartData()}>
             <CartesianGrid strokeDasharray="3 3" style={{ paddingBottom: '10px' }} />
             <XAxis dataKey="name">
-              <Label value="Unit Progress" offset={0} position="bottom" />
+              <Label value="Total Unit Progress" offset={0} position="bottom" />
             </XAxis>
             <YAxis dataKey="value" />
             <Tooltip />
