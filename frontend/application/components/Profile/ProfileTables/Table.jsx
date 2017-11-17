@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
 import ProfileUnitBarChart from '../ProfileUnitBarChart/ProfileUnitBarChart';
-
+import AverageGrade from '../AverageGrade/AverageGrade';
 
 
 import toaster from '../../../utils/toaster';
@@ -23,8 +23,6 @@ export default class Table extends React.Component {
 
     this.generateTableContents = this.generateTableContents.bind(this);
     this.generateTableTopContent = this.generateTableTopContent.bind(this);
-
-    this.averageGradeForUnitBox = this.averageGradeForUnitBox.bind(this);
 
     const editMode = (!_.isNil(this.props.unit.new));
 
@@ -174,16 +172,6 @@ export default class Table extends React.Component {
     );
   }
 
-  averageGradeForUnitBox() {
-    return (
-      <div className={`pt-card pt-elevation-1 ${style.tableCoreAverageGrade}`}>
-        <div>
-          content
-        </div>
-      </div>
-    );
-  }
-
   render() {
     const topTableContent = this.generateTableTopContent();
     const tableContent = this.generateTableContents();
@@ -217,7 +205,11 @@ export default class Table extends React.Component {
           color={this.state.tableColor}
           className={style.tableCoreBarChart}
         />
-        {this.averageGradeForUnitBox()}
+        <AverageGrade
+          data={this.props.unit.content}
+          className={style.tableCoreAverageGrade}
+          height={225}
+        />
       </div>
     );
   }

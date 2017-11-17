@@ -56,6 +56,8 @@ export default class ProfileUnitBarChart extends React.Component {
   }
 
   render() {
+    this.content = this.generateBarData();
+
     return (
       <div className={`pt-card pt-elevation-1 ${this.state.className}`} style={{ maxWidth: this.state.width, height: this.state.height }}>
         <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={this.state.width} height={200} data={this.content}>
