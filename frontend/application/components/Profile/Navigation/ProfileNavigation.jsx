@@ -4,8 +4,8 @@ import _ from 'lodash';
 
 import { Popover, Position, PopoverInteractionKind, Dialog, Button, Intent } from '@blueprintjs/core';
 
-import Notification from './Notification';
-import toaster from '../../utils/toaster';
+import Notification from '../Notifications/Notification';
+import toaster from '../../../utils/toaster';
 
 
 export default class ProfileNavigation extends React.Component {

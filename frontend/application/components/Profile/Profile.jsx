@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Dialog } from '@blueprintjs/core';
 
-import ProfileNavigation from './ProfileNavigation';
-import ProfileSummary from './ProfileSummary';
-import Tables from './Tables';
+import ProfileNavigation from './Navigation/ProfileNavigation';
+import ProfileSummary from './ProfileSummary/ProfileSummary';
+import Tables from './ProfileTables/Tables';
 
 import style from './profile.less';
 

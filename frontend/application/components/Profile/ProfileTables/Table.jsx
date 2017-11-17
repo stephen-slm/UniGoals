@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
-import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line, RadialBarChart, RadialBar, Legend } from 'recharts';
+import ProfileUnitBarChart from '../ProfileUnitBarChart/ProfileUnitBarChart';
 
 
 
-import toaster from '../../utils/toaster';
+import toaster from '../../../utils/toaster';
 import style from './tables.less';
 
 export default class Table extends React.Component {
@@ -24,9 +24,6 @@ export default class Table extends React.Component {
     this.generateTableContents = this.generateTableContents.bind(this);
     this.generateTableTopContent = this.generateTableTopContent.bind(this);
 
-    this.generateTableBarChartData = this.generateTableBarChartData.bind(this);
-    this.generateTableBarChart = this.generateTableBarChart.bind(this);
-
     this.averageGradeForUnitBox = this.averageGradeForUnitBox.bind(this);
 
     const editMode = (!_.isNil(this.props.unit.new));
@@ -36,7 +33,6 @@ export default class Table extends React.Component {
       isDeletingUnit: false,
       tableTitle: this.props.unit.title,
       tableColor: (this.props.tableIndex % 2 === 1) ? '#621362' : '#009FE3',
-      gradeData: this.generateTableBarChartData(),
     };
   }
 
@@ -106,46 +102,6 @@ export default class Table extends React.Component {
           <span className="pt-icon-standard pt-icon-build" />
         </span>
       </td>
-    );
-  }
-
-  generateTableBarChartData() {
-    let averageGrade = 0;
-
-    const tableGraphData = _.map(this.props.unit.content, (unit) => {
-
-      const name = _.defaultTo(unit[0], 'Section');
-      const { shortName: unitShortName } = unit;
-      let shortName = 'Section';
-
-      if (!_.isNil(unitShortName)) {
-        shortName = unitShortName;
-      } else if (!_.isNil(name) && name !== '') {
-        shortName = name.match(/\b(\w)/g).join('').toUpperCase();
-      }
-
-      averageGrade += parseFloat(unit[2]);
-
-      return { name: shortName, value: parseFloat(unit[2]) };
-    });
-
-    return { tableGraphData, averageGrade: parseFloat(averageGrade / this.props.unit.content.length).toFixed(2) };
-  }
-
-  generateTableBarChart() {
-    return (
-      <div className={`pt-card pt-elevation-1 ${style.tableCoreBarChart}`} style={{ maxWidth: (20 * this.props.unit.content.length < 200) ? 200 : 20 * this.props.unit.content.length, height: 'auto' }}>
-          <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={(20 * this.props.unit.content.length < 200) ? 200 : 20 * this.props.unit.content.length} height={200} data={this.state.gradeData.tableGraphData}>
-            <CartesianGrid stroke="#f5f5f5" />
-            <XAxis dataKey="name">
-              <Label value="Unit Progress" offset={0} position="bottom" />
-            </XAxis>
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="value" fill={this.state.tableColor} />
-            <Line type="monotone" dataKey="value" stroke="#ff7300" />
-          </ComposedChart>
-      </div>
     );
   }
 
@@ -240,23 +196,27 @@ export default class Table extends React.Component {
           {topTableContent}
           <table className={`pt-table pt-interactive pt-condensed ${style.tablesCoreTable}`}>
             <thead>
-            <tr>
-              <th>Name</th>
-              <th>% Weighting</th>
-              <th>% Achieved</th>
-              {this.editOrLockTable()}
-              <td style={exitVisibilityStyle}>
-                <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
-              </td>
+              <tr>
+                <th>Name</th>
+                <th>% Weighting</th>
+                <th>% Achieved</th>
+                {this.editOrLockTable()}
+                <td style={exitVisibilityStyle}>
+                  <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
+                </td>
               <th />
-            </tr>
+              </tr>
             </thead>
             <tbody>
               {tableContent}
             </tbody>
           </table>
         </div>
-        {this.generateTableBarChart()}
+        <ProfileUnitBarChart
+          data={this.props.unit.content}
+          color={this.state.tableColor}
+          className={style.tableCoreBarChart}
+        />
         {this.averageGradeForUnitBox()}
       </div>
     );
