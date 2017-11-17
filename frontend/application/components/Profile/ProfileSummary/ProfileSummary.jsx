@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
 
 import ProfileSummaryBarChart from '../ProfileUnitBarChart/ProfileSummaryBarChart';
-
+import AverageGrade from '../AverageGrade/AverageGrade';
 
 import style from '../profile.less';
 
@@ -27,6 +26,7 @@ export default class ProfileSummary extends React.Component {
     super(props);
 
     this.state = {
+      isSummary: true,
       currentWeek: ProfileSummary.getCurrentYearWeek(),
     };
   }
@@ -38,11 +38,18 @@ export default class ProfileSummary extends React.Component {
         <div className={style.profileSummaryHeader}>
           Bsc Computer Science - {this.props.profile.name}, week: {this.state.currentWeek}
         </div>
-        <ProfileSummaryBarChart
-          data={this.props.units}
-          color="#621362"
-          className={style.ProfileSummaryChart}
-        />
+        <div className={style.profileSummaryAverageWrapper}>
+          <ProfileSummaryBarChart
+            data={this.props.units}
+            color="#621362"
+            className={style.ProfileSummaryChart}
+          />
+          <AverageGrade
+            summaryData={this.props.units}
+            isSummary={this.state.isSummary}
+            className={style.SummaryAverageGrade}
+          />
+        </div>
       </div>
     );
   }

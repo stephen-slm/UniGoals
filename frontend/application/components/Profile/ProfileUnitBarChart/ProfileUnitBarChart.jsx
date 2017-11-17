@@ -56,11 +56,13 @@ export default class ProfileUnitBarChart extends React.Component {
   }
 
   render() {
-    this.content = this.generateBarData();
+    const data = this.generateBarData();
+    const width = ProfileUnitBarChart.calculateWidth(this.props.width, this.props.data.length);
+
 
     return (
-      <div className={`pt-card pt-elevation-1 ${this.state.className}`} style={{ maxWidth: this.state.width, height: this.state.height }}>
-        <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={this.state.width} height={200} data={this.content}>
+      <div className={`pt-card pt-elevation-1 ${this.state.className}`} style={{ maxWidth: width, height: this.state.height }}>
+        <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={width} height={200} data={data}>
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="name">
             <Label value="Unit Progress" offset={0} position="bottom" />

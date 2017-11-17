@@ -7,8 +7,6 @@ import ProfileNavigation from './Navigation/ProfileNavigation';
 import ProfileSummary from './ProfileSummary/ProfileSummary';
 import Tables from './ProfileTables/Tables';
 
-import style from './profile.less';
-
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);

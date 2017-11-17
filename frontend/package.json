@@ -20,6 +20,7 @@
         "body-parser": "^1.18.2",
         "css-loader": "^0.28.7",
         "express": "^4.16.2",
+        "firebase": "^4.6.2",
         "less": "^2.7.3",
         "less-loader": "^4.0.5",
         "lodash": "^4.17.4",
