@@ -13,6 +13,12 @@ export default class Tables extends React.Component {
     super(props);
 
     this.createTables = this.createTables.bind(this);
+    this.addUnitTable = this.addUnitTable.bind(this);
+  }
+
+  addUnitTable() {
+    this.props.addUnitTable();
+    this.props.firebase.insertUnitById();
   }
 
   createTables() {
@@ -29,6 +35,7 @@ export default class Tables extends React.Component {
           insertUnitRow={this.props.insertUnitRow}
           updateUnitTitle={this.props.updateUnitTitle}
           removeUnitTable={this.props.removeUnitTable}
+          firebase={this.props.firebase}
           unit={unit}
         />
       </div>));
@@ -37,7 +44,7 @@ export default class Tables extends React.Component {
   render() {
     return (
         <div className={`pt-card pt-elevation-3 ${style.tablesWrapper}`}>
-          <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.props.addUnitTable} />
+          <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.addUnitTable} />
           {this.createTables()}
         </div>
     );
@@ -45,6 +52,7 @@ export default class Tables extends React.Component {
 }
 
 Tables.propTypes = {
+  firebase: PropTypes.shape().isRequired,
   units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   updateUnits: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,

@@ -23,8 +23,6 @@ export default class Profile extends React.Component {
   }
 
 
-
-
   isNoLongerNew(e) {
     e.preventDefault();
     this.setState({ isNew: false });
@@ -35,7 +33,7 @@ export default class Profile extends React.Component {
     return (
       <Dialog
         iconName="pt-icon-edit"
-        title={`Welcome ${this.profile.givenName}`}
+        title={`Welcome ${this.profile.name}`}
         isOpen={this.state.isNew}
         onClose={this.isNoLongerNew}
         canEscapeKeyClose={this.state.canEscapeKeyClose}
@@ -60,7 +58,6 @@ export default class Profile extends React.Component {
         {this.newUserDialog()}
         <ProfileNavigation
           history={this.props.history}
-          help={this.props.client.help}
           profile={this.profile}
           notifications={this.props.notifications}
         />
@@ -76,6 +73,7 @@ export default class Profile extends React.Component {
           updateUnitTitle={this.props.updateUnitTitle}
           addUnitTable={this.props.addUnitTable}
           removeUnitTable={this.props.removeUnitTable}
+          firebase={this.props.firebase}
           units={this.props.units}
         />
       </div>
@@ -84,7 +82,7 @@ export default class Profile extends React.Component {
 }
 
 Profile.propTypes = {
-  client: PropTypes.shape().isRequired,
+  firebase: PropTypes.shape().isRequired,
   updateUnits: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
   units: PropTypes.arrayOf(PropTypes.shape()).isRequired,

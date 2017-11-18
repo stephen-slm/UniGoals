@@ -31,7 +31,6 @@ export default class Application extends React.Component {
   render() {
     const {
       removeProfile,
-      client,
       profile,
       notifications,
       units,
@@ -53,7 +52,6 @@ export default class Application extends React.Component {
               path="/"
               render={history => (<Profile
                 history={history.history}
-                client={client}
                 profile={profile}
                 notifications={notifications}
                 units={units}
@@ -64,7 +62,7 @@ export default class Application extends React.Component {
                 updateUnitTitle={updateUnitTitle}
                 addUnitTable={addUnitTable}
                 removeUnitTable={removeUnitTable}
-                database={this.firebase}
+                firebase={this.firebase}
               />)}
             />
             <Route
@@ -84,7 +82,6 @@ export default class Application extends React.Component {
             path="/"
             render={history => (<Login
               history={history.history}
-              google={client.google}
               updateProfile={this.props.updateProfile}
               firebase={this.firebase}
               updateUnits={this.props.updateUnits}
@@ -106,7 +103,6 @@ Application.propTypes = {
   updateUnitTitle: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
-  client: PropTypes.shape().isRequired,
   profile: PropTypes.shape().isRequired,
   notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   units: PropTypes.arrayOf(PropTypes.shape()).isRequired,

@@ -37,11 +37,13 @@ export default class Table extends React.Component {
   removeRowById(rowIndex) {
     if (!_.isNil(rowIndex) && _.isInteger(rowIndex)) {
       this.props.removeUnitRow(rowIndex, this.props.tableIndex);
+      this.props.firebase.deleteUnitRowById(rowIndex, this.props.tableIndex);
     }
   }
 
   insertRowBelow(rowIndex) {
     this.props.insertUnitRow(rowIndex, this.props.tableIndex);
+    this.props.firebase.insertUnitRowById(rowIndex, this.props.tableIndex);
   }
 
   updateRowContent(change, rowIndex, columnIndex) {
@@ -56,6 +58,16 @@ export default class Table extends React.Component {
     }
   }
 
+  updateRowContentDatabase(change, rowIndex, columnIndex) {
+    if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
+      toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
+    }
+
+    if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
+      this.props.firebase.updateUnitRowById(change, this.props.tableIndex, rowIndex, columnIndex);
+    }
+  }
+
   updateUnitTitle(change) {
     // This means that its the same content as was already there, so there is no need to update
     // when it does not change.
@@ -64,10 +76,19 @@ export default class Table extends React.Component {
     }
   }
 
+  updateUnitTitleDatabase(change) {
+    if (!_.isNil(change) || change !== this.props.unit.title) {
+      this.props.firebase.updateUnitTitle(change, this.props.tableIndex)
+        .catch(error => toaster.danger(error.message));
+    }
+  }
+
+
   deleteUnitTable() {
     this.showDeleteUnitBox();
     toaster.success(`Deleted ${(this.state.tableTitle === null) ? 'the' : this.state.tableTitle} unit`);
     const unitTableIndex = this.props.tableIndex;
+    this.props.firebase.deleteUnitById(unitTableIndex);
     this.props.removeUnitTable(unitTableIndex);
   }
 
@@ -117,9 +138,36 @@ export default class Table extends React.Component {
 
       return (
         <tr key={index}>
-          <td><EditableText placeholder="Section" maxLength="12" onChange={change => this.updateRowContent(change, index, 0)} disabled={!this.state.edit} value={_.defaultTo(unitContent[0], '')} /></td>
-          <td><EditableText placeholder="% Weighting" maxLength="4" onChange={change => this.updateRowContent(change, index, 1)} disabled={!this.state.edit} value={_.defaultTo(unitContent[1], '')} /></td>
-          <td><EditableText placeholder="% Achieved" maxLength="4" onChange={change => this.updateRowContent(change, index, 2)} disabled={!this.state.edit} value={_.defaultTo(unitContent[2], '')} /></td>
+          <td>
+            <EditableText
+              placeholder="Section"
+              maxLength="12"
+              onChange={change => this.updateRowContent(change, index, 0)}
+              onConfirm={change => this.updateRowContentDatabase(change, index, 0)}
+              disabled={!this.state.edit}
+              value={_.defaultTo(unitContent[0], '')}
+            />
+          </td>
+          <td>
+            <EditableText
+              placeholder="% Weighting"
+              maxLength="4"
+              onChange={change => this.updateRowContent(change, index, 1)}
+              onConfirm={change => this.updateRowContentDatabase(change, index, 1)}
+              disabled={!this.state.edit}
+              value={_.defaultTo(unitContent[1], '')}
+            />
+          </td>
+          <td>
+            <EditableText
+              placeholder="% Achieved"
+              maxLength="4"
+              onChange={change => this.updateRowContent(change, index, 2)}
+              onConfirm={change => this.updateRowContentDatabase(change, index, 2)}
+              disabled={!this.state.edit}
+              value={_.defaultTo(unitContent[2], '')}
+            />
+          </td>
           <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
             <span onClick={() => this.removeRowById(index)} className="pt-icon-standard pt-icon-cross" />
           </td>
@@ -153,6 +201,7 @@ export default class Table extends React.Component {
           maxLength="32"
           disabled={!this.state.edit}
           onChange={change => this.updateUnitTitle(change)}
+          onConfirm={change => this.updateUnitTitleDatabase(change)}
           value={this.props.unit.title}
         />
         <Button className="pt-button pt-icon-trash pt-minimal" onClick={showDeleteUnitButton} style={exitVisibilityStyle} />
@@ -217,9 +266,10 @@ export default class Table extends React.Component {
 
 
 Table.propTypes = {
+  firebase: PropTypes.shape().isRequired,
   unit: PropTypes.shape({
     title: PropTypes.string,
-    new: PropTypes.string,
+    new: PropTypes.bool,
     content: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
   }).isRequired,
   removeUnitRow: PropTypes.func.isRequired,

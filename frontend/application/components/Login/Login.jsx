@@ -18,7 +18,7 @@ export default class Login extends React.Component {
     const { search } = this.props.history.location;
 
     if (search === '?type=example') {
-      this.props.firebase.database.getExampleUser()
+      this.props.firebase.getExampleUser()
         .then((snapshot) => {
           const exampleUser = snapshot.val();
           const { units } = exampleUser;
@@ -54,17 +54,11 @@ export default class Login extends React.Component {
     } else if (isNew) {
       return this.props.firebase.createNewUser(profile);
     }
-    return this.props.firebase.getUser(profile);
+    return Promise.resolve(profile);
   }
 
   googleLogin() {
     this.setState({ loading: true }); // TODO: move this into the backend check when it is workings
-
-    // if (profile.email.split('@')[1] !== 'myport.ac.uk') {
-    //   toaster.danger('Sorry, currently only University of Portsmouth students allowed');
-    // } else {
-    //   this.props.updateProfile(profile);
-    // }
 
     const auth = this.props.firebase.authentication;
     const { provider } = this.props.firebase;
@@ -81,16 +75,6 @@ export default class Login extends React.Component {
         this.setState({ loading: false });
         toaster.danger(error.message);
       });
-
-
-    // TODO: send to the backend and then verify that its a valid google account: https://developers.google.com/identity/sign-in/web/backend-auth
-    // google.authenticate(profile)
-    //   .then((result) => {
-    //     toaster.success(result.message);
-    //     this.props.updateProfile(result.content.profile);
-    //     // TODO: check if there a new user otherwise move them onto there profile page
-    //   })
-    //   .catch(error => toaster.danger(error.description));
   }
 
   loadingBox() {
@@ -109,14 +93,6 @@ export default class Login extends React.Component {
       <div className={style.loginPage}>
         <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
           <button className={style.googleButton} onClick={this.googleLogin}>Lets Get Started</button>
-          {/*<GoogleLogin*/}
-            {/*ref={(googleButton) => { this.googleButton = googleButton; }}*/}
-            {/*clientId="40609903553-c60s8f5l9b50hqg3gi4gu1a1t2hf83e6.apps.googleusercontent.com"*/}
-            {/*buttonText="Lets Get Started"*/}
-            {/*className={style.googleButton}*/}
-            {/*onSuccess={this.googleLogin}*/}
-            {/*onFailure={this.googleLogin}*/}
-          {/*/>*/}
         </div>
       </div>
     );
@@ -131,7 +107,6 @@ export default class Login extends React.Component {
 }
 
 Login.propTypes = {
-  google: PropTypes.shape().isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,
   firebase: PropTypes.shape().isRequired,

@@ -11,7 +11,7 @@ export default function units(state = [], action) {
         return newUnits;
       }
 
-      return action.state;
+      return state;
     }
     case actionTypes.REMOVE_UNIT_ROW: {
       const { rowId: removingRowId, tableIndex: removingTableIndex } = action;
@@ -38,7 +38,7 @@ export default function units(state = [], action) {
       }
 
       const insertingUnitRow = state.slice();
-      insertingUnitRow[insertingTableIndex].content.splice(insertingRowId + 1, 0, [null, 0, 0]);
+      insertingUnitRow[insertingTableIndex].content.splice(insertingRowId + 1, 0, [null, '0', '0']);
 
       return insertingUnitRow;
     }
@@ -83,7 +83,7 @@ export default function units(state = [], action) {
 
     case actionTypes.ADD_UNIT_TABLE: {
       const addUnitTableContent = state.slice();
-      addUnitTableContent[addUnitTableContent.length] = { new: true, title: null, content: [[null, 0, 0]] };
+      addUnitTableContent[addUnitTableContent.length] = { new: true, title: null, content: [[null, '0', '0']] };
       return addUnitTableContent;
     }
 
