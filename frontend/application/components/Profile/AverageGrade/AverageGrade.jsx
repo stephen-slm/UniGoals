@@ -63,8 +63,10 @@ export default class AverageGrade extends React.Component {
         }
       });
 
-      total += tableTotal / unit.content.length;
-      maxTotalPossible += tableMax / unit.content.length;
+      if (!_.isNil(unit.content)) {
+        total += tableTotal / unit.content.length;
+        maxTotalPossible += tableMax / unit.content.length;
+      }
     });
 
 

@@ -63,6 +63,10 @@ export default class FirebaseWrapper {
 
     insertingRowRef.on('value', (snap) => { insertingRowList = snap.val(); });
 
+    if (_.isNil(insertingRowList)) {
+      return insertingRowRef.set([['', '0', '0']]);
+    }
+
     insertingRowList.splice(rowIndex + 1, 0, ['', '0', '0']);
     return insertingRowRef.set(insertingRowList);
   }

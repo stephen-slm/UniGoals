@@ -38,7 +38,12 @@ export default function units(state = [], action) {
       }
 
       const insertingUnitRow = state.slice();
-      insertingUnitRow[insertingTableIndex].content.splice(insertingRowId + 1, 0, [null, '0', '0']);
+
+      if (_.isNil(insertingUnitRow[insertingTableIndex].content)) {
+        insertingUnitRow[insertingTableIndex].content = [[null, '0', '0']];
+      } else {
+        insertingUnitRow[insertingTableIndex].content.splice(insertingRowId + 1, 0, [null, '0', '0']);
+      }
 
       return insertingUnitRow;
     }
@@ -63,6 +68,7 @@ export default function units(state = [], action) {
 
       const updateUnitContent = state.slice();
       updateUnitContent[updateUnitTableIndex].content[updateUnitRowIndex][updateUnitColumnIndex] = updateUnitChange;
+
       return updateUnitContent;
     }
 

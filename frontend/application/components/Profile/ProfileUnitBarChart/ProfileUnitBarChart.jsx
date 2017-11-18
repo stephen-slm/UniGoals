@@ -5,15 +5,17 @@ import _ from 'lodash';
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line } from 'recharts';
 
 export default class ProfileUnitBarChart extends React.Component {
-  static calculateWidth(width, dataLen) {
+  static calculateWidth(width, data) {
     if (!_.isNil(width)) {
       return width;
-    }
-
-    if (20 * dataLen < 200) {
+    } else if (_.isNil(data)) {
       return 200;
     }
-    return 20 * dataLen;
+
+    if (20 * data.length < 200) {
+      return 200;
+    }
+    return 20 * data.length;
   }
   /**
    * The data expected is an array of a object with three elements
@@ -31,7 +33,7 @@ export default class ProfileUnitBarChart extends React.Component {
       data: this.props.data,
       className: this.props.className,
       color: this.props.color,
-      width: ProfileUnitBarChart.calculateWidth(this.props.width, this.props.data.length),
+      width: ProfileUnitBarChart.calculateWidth(this.props.width, this.props.data),
       height: this.props.height,
       lineOnly: this.props.lineOnly,
     };
@@ -57,7 +59,7 @@ export default class ProfileUnitBarChart extends React.Component {
 
   render() {
     const data = this.generateBarData();
-    const width = ProfileUnitBarChart.calculateWidth(this.props.width, this.props.data.length);
+    const width = ProfileUnitBarChart.calculateWidth(this.props.width, this.props.data);
 
 
     return (
@@ -78,7 +80,7 @@ export default class ProfileUnitBarChart extends React.Component {
 }
 
 ProfileUnitBarChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
+  data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   width: PropTypes.number,
   height: PropTypes.string,
   className: PropTypes.string,
@@ -92,4 +94,5 @@ ProfileUnitBarChart.defaultProps = {
   className: '',
   color: '#009FE3',
   lineOnly: false,
+  data: [],
 };

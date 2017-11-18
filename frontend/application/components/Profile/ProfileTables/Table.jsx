@@ -270,12 +270,18 @@ Table.propTypes = {
   unit: PropTypes.shape({
     title: PropTypes.string,
     new: PropTypes.bool,
-    content: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)).isRequired,
-  }).isRequired,
+    content: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  }),
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   tableIndex: PropTypes.number.isRequired,
+};
+
+Table.defaultProps = {
+  unit: {
+    content: [],
+  },
 };
