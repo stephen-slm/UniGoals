@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
-import ProfileSummaryBarChart from '../ProfileUnitBarChart/ProfileSummaryBarChart';
+import ProfileUnitBarChart from '../ProfileUnitBarChart/ProfileUnitBarChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 
 import style from '../profile.less';
@@ -33,16 +34,18 @@ export default class ProfileSummary extends React.Component {
 
   render() {
     return (
-      <div style={{ minWidth: 75 * this.props.units.length }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
+      <div style={{ minWidth: 75 * _.size(this.props.units) }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
         <div className={style.profileSummaryHeader}>Summary</div>
         <div className={style.profileSummaryHeader}>
           Bsc Computer Science - {this.props.profile.name}, week: {this.state.currentWeek}
         </div>
         <div className={style.profileSummaryAverageWrapper}>
-          <ProfileSummaryBarChart
+          <ProfileUnitBarChart
             data={this.props.units}
             color="#621362"
             className={style.ProfileSummaryChart}
+            isSummary={this.state.isSummary}
+            displayText="Overall Process"
           />
           <AverageGrade
             summaryData={this.props.units}
@@ -56,7 +59,7 @@ export default class ProfileSummary extends React.Component {
 }
 
 ProfileSummary.propTypes = {
-  units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  units: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
     familyName: PropTypes.string,

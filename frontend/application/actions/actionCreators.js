@@ -70,10 +70,10 @@ export function removeUnitRow(rowId, tableIndex) {
   };
 }
 
-export function insertUnitRow(rowId, tableIndex) {
+export function insertUnitRow(rowKeyId, tableIndex) {
   return {
     type: actionTypes.INSERT_UNIT_ROW,
-    rowId,
+    rowKeyId,
     tableIndex,
   };
 }
@@ -86,9 +86,10 @@ export function updateUnitTitle(title, tableIndex) {
   };
 }
 
-export function addUnitTable() {
+export function addUnitTable(key) {
   return {
     type: actionTypes.ADD_UNIT_TABLE,
+    key,
   };
 }
 

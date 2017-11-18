@@ -25,60 +25,48 @@ export default class FirebaseWrapper {
     return this.database.ref(`users/${this.getUid()}/units`).once('value');
   }
 
-  getUserById() {
-    return this.database.ref(`users/${this.getUid()}`).once('value');
+  getProfileById() {
+    return this.database.ref(`users/${this.getUid()}/profile`).once('value');
   }
 
-  updateUnitTitle(change, unitIndex) {
-    return this.database.ref(`users/${this.getUid()}/units/${unitIndex}/title`).set(change);
+  updateUnitTitle(change, key) {
+    return this.database.ref(`users/${this.getUid()}/units/${key}/title`).set(change);
   }
 
-  updateUnitRowById(change, unitIndex, rowIndex, columnIndex) {
-    return this.database.ref(`users/${this.getUid()}/units/${unitIndex}/content/${rowIndex}/${columnIndex}`).set(change);
+  updateUnitRowWeighting(change, unitKey, contentKey) {
+    return this.database.ref(`users/${this.getUid()}/units/${unitKey}/content/${contentKey}/weighting`).set(change);
   }
 
-  deleteUnitRowById(rowIndex, unitIndex) {
-    const removingUnitRowRef = this.database.ref(`users/${this.getUid()}/units/${unitIndex}/content/`);
-    let removingUnitRowList = [];
+  updateUnitRowArchived(change, unitKey, contentKey) {
+    return this.database.ref(`users/${this.getUid()}/units/${unitKey}/content/${contentKey}/archived`).set(change);
+  }
 
-    removingUnitRowRef.on('value', (snap) => { removingUnitRowList = snap.val(); });
+  updateUnitRowName(change, unitKey, contentKey) {
+    return this.database.ref(`users/${this.getUid()}/units/${unitKey}/content/${contentKey}/name`).set(change);
+  }
 
-    removingUnitRowList.splice(rowIndex, 1);
-    return removingUnitRowRef.set(removingUnitRowList);
+  updateUnitRowSection(change, tableIndex, rowIndex, columnIndex) {
+    return this.database.ref(`users/${this.getUid()}/units/${tableIndex}/content/${rowIndex}/${columnIndex}`).set(change);
+  }
+
+  deleteUnitRowById(unitRowKey, tableUnitKey) {
+    return this.database.ref(`users/${this.getUid()}/units/${tableUnitKey}/content/${unitRowKey}`).remove();
   }
 
   insertUnitById() {
     const insertUnitRef = this.database.ref(`users/${this.getUid()}/units`);
-    let unitList = [];
-
-    insertUnitRef.on('value', (snap) => { unitList = snap.val(); });
-
-    unitList.push({ title: '', content: [['', '0', '0']] });
-    return insertUnitRef.set(unitList);
+    const insertKey = insertUnitRef.push({ title: '', content: {} });
+    return Promise.resolve(insertKey.key);
   }
 
-  insertUnitRowById(rowIndex, unitIndex) {
-    const insertingRowRef = this.database.ref(`users/${this.getUid()}/units/${unitIndex}/content`);
-    let insertingRowList = [];
-
-    insertingRowRef.on('value', (snap) => { insertingRowList = snap.val(); });
-
-    if (_.isNil(insertingRowList)) {
-      return insertingRowRef.set([['', '0', '0']]);
-    }
-
-    insertingRowList.splice(rowIndex + 1, 0, ['', '0', '0']);
-    return insertingRowRef.set(insertingRowList);
+  insertUnitRowById(unitKey) {
+    const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/units/${unitKey}/content`);
+    const insertingUnitRowKey = insertingUnitRowRef.push({ name: '', weighting: '0', archived: '0' });
+    return Promise.resolve(insertingUnitRowKey.key);
   }
 
   deleteUnitById(unitIndex) {
-    const removingUnitRef = this.database.ref(`users/${this.getUid()}/units`);
-    let removingUnitList = [];
-
-    removingUnitRef.on('value', (snap) => { removingUnitList = snap.val(); });
-
-    removingUnitList.splice(unitIndex, 1);
-    return removingUnitRef.set(removingUnitList);
+    return this.database.ref(`users/${this.getUid()}/units/${unitIndex}`).remove();
   }
 
   createNewUser(profile) {
@@ -93,21 +81,18 @@ export default class FirebaseWrapper {
     } = profile;
 
     this.database.ref(`users/${uid}`).set({
-      uid,
-      given_name,
-      family_name,
-      email,
-      picture,
-      name,
-      hd,
-      units: [{
-        title: '',
-        content: [
-          ['', '0', '0'],
-        ],
-      }],
+      profile: {
+        uid,
+        given_name,
+        family_name,
+        email,
+        picture,
+        name,
+        hd,
+      },
+      units: { key1: { title: '', content: { key1: { name: '', weighting: '0', archived: '0' } } } },
     });
 
-    return profile;
+    return Promise.resolve(profile);
   }
 }

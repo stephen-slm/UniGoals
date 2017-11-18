@@ -5,17 +5,17 @@ import _ from 'lodash';
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line } from 'recharts';
 
 export default class ProfileUnitBarChart extends React.Component {
-  static calculateWidth(width, data) {
+  static calculateWidth(width, dataLen) {
     if (!_.isNil(width)) {
       return width;
-    } else if (_.isNil(data)) {
+    } else if (_.isNil(dataLen)) {
       return 200;
     }
 
-    if (20 * data.length < 200) {
+    if (20 * dataLen < 200) {
       return 200;
     }
-    return 20 * data.length;
+    return 20 * dataLen;
   }
   /**
    * The data expected is an array of a object with three elements
@@ -33,9 +33,10 @@ export default class ProfileUnitBarChart extends React.Component {
       data: this.props.data,
       className: this.props.className,
       color: this.props.color,
-      width: ProfileUnitBarChart.calculateWidth(this.props.width, this.props.data),
       height: this.props.height,
       lineOnly: this.props.lineOnly,
+      isSummary: this.props.isSummary,
+      displayText: this.props.displayText
     };
 
     this.content = this.generateBarData();
@@ -43,7 +44,7 @@ export default class ProfileUnitBarChart extends React.Component {
 
   generateBarData() {
     return _.map(this.state.data, (unit) => {
-      const name = _.defaultTo(unit[0], 'Section');
+      const name = _.defaultTo(unit.name, 'Section');
       const { shortName: unitShortName } = unit;
       let shortName = 'Section';
 
@@ -53,21 +54,52 @@ export default class ProfileUnitBarChart extends React.Component {
         shortName = name.match(/\b(\w)/g).join('').toUpperCase();
       }
 
-      return { name: shortName, value: parseFloat(unit[2]) };
+      return { name: shortName, value: parseFloat(unit.archived) };
+    });
+  }
+
+  generateSummaryBarData() {
+    return _.map(this.props.data, (unit) => {
+      const name = _.defaultTo(unit.title, 'Unit');
+      const { shortName: unitShortName } = unit;
+      let shortName = 'Section';
+
+      if (!_.isNil(unitShortName)) {
+        shortName = unitShortName;
+      } else if (!_.isNil(name) && name !== '') {
+        shortName = name.match(/\b(\w)/g).join('').toUpperCase();
+      }
+
+      let total = 0;
+
+      _.forEach(unit.content, (content) => {
+        if (!_.isNil(content.weighting) && !_.isNil(content.archived)) {
+          if (parseFloat(content.archived) > 0) {
+            total += parseFloat(content.weighting) * parseFloat(content.archived);
+          }
+        }
+      });
+      return { name: shortName, value: total / 100, target: 100 };
     });
   }
 
   render() {
-    const data = this.generateBarData();
-    const width = ProfileUnitBarChart.calculateWidth(this.props.width, this.props.data);
+    let data;
 
+    if (this.state.isSummary) {
+      data = this.generateSummaryBarData();
+    } else {
+      data = this.generateBarData();
+    }
+
+    const width = ProfileUnitBarChart.calculateWidth(this.props.width, _.size(this.props.data));
 
     return (
       <div className={`pt-card pt-elevation-1 ${this.state.className}`} style={{ maxWidth: width, height: this.state.height }}>
         <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={width} height={200} data={data}>
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="name">
-            <Label value="Unit Progress" offset={0} position="bottom" />
+            <Label value={this.state.displayText} offset={0} position="bottom" />
           </XAxis>
           <YAxis />
           <Tooltip />
@@ -80,12 +112,14 @@ export default class ProfileUnitBarChart extends React.Component {
 }
 
 ProfileUnitBarChart.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
   width: PropTypes.number,
+  data: PropTypes.shape(),
   height: PropTypes.string,
   className: PropTypes.string,
   color: PropTypes.string,
+  displayText: PropTypes.string,
   lineOnly: PropTypes.bool,
+  isSummary: PropTypes.bool,
 };
 
 ProfileUnitBarChart.defaultProps = {
@@ -94,5 +128,7 @@ ProfileUnitBarChart.defaultProps = {
   className: '',
   color: '#009FE3',
   lineOnly: false,
-  data: [],
+  isSummary: false,
+  data: {},
+  displayText: 'Unit Process',
 };

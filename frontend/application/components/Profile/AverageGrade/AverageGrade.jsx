@@ -11,7 +11,7 @@ export default class AverageGrade extends React.Component {
    * @returns {number} The average grade
    */
   static calculateAverageGradePercent(data) {
-    if (_.isNil(data) || _.isNil(data[0])) {
+    if (_.isNil(data)) {
       return {
         averageGrade: 0,
         maxTotalPossible: 0,
@@ -22,16 +22,16 @@ export default class AverageGrade extends React.Component {
     let maxTotalPossible = 0;
 
     _.forEach(data, (content) => {
-      if (parseFloat(content[2]) > 0) {
-        total += parseFloat(content[2]);
-        maxTotalPossible += parseFloat(content[2]);
+      if (parseFloat(content.archived) > 0) {
+        total += parseFloat(content.archived);
+        maxTotalPossible += parseFloat(content.archived);
       } else {
         maxTotalPossible += 100;
       }
     });
 
-    const average = parseFloat(total / data.length).toFixed(2);
-    const max = parseFloat(maxTotalPossible / data.length).toFixed(2);
+    const average = parseFloat(total / _.size(data)).toFixed(2);
+    const max = parseFloat(maxTotalPossible / _.size(data)).toFixed(2);
 
     return {
       averageGrade: (average < 0) ? 0 : average,
@@ -40,7 +40,7 @@ export default class AverageGrade extends React.Component {
   }
 
   static calculateAverageGradePercentSummary(data) {
-    if (_.isNil(data) || _.isNil(data[0])) {
+    if (_.isNil(data)) {
       return {
         averageGrade: 0,
         maxTotalPossible: 0,
@@ -55,23 +55,23 @@ export default class AverageGrade extends React.Component {
       let tableMax = 0;
 
       _.forEach(unit.content, (content) => {
-        if (parseFloat(content[2]) > 0) {
-          tableTotal += parseFloat(content[2]);
-          tableMax += parseFloat(content[2]);
+        if (parseFloat(content.archived) > 0) {
+          tableTotal += parseFloat(content.archived);
+          tableMax += parseFloat(content.archived);
         } else {
           tableMax += 100;
         }
       });
 
       if (!_.isNil(unit.content)) {
-        total += tableTotal / unit.content.length;
-        maxTotalPossible += tableMax / unit.content.length;
+        total += tableTotal / _.size(unit.content);
+        maxTotalPossible += tableMax / _.size(unit.content);
       }
     });
 
 
-    const average = parseFloat(total / data.length).toFixed(2);
-    const max = parseFloat(maxTotalPossible / data.length).toFixed(2);
+    const average = parseFloat(total / _.size(data)).toFixed(2);
+    const max = parseFloat(maxTotalPossible / _.size(data)).toFixed(2);
 
     return {
       averageGrade: (average < 0) ? 0 : average,
@@ -92,9 +92,11 @@ export default class AverageGrade extends React.Component {
     let maxTotalPossible;
 
     if (this.state.isSummary) {
-      ({ averageGrade, maxTotalPossible } = AverageGrade.calculateAverageGradePercentSummary(this.props.summaryData));
+      const calculationFunction = AverageGrade.calculateAverageGradePercentSummary;
+      ({ averageGrade, maxTotalPossible } = calculationFunction(this.props.summaryData));
     } else {
-      ({ averageGrade, maxTotalPossible } = AverageGrade.calculateAverageGradePercent(this.props.data));
+      const calculationFunction = AverageGrade.calculateAverageGradePercent;
+      ({ averageGrade, maxTotalPossible } = calculationFunction(this.props.data));
     }
 
     return (
@@ -107,8 +109,8 @@ export default class AverageGrade extends React.Component {
 }
 
 AverageGrade.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-  summaryData: PropTypes.arrayOf(PropTypes.shape()),
+  data: PropTypes.shape(),
+  summaryData: PropTypes.shape(),
   className: PropTypes.string,
   height: PropTypes.number,
   isSummary: PropTypes.bool,
@@ -117,8 +119,8 @@ AverageGrade.propTypes = {
 
 AverageGrade.defaultProps = {
   height: null,
-  data: [],
-  summaryData: [],
+  data: {},
+  summaryData: {},
   className: '',
   isSummary: false,
 };

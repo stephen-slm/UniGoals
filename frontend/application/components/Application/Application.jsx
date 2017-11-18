@@ -43,7 +43,7 @@ export default class Application extends React.Component {
       removeUnitTable,
     } = this.props;
 
-    if (!_.isNil(profile.token)) {
+    if (!_.isNil(profile.uid)) {
       return (
         <Router>
           <div className={style.applicationStyle}>
@@ -104,6 +104,10 @@ Application.propTypes = {
   addUnitTable: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   profile: PropTypes.shape().isRequired,
-  notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
-  units: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  notifications: PropTypes.shape().isRequired,
+  units: PropTypes.shape(),
+};
+
+Application.defaultProps = {
+  units: {},
 };

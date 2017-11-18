@@ -60,9 +60,6 @@ export default class ProfileNavigation extends React.Component {
 
     this.showHelpBox();
 
-    const text = this.helpText.value;
-    const { name, email } = this.profile;
-
     // TODO: complete the backend so this works
     toaster.warning('Question service is currently in the works!');
   }
@@ -162,7 +159,7 @@ export default class ProfileNavigation extends React.Component {
 }
 
 ProfileNavigation.propTypes = {
-  notifications: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  notifications: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,

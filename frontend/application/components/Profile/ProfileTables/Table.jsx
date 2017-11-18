@@ -30,20 +30,21 @@ export default class Table extends React.Component {
       edit: editMode,
       isDeletingUnit: false,
       tableTitle: this.props.unit.title,
-      tableColor: (this.props.tableIndex % 2 === 1) ? '#621362' : '#009FE3',
+      tableColor: (this.props.tableNum % 2 === 0) ? '#621362' : '#009FE3',
     };
   }
 
   removeRowById(rowIndex) {
-    if (!_.isNil(rowIndex) && _.isInteger(rowIndex)) {
+    if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
       this.props.removeUnitRow(rowIndex, this.props.tableIndex);
       this.props.firebase.deleteUnitRowById(rowIndex, this.props.tableIndex);
     }
   }
 
-  insertRowBelow(rowIndex) {
-    this.props.insertUnitRow(rowIndex, this.props.tableIndex);
-    this.props.firebase.insertUnitRowById(rowIndex, this.props.tableIndex);
+  insertRowBelow() {
+    this.props.firebase.insertUnitRowById(this.props.tableIndex)
+      .then(key => this.props.insertUnitRow(key, this.props.tableIndex))
+      .catch(error => toaster.danger(error.message));
   }
 
   updateRowContent(change, rowIndex, columnIndex) {
@@ -58,13 +59,14 @@ export default class Table extends React.Component {
     }
   }
 
-  updateRowContentDatabase(change, rowIndex, columnIndex) {
+  updateRowCententDatabase(change, rowIndex, columnIndex) {
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
     }
 
     if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
-      this.props.firebase.updateUnitRowById(change, this.props.tableIndex, rowIndex, columnIndex);
+      const { tableIndex } = this.props;
+      this.props.firebase.updateUnitRowSection(change, tableIndex, rowIndex, columnIndex);
     }
   }
 
@@ -129,11 +131,11 @@ export default class Table extends React.Component {
     let totalGained = 0;
 
     const tables = _.map(this.props.unit.content, (unitContent, index) => {
-      if (!_.isNil(unitContent[1]) && !_.isNil(unitContent[2])) {
-        if (parseFloat(unitContent[2]) > 0) {
-          total += parseFloat(unitContent[1]) * parseFloat(unitContent[2]);
+      if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.archived)) {
+        if (parseFloat(unitContent.archived) > 0) {
+          total += parseFloat(unitContent.weighting) * parseFloat(unitContent.archived);
         }
-        totalGained += parseFloat(unitContent[1]);
+        totalGained += parseFloat(unitContent.weighting);
       }
 
       return (
@@ -142,37 +144,34 @@ export default class Table extends React.Component {
             <EditableText
               placeholder="Section"
               maxLength="12"
-              onChange={change => this.updateRowContent(change, index, 0)}
-              onConfirm={change => this.updateRowContentDatabase(change, index, 0)}
+              onChange={change => this.updateRowContent(change, index, 'name')}
+              onConfirm={change => this.updateRowCententDatabase(change, index, 'name')}
               disabled={!this.state.edit}
-              value={_.defaultTo(unitContent[0], '')}
+              value={_.defaultTo(unitContent.name, '')}
             />
           </td>
           <td>
             <EditableText
               placeholder="% Weighting"
               maxLength="4"
-              onChange={change => this.updateRowContent(change, index, 1)}
-              onConfirm={change => this.updateRowContentDatabase(change, index, 1)}
+              onChange={change => this.updateRowContent(change, index, 'weighting')}
+              onConfirm={change => this.updateRowCententDatabase(change, index, 'weighting')}
               disabled={!this.state.edit}
-              value={_.defaultTo(unitContent[1], '')}
+              value={_.defaultTo(unitContent.weighting, '')}
             />
           </td>
           <td>
             <EditableText
               placeholder="% Achieved"
               maxLength="4"
-              onChange={change => this.updateRowContent(change, index, 2)}
-              onConfirm={change => this.updateRowContentDatabase(change, index, 2)}
+              onChange={change => this.updateRowContent(change, index, 'archived')}
+              onConfirm={change => this.updateRowCententDatabase(change, index, 'archived')}
               disabled={!this.state.edit}
-              value={_.defaultTo(unitContent[2], '')}
+              value={_.defaultTo(unitContent.archived, '')}
             />
           </td>
           <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
             <span onClick={() => this.removeRowById(index)} className="pt-icon-standard pt-icon-cross" />
-          </td>
-          <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
-            <span onClick={() => this.insertRowBelow(index)} className="pt-icon-standard pt-icon-plus" />
           </td>
         </tr>
       );
@@ -239,9 +238,9 @@ export default class Table extends React.Component {
                 <th>% Achieved</th>
                 {this.editOrLockTable()}
                 <td style={exitVisibilityStyle}>
-                  <span onClick={() => this.insertRowBelow(-1)} className="pt-icon-standard pt-icon-plus" />
+                  <span onClick={this.insertRowBelow} className="pt-icon-standard pt-icon-plus" />
                 </td>
-              <th />
+                <th />
               </tr>
             </thead>
             <tbody>
@@ -270,18 +269,19 @@ Table.propTypes = {
   unit: PropTypes.shape({
     title: PropTypes.string,
     new: PropTypes.bool,
-    content: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+    content: PropTypes.shape(),
   }),
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
-  tableIndex: PropTypes.number.isRequired,
+  tableIndex: PropTypes.string.isRequired,
+  tableNum: PropTypes.number.isRequired,
 };
 
 Table.defaultProps = {
   unit: {
-    content: [],
+    content: {},
   },
 };

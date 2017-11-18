@@ -23,7 +23,7 @@ export default class Login extends React.Component {
           const exampleUser = snapshot.val();
           const { units } = exampleUser;
 
-          const profile = exampleUser;
+          const { profile } = exampleUser;
           profile.token = '';
           delete profile.units;
 
@@ -54,7 +54,7 @@ export default class Login extends React.Component {
     } else if (isNew) {
       return this.props.firebase.createNewUser(profile);
     }
-    return Promise.resolve(profile);
+    return this.props.firebase.getProfileById();
   }
 
   googleLogin() {
@@ -66,8 +66,9 @@ export default class Login extends React.Component {
     auth.signInWithPopup(provider)
       .then(result => this.generateAccountDetails(result))
       .then((result) => {
-        toaster.success(`Authenticated user ${result.email}`);
-        this.props.updateProfile(result);
+        const profile = result.val();
+        toaster.success(`Authenticated user ${profile.email}`);
+        this.props.updateProfile(profile);
         return this.props.firebase.getUnitsById();
       })
       .then(units => this.props.updateUnits(units.val()))
