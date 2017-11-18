@@ -26,7 +26,8 @@ export default class FirebaseWrapper {
   }
 
   getProfileById() {
-    return this.database.ref(`users/${this.getUid()}/profile`).once('value');
+    return this.database.ref(`users/${this.getUid()}/profile`).once('value')
+      .then(ref => ref.val());
   }
 
   updateUnitTitle(change, key) {
@@ -61,12 +62,31 @@ export default class FirebaseWrapper {
 
   insertUnitRowById(unitKey) {
     const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/units/${unitKey}/content`);
-    const insertingUnitRowKey = insertingUnitRowRef.push({ name: '', weighting: '0', archived: '0' });
+    const insertingUnitRowKey = insertingUnitRowRef.push({ name: 'Section', weighting: '0', archived: '0' });
     return Promise.resolve(insertingUnitRowKey.key);
   }
 
   deleteUnitById(unitIndex) {
     return this.database.ref(`users/${this.getUid()}/units/${unitIndex}`).remove();
+  }
+
+  createSampleUnitsForNewUser() {
+    const sampleOneRef = this.database.ref(`users/${this.getUid()}/units`);
+    const sampleOneKey = sampleOneRef.push({ title: 'Sample', content: {} });
+
+    this.insertUnitRowById(sampleOneKey.key)
+      .then((unitRow) => {
+        this.updateUnitRowSection('Coursework', sampleOneKey.key, unitRow, 'name')
+          .then(() => this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting'))
+          .then(() => this.updateUnitRowSection('71', sampleOneKey.key, unitRow, 'archived'));
+      });
+
+    this.insertUnitRowById(sampleOneKey.key)
+      .then((unitRow) => {
+        this.updateUnitRowSection('Exam', sampleOneKey.key, unitRow, 'name')
+          .then(() => this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting'))
+          .then(() => this.updateUnitRowSection('31', sampleOneKey.key, unitRow, 'archived'));
+      });
   }
 
   createNewUser(profile) {
@@ -80,19 +100,16 @@ export default class FirebaseWrapper {
       picture,
     } = profile;
 
-    this.database.ref(`users/${uid}`).set({
-      profile: {
-        uid,
-        given_name,
-        family_name,
-        email,
-        picture,
-        name,
-        hd,
-      },
-      units: { key1: { title: '', content: { key1: { name: '', weighting: '0', archived: '0' } } } },
-    });
-
-    return Promise.resolve(profile);
+    return this.database.ref(`users/${uid}/profile`).set({
+      uid,
+      given_name,
+      family_name,
+      email,
+      picture,
+      name,
+      hd,
+    })
+      .then(() => this.createSampleUnitsForNewUser())
+      .then(() => Promise.resolve(profile))
   }
 }

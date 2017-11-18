@@ -66,7 +66,7 @@ export default class Login extends React.Component {
     auth.signInWithPopup(provider)
       .then(result => this.generateAccountDetails(result))
       .then((result) => {
-        const profile = result.val();
+        const profile = result;
         toaster.success(`Authenticated user ${profile.email}`);
         this.props.updateProfile(profile);
         return this.props.firebase.getUnitsById();
@@ -93,7 +93,9 @@ export default class Login extends React.Component {
     return (
       <div className={style.loginPage}>
         <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
-          <button className={style.googleButton} onClick={this.googleLogin}>Lets Get Started</button>
+          <button className={style.googleButton} onClick={this.googleLogin}>
+            Lets Get Started
+          </button>
         </div>
       </div>
     );

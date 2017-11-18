@@ -22,7 +22,7 @@ export default class ProfileUnitBarChart extends React.Component {
    *
    * 0: Section Name, Defaulted to 'Section'
    * 1: Weighting: Defaulted to 0
-   * 2: Achieved: Defaulted to 0
+   * 2: Archived: Defaulted to 0
    */
   constructor(props) {
     super(props);

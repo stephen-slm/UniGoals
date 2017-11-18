@@ -157,17 +157,17 @@ export default class Table extends React.Component {
               onChange={change => this.updateRowContent(change, index, 'weighting')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'weighting')}
               disabled={!this.state.edit}
-              value={_.defaultTo(unitContent.weighting, '')}
+              value={_.defaultTo(unitContent.weighting, '0')}
             />
           </td>
           <td>
             <EditableText
-              placeholder="% Achieved"
+              placeholder="% Archived"
               maxLength="4"
               onChange={change => this.updateRowContent(change, index, 'archived')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'archived')}
               disabled={!this.state.edit}
-              value={_.defaultTo(unitContent.archived, '')}
+              value={_.defaultTo(unitContent.archived, '0')}
             />
           </td>
           <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
@@ -235,7 +235,7 @@ export default class Table extends React.Component {
               <tr>
                 <th>Name</th>
                 <th>% Weighting</th>
-                <th>% Achieved</th>
+                <th>% Archived</th>
                 {this.editOrLockTable()}
                 <td style={exitVisibilityStyle}>
                   <span onClick={this.insertRowBelow} className="pt-icon-standard pt-icon-plus" />
