@@ -11,7 +11,12 @@ export default class AverageGrade extends React.Component {
    * @returns {number} The average grade
    */
   static calculateAverageGradePercent(data) {
-    if (_.isNil(data.archived)) {
+    if (_.size(data) === 0) {
+      return {
+        averageGrade: 0,
+        maxTotalPossible: 0,
+      };
+    } else if (_.size(data[Object.keys(data)[0]]) === 0) {
       return {
         averageGrade: 0,
         maxTotalPossible: 0,
@@ -40,7 +45,12 @@ export default class AverageGrade extends React.Component {
   }
 
   static calculateAverageGradePercentSummary(data) {
-    if (_.isNil(data)) {
+    if (_.size(data) === 0) {
+      return {
+        averageGrade: 0,
+        maxTotalPossible: 0,
+      };
+    } else if (_.size(data[Object.keys(data)[0]]) === 0) {
       return {
         averageGrade: 0,
         maxTotalPossible: 0,

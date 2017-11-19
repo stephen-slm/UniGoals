@@ -71,7 +71,12 @@ export default class FirebaseWrapper {
 
   sendHelpMessage(message, name, email) {
     const insertingHelpMessage = this.database.ref('help');
-    insertingHelpMessage.push({ message, name, email, timestamp: Date.now() });
+    insertingHelpMessage.push({
+      message,
+      name,
+      email,
+      timestamp: Date.now(),
+    });
     return Promise.resolve(true);
   }
 
