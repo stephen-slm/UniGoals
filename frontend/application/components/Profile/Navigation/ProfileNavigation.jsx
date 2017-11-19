@@ -59,14 +59,14 @@ export default class ProfileNavigation extends React.Component {
     e.preventDefault();
 
     const message = this.helpText.value;
-    const name = this.props.profile.name;
-    const email = this.props.profile.email;
+    const { name, email } = this.props.profile;
+    const givenName = this.props.profile.given_name;
 
     this.showHelpBox();
 
     this.props.firebase.sendHelpMessage(message, name, email)
-      .then(() => toaster.warning('Question / help submitted!'))
-      .catch((error) => toaster.danger(error.message));
+      .then(() => toaster.success(`Thank you ${givenName} for submitting your help and or question`))
+      .catch(error => toaster.danger(error.message));
   }
 
   buildNotifications() {
@@ -175,6 +175,8 @@ ProfileNavigation.propTypes = {
   firebase: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
+    name: PropTypes.string,
     email: PropTypes.string,
+    given_name: PropTypes.string,
   }).isRequired,
 };
