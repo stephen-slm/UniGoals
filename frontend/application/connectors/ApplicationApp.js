@@ -1,8 +1,6 @@
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actionCreators from '../actions/actionCreators';
-
-
 // import the main front
 import Application from '../components/Application/Application';
 

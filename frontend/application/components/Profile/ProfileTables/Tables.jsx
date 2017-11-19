@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { Button, Position }  from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import toaster from '../../../utils/toaster';
 
 import Table from './Table';
@@ -53,10 +53,10 @@ export default class Tables extends React.Component {
 
   render() {
     return (
-        <div className={`pt-card pt-elevation-3 ${style.tablesWrapper}`}>
-          <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.addUnitTable} />
-          {this.createTables()}
-        </div>
+      <div className={`pt-card pt-elevation-3 ${style.tablesWrapper}`}>
+        <Button className="pt-button pt-icon-plus pt-minimal" text="Add Unit" onClick={this.addUnitTable} />
+        {this.createTables()}
+      </div>
     );
   }
 }
@@ -64,7 +64,6 @@ export default class Tables extends React.Component {
 Tables.propTypes = {
   firebase: PropTypes.shape().isRequired,
   units: PropTypes.shape().isRequired,
-  updateUnits: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,

@@ -171,7 +171,7 @@ export default class Table extends React.Component {
             />
           </td>
           <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
-            <span onClick={() => this.removeRowById(index)} className="pt-icon-standard pt-icon-cross" />
+            <Button onClick={() => this.removeRowById(index)} className="pt-button pt-minimal pt-icon-cross" />
           </td>
         </tr>
       );
@@ -238,7 +238,7 @@ export default class Table extends React.Component {
                 <th>% Archived</th>
                 {this.editOrLockTable()}
                 <td style={exitVisibilityStyle}>
-                  <span onClick={this.insertRowBelow} className="pt-icon-standard pt-icon-plus" />
+                  <Button onClick={this.insertRowBelow} className="pt-button pt-minimal pt-icon-plus" />
                 </td>
                 <th />
               </tr>
@@ -265,11 +265,17 @@ export default class Table extends React.Component {
 
 
 Table.propTypes = {
-  firebase: PropTypes.shape().isRequired,
+  firebase: PropTypes.shape({
+    deleteUnitById: PropTypes.func,
+    updateUnitTitle: PropTypes.func,
+    deleteUnitRowById: PropTypes.func,
+    updateUnitRowSection: PropTypes.func,
+    insertUnitRowById: PropTypes.func,
+  }).isRequired,
   unit: PropTypes.shape({
     title: PropTypes.string,
     new: PropTypes.bool,
-    content: PropTypes.shape(),
+    content: PropTypes.shape({}),
   }),
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,

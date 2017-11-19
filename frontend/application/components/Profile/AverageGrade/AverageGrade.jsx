@@ -92,23 +92,29 @@ export default class AverageGrade extends React.Component {
     let maxTotalPossible;
 
     if (this.state.isSummary) {
-      ({ averageGrade, maxTotalPossible } = AverageGrade.calculateAverageGradePercentSummary(this.props.summaryData));
+      ({ averageGrade, maxTotalPossible } =
+        AverageGrade.calculateAverageGradePercentSummary(this.props.summaryData));
     } else {
-      ({ averageGrade, maxTotalPossible } = AverageGrade.calculateAverageGradePercent(this.props.data));
+      ({ averageGrade, maxTotalPossible } =
+        AverageGrade.calculateAverageGradePercent(this.props.data));
     }
 
     return (
       <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: 120, height: this.props.height }}>
-        <div style={{ margin: '60% 23%' }}><Tooltip content="Average Grade" position={Position.TOP}>{`${averageGrade}%`}</Tooltip></div>
-        <div style={{ margin: '85% 23%' }}><Tooltip content="Max Grade" position={Position.BOTTOM}>{`${maxTotalPossible}%`}</Tooltip></div>
+        <div style={{ margin: '60% 23%' }}>
+          <Tooltip content="Average Grade" position={Position.TOP}>{`${averageGrade}%`}</Tooltip>
+        </div>
+        <div style={{ margin: '85% 23%' }}>
+          <Tooltip content="Max Grade" position={Position.BOTTOM}>{`${maxTotalPossible}%`}</Tooltip>
+        </div>
       </div>
     );
   }
 }
 
 AverageGrade.propTypes = {
-  data: PropTypes.shape(),
-  summaryData: PropTypes.shape(),
+  data: PropTypes.shape({}),
+  summaryData: PropTypes.shape({}),
   className: PropTypes.string,
   height: PropTypes.number,
   isSummary: PropTypes.bool,

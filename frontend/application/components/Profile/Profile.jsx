@@ -41,11 +41,11 @@ export default class Profile extends React.Component {
         <div className="pt-dialog-body">
           Thank you for  using unistats-alpha! If you have any problems please email:
           UP840877@myport.ac.uk or click the little help box in the top right hand corner!
-          <br/>
-          <br/>
+          <br />
+          <br />
           Thanks,
-          <br/>
-          <br/>
+          <br />
+          <br />
           thinknet.xyz
         </div>
       </Dialog>

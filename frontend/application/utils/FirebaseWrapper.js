@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import * as firebase from 'firebase';
 
 export default class FirebaseWrapper {
@@ -110,6 +109,6 @@ export default class FirebaseWrapper {
       hd,
     })
       .then(() => this.createSampleUnitsForNewUser())
-      .then(() => Promise.resolve(profile))
+      .then(() => Promise.resolve(profile));
   }
 }

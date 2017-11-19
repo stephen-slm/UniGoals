@@ -17,6 +17,7 @@ export default class ProfileUnitBarChart extends React.Component {
     }
     return 20 * dataLen;
   }
+
   /**
    * The data expected is an array of a object with three elements
    *
@@ -36,7 +37,7 @@ export default class ProfileUnitBarChart extends React.Component {
       height: this.props.height,
       lineOnly: this.props.lineOnly,
       isSummary: this.props.isSummary,
-      displayText: this.props.displayText
+      displayText: this.props.displayText,
     };
 
     this.content = this.generateBarData();
@@ -95,7 +96,10 @@ export default class ProfileUnitBarChart extends React.Component {
     const width = ProfileUnitBarChart.calculateWidth(this.props.width, _.size(this.props.data));
 
     return (
-      <div className={`pt-card pt-elevation-1 ${this.state.className}`} style={{ maxWidth: width, height: this.state.height }}>
+      <div
+        className={`pt-card pt-elevation-1 ${this.state.className}`}
+        style={{ maxWidth: width, height: this.state.height }}
+      >
         <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={width} height={200} data={data}>
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="name">
@@ -103,7 +107,7 @@ export default class ProfileUnitBarChart extends React.Component {
           </XAxis>
           <YAxis />
           <Tooltip />
-          {(!this.state.lineOnly) ? (<Bar dataKey="value" fill={this.state.color} />) : null }
+          {(!this.state.lineOnly) ? (<Bar dataKey="value" fill={this.state.color} />) : null}
           <Line type="monotone" dataKey="value" stroke="#ff7300" />
         </ComposedChart>
       </div>
@@ -113,7 +117,7 @@ export default class ProfileUnitBarChart extends React.Component {
 
 ProfileUnitBarChart.propTypes = {
   width: PropTypes.number,
-  data: PropTypes.shape(),
+  data: PropTypes.shape({}),
   height: PropTypes.string,
   className: PropTypes.string,
   color: PropTypes.string,
@@ -123,12 +127,12 @@ ProfileUnitBarChart.propTypes = {
 };
 
 ProfileUnitBarChart.defaultProps = {
-  width: undefined,
+  width: null,
   height: 'auto',
   className: '',
   color: '#009FE3',
   lineOnly: false,
   isSummary: false,
-  data: null,
+  data: {},
   displayText: 'Unit Process',
 };

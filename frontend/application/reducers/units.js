@@ -86,7 +86,9 @@ export default function units(state = {}, action) {
       }
 
       const updateUnitContent = Object.assign({}, state);
-      updateUnitContent[updateUnitTableIndex].content[updateUnitRowIndex][updateUnitColumnIndex] = updateUnitChange;
+
+      updateUnitContent[updateUnitTableIndex]
+        .content[updateUnitRowIndex][updateUnitColumnIndex] = updateUnitChange;
       return updateUnitContent;
     }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { Popover, Position, PopoverInteractionKind, Dialog, Button, Intent } from '@blueprintjs/core';
+import { Popover, Position, PopoverInteractionKind, Dialog, Button } from '@blueprintjs/core';
 
 import Notification from '../Notifications/Notification';
 import toaster from '../../../utils/toaster';
@@ -69,8 +69,7 @@ export default class ProfileNavigation extends React.Component {
 
     if (!_.isNil(this.props.notifications) && !_.isNil(this.props.notifications[0])) {
       notifications = _.map(this.props.notifications, (notification, index) =>
-        (<Notification key={index} title={notification.title} content={notification.message} />),
-      );
+        (<Notification key={index} title={notification.title} content={notification.message} />));
     }
 
     return (
@@ -143,7 +142,7 @@ export default class ProfileNavigation extends React.Component {
       <div>
         <nav className="pt-navbar">
           <div className="pt-navbar-group pt-align-left">
-            <div className="pt-navbar-heading">Uni Stats, Welcome {this.profile.name} - {this.profile.email.split("@")[0].toUpperCase()}</div>
+            <div className="pt-navbar-heading">Uni Stats, Welcome {this.profile.name} - {this.profile.email.split('@')[0].toUpperCase()}</div>
           </div>
           <div className="pt-navbar-group pt-align-right">
             <button className="pt-button pt-minimal pt-icon-user" />

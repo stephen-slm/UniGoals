@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { Spinner, Intent, Classes } from '@blueprintjs/core';
 import _ from 'lodash';
 
-import * as Promise from 'bluebird';
-
 import toaster from '../../utils/toaster';
 import style from './login.less';
 
@@ -44,7 +42,9 @@ export default class Login extends React.Component {
 
     profile.token = result.credential.accessToken;
     profile.uid = result.user.uid;
-    profile.university_id = profile.email.split('@')[0];
+
+    const { email } = profile.email;
+    profile.university_id = email.split('@')[0];
 
     if (profile.hd !== 'myport.ac.uk') {
       throw new Error('Sorry, currently only University of Portsmouth students allowed');

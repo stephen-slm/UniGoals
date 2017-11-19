@@ -2,6 +2,7 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
+import _ from 'lodash';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import * as routePaths from './routePaths';
@@ -67,7 +68,10 @@ export default class Application extends React.Component {
             />
             <Route
               path={this.routePaths.signOut}
-              render={history => <SignOut removeProfile={removeProfile} history={history.history} />}
+              render={history => (<SignOut
+                removeProfile={removeProfile}
+                history={history.history}
+              />)}
             />
           </div>
         </Router>
@@ -105,7 +109,7 @@ Application.propTypes = {
   removeUnitTable: PropTypes.func.isRequired,
   profile: PropTypes.shape().isRequired,
   notifications: PropTypes.shape().isRequired,
-  units: PropTypes.shape(),
+  units: PropTypes.shape({}),
 };
 
 Application.defaultProps = {
