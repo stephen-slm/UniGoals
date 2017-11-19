@@ -43,8 +43,7 @@ export default class Login extends React.Component {
     profile.token = result.credential.accessToken;
     profile.uid = result.user.uid;
 
-    const { email } = profile.email;
-    profile.university_id = email.split('@')[0];
+    profile.university_id = profile.email.split('@')[0];
 
     if (profile.hd !== 'myport.ac.uk') {
       throw new Error('Sorry, currently only University of Portsmouth students allowed');

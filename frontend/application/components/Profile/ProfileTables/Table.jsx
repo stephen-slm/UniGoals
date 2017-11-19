@@ -14,9 +14,7 @@ export default class Table extends React.Component {
   constructor(props) {
     super(props);
 
-    this.showEditButtons = this.showEditButtons.bind(this);
     this.showDeleteUnitBox = this.showDeleteUnitBox.bind(this);
-    this.editOrLockTable = this.editOrLockTable.bind(this);
     this.insertRowBelow = this.insertRowBelow.bind(this);
     this.updateRowContent = this.updateRowContent.bind(this);
     this.deleteUnitTable = this.deleteUnitTable.bind(this);
@@ -24,13 +22,20 @@ export default class Table extends React.Component {
     this.generateTableContents = this.generateTableContents.bind(this);
     this.generateTableTopContent = this.generateTableTopContent.bind(this);
 
-    const editMode = (!_.isNil(this.props.unit.new));
+    this.mouseOverEdit = this.mouseOverEdit.bind(this);
+    this.moveOutEdit = this.moveOutEdit.bind(this);
+    this.moveOverDeleteUnit = this.moveOverDeleteUnit.bind(this);
+    this.moveOverhideDeleteUnit = this.moveOverhideDeleteUnit.bind(this);
+    this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
+    this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
 
     this.state = {
-      edit: editMode,
       isDeletingUnit: false,
       tableTitle: this.props.unit.title,
       tableColor: (this.props.tableNum % 2 === 0) ? '#621362' : '#009FE3',
+      editing: false,
+      showDeleteUnit: false,
+      showInsertRow: false,
     };
   }
 
@@ -94,9 +99,39 @@ export default class Table extends React.Component {
     this.props.removeUnitTable(unitTableIndex);
   }
 
-  showEditButtons() {
+  mouseOverEdit() {
     this.setState({
-      edit: !this.state.edit,
+      editing: true,
+    });
+  }
+
+  moveOutEdit() {
+    this.setState({
+      editing: false,
+    });
+  }
+
+  moveOverDeleteUnit() {
+    this.setState({
+      showDeleteUnit: true,
+    });
+  }
+
+  moveOverhideDeleteUnit() {
+    this.setState({
+      showDeleteUnit: false,
+    });
+  }
+
+  moveOverShowInsert() {
+    this.setState({
+      showInsertRow: true,
+    });
+  }
+
+  moveHideShowInsert() {
+    this.setState({
+      showInsertRow: false,
     });
   }
 
@@ -107,46 +142,27 @@ export default class Table extends React.Component {
     });
   }
 
-  editOrLockTable() {
-    if (this.state.edit) {
-      return (
-        <td>
-          <span tabIndex={0} role="button" onKeyDown={this.showEditButtons} onClick={this.showEditButtons}>
-            <span className="pt-icon-standard pt-icon-lock" />
-          </span>
-        </td>
-      );
-    }
-    return (
-      <td>
-        <span tabIndex={0} role="button" onKeyDown={this.showEditButtons} onClick={this.showEditButtons}>
-          <span className="pt-icon-standard pt-icon-build" />
-        </span>
-      </td>
-    );
-  }
-
   generateTableContents() {
-    let total = 0;
-    let totalGained = 0;
+    let totalArchived = 0;
+    let totalWeighting = 0;
 
     const tables = _.map(this.props.unit.content, (unitContent, index) => {
-      if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.archived)) {
+      if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.archived) && (unitContent.weighting !== '' && unitContent.archived !== '')) {
         if (parseFloat(unitContent.archived) > 0) {
-          total += parseFloat(unitContent.weighting) * parseFloat(unitContent.archived);
+          totalArchived += parseFloat(unitContent.weighting) * parseFloat(unitContent.archived);
+        } else if (!_.isNil(unitContent.weighting) && unitContent.weighting !== '') {
+          totalWeighting += parseFloat(unitContent.weighting);
         }
-        totalGained += parseFloat(unitContent.weighting);
       }
 
       return (
-        <tr key={index}>
+        <tr key={index} onMouseEnter={this.mouseOverEdit} onMouseLeave={this.moveOutEdit}>
           <td>
             <EditableText
               placeholder="Section"
               maxLength="12"
               onChange={change => this.updateRowContent(change, index, 'name')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'name')}
-              disabled={!this.state.edit}
               value={_.defaultTo(unitContent.name, '')}
             />
           </td>
@@ -156,7 +172,6 @@ export default class Table extends React.Component {
               maxLength="4"
               onChange={change => this.updateRowContent(change, index, 'weighting')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'weighting')}
-              disabled={!this.state.edit}
               value={_.defaultTo(unitContent.weighting, '0')}
             />
           </td>
@@ -166,11 +181,10 @@ export default class Table extends React.Component {
               maxLength="4"
               onChange={change => this.updateRowContent(change, index, 'archived')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'archived')}
-              disabled={!this.state.edit}
               value={_.defaultTo(unitContent.archived, '0')}
             />
           </td>
-          <td style={{ visibility: (this.state.edit) ? 'visible' : 'hidden' }}>
+          <td style={{ visibility: (this.state.editing) ? 'visible' : 'hidden' }}>
             <Button onClick={() => this.removeRowById(index)} className="pt-button pt-minimal pt-icon-cross" />
           </td>
         </tr>
@@ -180,8 +194,8 @@ export default class Table extends React.Component {
     tables.push((
       <tr key={tables.length}>
         <td>Total</td>
-        <td>{parseInt(totalGained, 10)}</td>
-        <td>{parseFloat(total / 100).toFixed(2)}</td>
+        <td>{parseInt(totalWeighting, 10)}</td>
+        <td>{parseFloat(totalArchived / 100).toFixed(2)}</td>
       </tr>
     ));
 
@@ -191,14 +205,13 @@ export default class Table extends React.Component {
   generateTableTopContent() {
     const deleteUnitConfirmButtonText = (this.state.tableTitle === null) ? '' : `${this.state.tableTitle}`;
     const showDeleteUnitButton = () => { this.showDeleteUnitBox(this.props.unit.title); };
-    const exitVisibilityStyle = { visibility: (this.state.edit) ? 'visible' : 'hidden' };
+    const exitVisibilityStyle = { visibility: (this.state.showDeleteUnit) ? 'visible' : 'hidden' };
 
     return (
-      <h3>
+      <h3 onMouseEnter={this.moveOverDeleteUnit} onMouseLeave={this.moveOverhideDeleteUnit}>
         <EditableText
           placeholder="Unit title"
           maxLength="32"
-          disabled={!this.state.edit}
           onChange={change => this.updateUnitTitle(change)}
           onConfirm={change => this.updateUnitTitleDatabase(change)}
           value={this.props.unit.title}
@@ -224,10 +237,14 @@ export default class Table extends React.Component {
     const topTableContent = this.generateTableTopContent();
     const tableContent = this.generateTableContents();
 
-    const exitVisibilityStyle = { visibility: (this.state.edit) ? 'visible' : 'hidden' };
+    const exitVisibilityStyle = { visibility: (this.state.showInsertRow) ? 'visible' : 'hidden' };
 
     return (
-      <div className={style.tableWrapper}>
+      <div
+        className={style.tableWrapper}
+        onMouseEnter={this.moveOverShowInsert}
+        onMouseLeave={this.moveHideShowInsert}
+      >
         <div className={style.unitTable}>
           {topTableContent}
           <table className={`pt-table pt-interactive pt-condensed ${style.tablesCoreTable}`}>
@@ -236,7 +253,6 @@ export default class Table extends React.Component {
                 <th>Name</th>
                 <th>% Weighting</th>
                 <th>% Archived</th>
-                {this.editOrLockTable()}
                 <td style={exitVisibilityStyle}>
                   <Button onClick={this.insertRowBelow} className="pt-button pt-minimal pt-icon-plus" />
                 </td>
