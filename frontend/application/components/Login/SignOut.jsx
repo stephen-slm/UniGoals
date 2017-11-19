@@ -7,6 +7,7 @@ export default class SignOut extends React.Component {
     this.props.history.push('/');
     this.props.removeProfile();
     window.location.reload();
+    // TODO: sign out of google using firebase
   }
 
   render() {
