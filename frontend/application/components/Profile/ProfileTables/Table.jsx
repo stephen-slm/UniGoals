@@ -150,7 +150,8 @@ export default class Table extends React.Component {
       if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.archived) && (unitContent.weighting !== '' && unitContent.archived !== '')) {
         if (parseFloat(unitContent.archived) > 0) {
           totalArchived += parseFloat(unitContent.weighting) * parseFloat(unitContent.archived);
-        } else if (!_.isNil(unitContent.weighting) && unitContent.weighting !== '') {
+        }
+        if (!_.isNil(unitContent.weighting) && unitContent.weighting !== '') {
           totalWeighting += parseFloat(unitContent.weighting);
         }
       }
