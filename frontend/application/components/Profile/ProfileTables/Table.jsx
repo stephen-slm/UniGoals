@@ -240,12 +240,12 @@ export default class Table extends React.Component {
     const exitVisibilityStyle = { visibility: (this.state.showInsertRow) ? 'visible' : 'hidden' };
 
     return (
-      <div
-        className={style.tableWrapper}
-        onMouseEnter={this.moveOverShowInsert}
-        onMouseLeave={this.moveHideShowInsert}
-      >
-        <div className={style.unitTable}>
+      <div className={style.tableWrapper}>
+        <div
+          className={style.unitTable}
+          onMouseEnter={this.moveOverShowInsert}
+          onMouseLeave={this.moveHideShowInsert}
+        >
           {topTableContent}
           <table className={`pt-table pt-interactive pt-condensed ${style.tablesCoreTable}`}>
             <thead>
