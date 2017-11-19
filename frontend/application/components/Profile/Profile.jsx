@@ -60,6 +60,7 @@ export default class Profile extends React.Component {
           history={this.props.history}
           profile={this.profile}
           notifications={this.props.notifications}
+          firebase={this.props.firebase}
         />
         <ProfileSummary
           units={this.props.units}

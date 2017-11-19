@@ -69,6 +69,12 @@ export default class FirebaseWrapper {
     return this.database.ref(`users/${this.getUid()}/units/${unitIndex}`).remove();
   }
 
+  sendHelpMessage(message, name, email) {
+    const insertingHelpMessage = this.database.ref('help');
+    insertingHelpMessage.push({ message, name, email, timestamp: Date.now() });
+    return Promise.resolve(true);
+  }
+
   createSampleUnitsForNewUser() {
     const sampleOneRef = this.database.ref(`users/${this.getUid()}/units`);
     const sampleOneKey = sampleOneRef.push({ title: 'Sample', content: {} });

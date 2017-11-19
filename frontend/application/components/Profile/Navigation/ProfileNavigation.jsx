@@ -58,10 +58,15 @@ export default class ProfileNavigation extends React.Component {
   submitHelpMessage(e) {
     e.preventDefault();
 
+    const message = this.helpText.value;
+    const name = this.props.profile.name;
+    const email = this.props.profile.email;
+
     this.showHelpBox();
 
-    // TODO: complete the backend so this works
-    toaster.warning('Question service is currently in the works!');
+    this.props.firebase.sendHelpMessage(message, name, email)
+      .then(() => toaster.warning('Question / help submitted!'))
+      .catch((error) => toaster.danger(error.message));
   }
 
   buildNotifications() {
@@ -92,7 +97,15 @@ export default class ProfileNavigation extends React.Component {
           title="Send Question / feedback"
         >
           <div className="pt-dialog-body">
-            <textarea ref={(ref) => { this.helpText = ref; }} rows={10} cols={70} className="pt-input .pt-fill" dir="auto" defaultValue="If you have any problems or help please ask below and I will email you back!" />
+            <textarea
+              ref={(ref) => { this.helpText = ref; }}
+              rows={10}
+              cols={70}
+              maxLength={500}
+              className="pt-input .pt-fill"
+              dir="auto"
+              placeholder="If you have any problems or help please ask below and I will email you back!"
+            />
           </div>
           <div className="pt-dialog-footer">
             <div className="pt-dialog-footer-actions">
@@ -159,6 +172,7 @@ export default class ProfileNavigation extends React.Component {
 
 ProfileNavigation.propTypes = {
   notifications: PropTypes.shape().isRequired,
+  firebase: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
