@@ -129,6 +129,6 @@ ProfileUnitBarChart.defaultProps = {
   color: '#009FE3',
   lineOnly: false,
   isSummary: false,
-  data: {},
+  data: null,
   displayText: 'Unit Process',
 };

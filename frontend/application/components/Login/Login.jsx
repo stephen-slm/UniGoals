@@ -24,7 +24,6 @@ export default class Login extends React.Component {
           const { units } = exampleUser;
 
           const { profile } = exampleUser;
-          profile.token = '';
           delete profile.units;
 
           this.props.updateProfile(profile);

@@ -92,11 +92,9 @@ export default class AverageGrade extends React.Component {
     let maxTotalPossible;
 
     if (this.state.isSummary) {
-      const calculationFunction = AverageGrade.calculateAverageGradePercentSummary;
-      ({ averageGrade, maxTotalPossible } = calculationFunction(this.props.summaryData));
+      ({ averageGrade, maxTotalPossible } = AverageGrade.calculateAverageGradePercentSummary(this.props.summaryData));
     } else {
-      const calculationFunction = AverageGrade.calculateAverageGradePercent;
-      ({ averageGrade, maxTotalPossible } = calculationFunction(this.props.data));
+      ({ averageGrade, maxTotalPossible } = AverageGrade.calculateAverageGradePercent(this.props.data));
     }
 
     return (
@@ -118,9 +116,9 @@ AverageGrade.propTypes = {
 
 
 AverageGrade.defaultProps = {
+  data: null,
   height: null,
-  data: {},
-  summaryData: {},
+  summaryData: null,
   className: '',
   isSummary: false,
 };

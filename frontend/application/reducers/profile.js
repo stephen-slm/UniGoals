@@ -8,7 +8,7 @@ export default function profile(state = { email: null, isNew: true }, action) {
       if (!_.isNil(action.profile) && !_.isNil(action.profile.uid)) {
         return Object.assign({ isNew: true }, action.profile);
       }
-      return action.state;
+      return state;
     }
     case actionTypes.REMOVE_PROFILE: {
       return {
