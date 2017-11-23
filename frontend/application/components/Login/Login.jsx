@@ -10,24 +10,17 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
 
-    this.googleLogin = this.googleLogin.bind(this);
+    this.authenticateExamplesUser = this.authenticateExamplesUser.bind(this);
     this.loadingBox = this.loadingBox.bind(this);
+
+    this.authenticateUser = this.authenticateUser.bind(this);
+    this.getNotifications = this.getNotifications.bind(this);
+    this.getUnits = this.getUnits.bind(this);
 
     const { search } = this.props.history.location;
 
     if (search === '?type=example') {
-      this.props.firebase.getExampleUser()
-        .then((snapshot) => {
-          const exampleUser = snapshot.val();
-          const { units } = exampleUser;
-
-          const { profile } = exampleUser;
-          delete profile.units;
-
-          this.props.updateProfile(profile);
-          this.props.updateUnits(units);
-        })
-        .catch(error => toaster.danger(error.message));
+      this.authenticateExamplesUser();
     }
 
     this.state = {
@@ -35,45 +28,97 @@ export default class Login extends React.Component {
     };
   }
 
-  generateAccountDetails(result) {
-    const profilePickList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
-    const profile = _.pick(result.additionalUserInfo.profile, profilePickList);
-    const isNew = result.additionalUserInfo.isNewUser;
+  /**
+   * Takes the login result and generates the profile for the account, creating the users account
+   * if they don't already exist
+   * @param loginResult The google login result
+   * @returns {Promise.<*>}
+   */
+  getAccountDetails(loginResult) {
+    const selectionList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
 
-    profile.token = result.credential.accessToken;
-    profile.uid = result.user.uid;
+    const profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
+    const isNew = loginResult.additionalUserInfo.isNewUser;
 
+    profile.token = loginResult.credential.accessToken;
+    profile.uid = loginResult.user.uid;
     profile.university_id = profile.email.split('@')[0];
+    profile.hd = (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd;
 
-    if (profile.hd !== 'myport.ac.uk') {
-      throw new Error('Sorry, currently only University of Portsmouth students allowed');
-    } else if (!profile.verified_email) {
-      throw new Error(`Account ${profile.mail} has not verified there email.`);
-    } else if (isNew) {
-      return this.props.firebase.createNewUser(profile);
+    if (isNew) {
+      this.props.firebase.createNewUser(profile)
+        .then(() => {
+          this.props.updateProfile(profile);
+          return Promise.resolve();
+        })
+        .catch(error => Promise.reject(error));
     }
-    return this.props.firebase.getProfileById();
+
+    this.props.firebase.getProfileById()
+      .then((gotProfile) => {
+        this.props.updateProfile(gotProfile);
+        return Promise.resolve();
+      })
+      .catch(error => Promise.reject(error));
   }
 
-  googleLogin() {
-    this.setState({ loading: true }); // TODO: move this into the backend check when it is workings
+  /**
+   * gets the authenticating users units within a promise wrapper, updating the proops
+   */
+  getUnits() {
+    this.props.firebase.getUnitsById()
+      .then((units) => {
+        this.props.updateUnits(units.val());
+        return Promise.resolve();
+      })
+      .catch(error => Promise.reject(error));
+  }
 
+  /**
+   * gets the logging in users notifications
+   */
+  getNotifications() {
+    this.props.firebase.getUserNotifications()
+      .then((notifications) => {
+        this.props.updateNotifications(notifications.val());
+        return Promise.resolve();
+      })
+      .catch(error => Promise.reject(error));
+  }
+
+  /**
+   * logs in with the example user accouont
+   */
+  authenticateExamplesUser() {
+    this.props.firebase.getExampleUser()
+      .then((snapshot) => {
+        const exampleUser = snapshot.val();
+        const { units } = exampleUser;
+
+        const { profile, notifications } = exampleUser;
+        profile.exampleUser = true;
+
+        delete profile.units;
+
+        this.props.updateNotifications(notifications);
+        this.props.updateProfile(profile);
+        this.props.updateUnits(units);
+      })
+      .catch(error => toaster.danger(error.message));
+  }
+
+  /**
+   * Authenticates a standard user
+   */
+  authenticateUser() {
     const auth = this.props.firebase.authentication;
     const { provider } = this.props.firebase;
 
     auth.signInWithPopup(provider)
-      .then(result => this.generateAccountDetails(result))
-      .then((result) => {
-        const profile = result;
-        toaster.success(`Authenticated user ${profile.email}`);
-        this.props.updateProfile(profile);
-        return this.props.firebase.getUnitsById();
-      })
-      .then(units => this.props.updateUnits(units.val()))
-      .catch((error) => {
-        this.setState({ loading: false });
-        toaster.danger(error.message);
-      });
+      .then(result => this.getAccountDetails(result))
+      .then(() => this.getUnits())
+      .then(() => this.getNotifications())
+      .catch(error => toaster.danger(error.message));
   }
 
   loadingBox() {
@@ -91,7 +136,7 @@ export default class Login extends React.Component {
     return (
       <div className={style.loginPage}>
         <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
-          <button className={style.googleButton} onClick={this.googleLogin}>
+          <button className={style.googleButton} onClick={this.authenticateUser}>
             Lets Get Started
           </button>
         </div>
@@ -108,6 +153,7 @@ export default class Login extends React.Component {
 }
 
 Login.propTypes = {
+  updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,
   firebase: PropTypes.shape().isRequired,

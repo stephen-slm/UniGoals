@@ -42,7 +42,10 @@ export default class Table extends React.Component {
   removeRowById(rowIndex) {
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
       this.props.removeUnitRow(rowIndex, this.props.tableIndex);
-      this.props.firebase.deleteUnitRowById(rowIndex, this.props.tableIndex);
+
+      if (_.isNil(this.props.exampleUser)) {
+        this.props.firebase.deleteUnitRowById(rowIndex, this.props.tableIndex);
+      }
     }
   }
 
@@ -301,10 +304,12 @@ Table.propTypes = {
   removeUnitTable: PropTypes.func.isRequired,
   tableIndex: PropTypes.string.isRequired,
   tableNum: PropTypes.number.isRequired,
+  exampleUser: PropTypes.bool,
 };
 
 Table.defaultProps = {
   unit: {
     content: {},
   },
+  exampleUser: null,
 };

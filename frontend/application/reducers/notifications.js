@@ -7,7 +7,7 @@ export default function notifications(state = {}, action) {
     case actionTypes.UPDATE_NOTIFICATIONS: {
       const newNotifications = action.notifications;
 
-      if (_.isArray(newNotifications) && !_.isNil(newNotifications[0])) {
+      if (_.isObject(newNotifications) && !_.isNil(newNotifications)) {
         return newNotifications;
       }
 

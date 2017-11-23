@@ -42,6 +42,7 @@ export default class Application extends React.Component {
       updateUnitTitle,
       addUnitTable,
       removeUnitTable,
+      updateNotifications,
     } = this.props;
 
     if (!_.isNil(profile.uid)) {
@@ -55,6 +56,7 @@ export default class Application extends React.Component {
                 history={history.history}
                 profile={profile}
                 notifications={notifications}
+                updateNotifications={updateNotifications}
                 units={units}
                 updateUnits={updateUnits}
                 removeUnitRow={removeUnitRow}
@@ -64,6 +66,7 @@ export default class Application extends React.Component {
                 addUnitTable={addUnitTable}
                 removeUnitTable={removeUnitTable}
                 firebase={this.firebase}
+                exampleUser={this.props.profile.exampleUser}
               />)}
             />
             <Route
@@ -71,6 +74,7 @@ export default class Application extends React.Component {
               render={history => (<SignOut
                 removeProfile={removeProfile}
                 history={history.history}
+                firebase={this.firebase}
               />)}
             />
           </div>
@@ -87,6 +91,7 @@ export default class Application extends React.Component {
             render={history => (<Login
               history={history.history}
               updateProfile={this.props.updateProfile}
+              updateNotifications={this.props.updateNotifications}
               firebase={this.firebase}
               updateUnits={this.props.updateUnits}
             />)}
@@ -98,6 +103,7 @@ export default class Application extends React.Component {
 }
 
 Application.propTypes = {
+  updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   removeProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,

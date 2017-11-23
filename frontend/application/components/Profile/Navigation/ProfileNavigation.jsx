@@ -64,15 +64,20 @@ export default class ProfileNavigation extends React.Component {
 
     this.showHelpBox();
 
-    this.props.firebase.sendHelpMessage(message, name, email)
-      .then(() => toaster.success(`Thank you ${givenName} for submitting your help and or question`))
-      .catch(error => toaster.danger(error.message));
+    if (_.isNil(this.props.profile.exampleUser)) {
+      this.props.firebase.sendHelpMessage(message, name, email)
+        .then(() => toaster.success(`Thank you ${givenName} for submitting your help and or question`))
+        .catch(error => toaster.danger(error.message));
+    } else {
+      toaster.warning('Sorry the example user cannot send help or feedback messages');
+    }
   }
+
 
   buildNotifications() {
     let notifications = (<pre>No Notifications</pre>);
 
-    if (!_.isNil(this.props.notifications) && !_.isNil(this.props.notifications[0])) {
+    if (_.size(this.props.notifications) > 0) {
       notifications = _.map(this.props.notifications, (notification, index) =>
         (<Notification key={index} title={notification.title} content={notification.message} />));
     }
@@ -135,12 +140,12 @@ export default class ProfileNavigation extends React.Component {
           <div className="pt-dialog-footer">
             <div className="pt-dialog-footer-actions">
               <Button
-                onClick={this.signOut}
-                text="Yes"
-              />
-              <Button
                 onClick={this.showSignOutBox}
                 text="No"
+              />
+              <Button
+                onClick={this.signOut}
+                text="Yes"
               />
             </div>
           </div>
@@ -178,5 +183,6 @@ ProfileNavigation.propTypes = {
     name: PropTypes.string,
     email: PropTypes.string,
     given_name: PropTypes.string,
+    exampleUser: PropTypes.bool,
   }).isRequired,
 };

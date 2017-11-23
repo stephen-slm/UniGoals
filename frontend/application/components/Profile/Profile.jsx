@@ -60,6 +60,7 @@ export default class Profile extends React.Component {
           history={this.props.history}
           profile={this.profile}
           notifications={this.props.notifications}
+          updateNotifications={this.props.updateNotifications}
           firebase={this.props.firebase}
         />
         <ProfileSummary
@@ -75,6 +76,7 @@ export default class Profile extends React.Component {
           addUnitTable={this.props.addUnitTable}
           removeUnitTable={this.props.removeUnitTable}
           firebase={this.props.firebase}
+          exampleUser={this.props.profile.exampleUser}
           units={this.props.units}
         />
       </div>
@@ -92,10 +94,12 @@ Profile.propTypes = {
   updateRowContent: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
+  updateNotifications: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   notifications: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
     isNew: PropTypes.bool,
+    exampleUser: PropTypes.bool,
   }).isRequired,
 };

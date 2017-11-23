@@ -44,6 +44,7 @@ export default class Tables extends React.Component {
             updateUnitTitle={this.props.updateUnitTitle}
             removeUnitTable={this.props.removeUnitTable}
             firebase={this.props.firebase}
+            exampleUser={this.props.exampleUser}
             unit={unit}
           />
         </div>
@@ -64,10 +65,15 @@ export default class Tables extends React.Component {
 Tables.propTypes = {
   firebase: PropTypes.shape().isRequired,
   units: PropTypes.shape().isRequired,
+  exampleUser: PropTypes.bool,
   insertUnitRow: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
+};
+
+Tables.defaultProps = {
+  exampleUser: null,
 };
