@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Position, Button } from '@blueprintjs/core';
-import _ from 'lodash';
+import { Button } from '@blueprintjs/core';
 
 export default class Notification extends React.Component {
   constructor(props) {
     super(props);
 
     this.dismissNotification = this.dismissNotification.bind(this);
-
 
     this.state = {
       title: this.props.title,

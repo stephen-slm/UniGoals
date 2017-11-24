@@ -39,6 +39,13 @@ export function removeProfile() {
   };
 }
 
+export function updateCourseName(courseName) {
+  return {
+    type: actionTypes.UPDATE_COURSE_NAME,
+    courseName,
+  };
+}
+
 // Notifications
 export function updateNotifications(notifications) {
   return {

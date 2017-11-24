@@ -91,6 +91,15 @@ export default class FirebaseWrapper {
   }
 
   /**
+   * Updates the courseName for the user on the profile
+   * @param change The change to for the users profile
+   * @returns {firebase.Promise.<void>}
+   */
+  updateProfileCourse(change) {
+    return this.database.ref(`users/${this.getUid()}/profile/coursename`).set(change);
+  }
+
+  /**
    * update the content on a row for a unit, must contain the change, tablekey, rowKey and then
    * the column index which would be either (name, archieved or weighting)
    * @param change What is being changed

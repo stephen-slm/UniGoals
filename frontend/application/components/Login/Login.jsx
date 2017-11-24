@@ -37,15 +37,18 @@ export default class Login extends React.Component {
   getAccountDetails(loginResult) {
     const selectionList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
 
-    const profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
+    let profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
     const isNew = loginResult.additionalUserInfo.isNewUser;
 
-    profile.token = loginResult.credential.accessToken;
-    profile.uid = loginResult.user.uid;
-    profile.university_id = profile.email.split('@')[0];
-    profile.hd = (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd;
+    profile = Object.assign(profile, {
+      token: loginResult.credential.accessToken,
+      uid: loginResult.user.uid,
+      university_id: profile.email.split('@')[0],
+      hd: (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd,
+      new: isNew,
+    });
 
-    if (isNew) {
+    if (profile.new) {
       this.props.firebase.createNewUser(profile)
         .then(() => {
           this.props.updateProfile(profile);

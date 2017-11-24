@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import toaster from '../../utils/toaster';
 import { Dialog } from '@blueprintjs/core';
 
 import ProfileNavigation from './Navigation/ProfileNavigation';
@@ -17,7 +18,7 @@ export default class Profile extends React.Component {
     this.profile = this.props.profile;
 
     this.state = {
-      isNew: true,
+      isNew: this.profile.new,
       canEscapeKeyClose: true,
     };
   }
@@ -26,7 +27,15 @@ export default class Profile extends React.Component {
   isNoLongerNew(e) {
     e.preventDefault();
     this.setState({ isNew: false });
-    // TODO: This should tell the server that the user is no longer new
+  }
+
+  updateCourseTitle(change, firebase) {
+    if (firebase) {
+      this.props.firebase.updateProfileCourse(change)
+        .catch(error => toaster.danger(error.message));
+    } else {
+      this.props.updateCourseName(change);
+    }
   }
 
   newUserDialog() {
@@ -40,13 +49,23 @@ export default class Profile extends React.Component {
       >
         <div className="pt-dialog-body">
           Thank you for  using unistats-alpha! If you have any problems please email:
-          UP840877@myport.ac.uk or click the little help box in the top right hand corner!
+          UP840877@myport.ac.uk or click the little help box in the top right hand corner! <strong>
+          This box will only ever show once!</strong>
+          <br />
+          <br />
+          For the time being please may you update the content below.
           <br />
           <br />
           Thanks,
           <br />
           <br />
           thinknet.xyz
+          <div>
+            <label className="pt-label pt-inline">
+              University course
+              <input className="pt-input" style={{ width: '200px' }} type="text" placeholder="Text input" dir="auto" />
+            </label>
+          </div>
         </div>
       </Dialog>
     );
@@ -99,6 +118,7 @@ Profile.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   removeNotification: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
+  updateCourseName: PropTypes.func.isRequired,
   notifications: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,

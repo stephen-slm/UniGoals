@@ -37,7 +37,7 @@ export default class ProfileSummary extends React.Component {
       <div style={{ minWidth: 75 * _.size(this.props.units) }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
         <div className={style.profileSummaryHeader}>Summary</div>
         <div className={style.profileSummaryHeader}>
-          Bsc Computer Science - {this.props.profile.name}, week: {this.state.currentWeek}
+          University Course - {this.props.profile.name}, week: {this.state.currentWeek}
         </div>
         <div className={style.profileSummaryAverageWrapper}>
           <ProfileUnitBarChart
@@ -67,5 +67,6 @@ ProfileSummary.propTypes = {
     imageUrl: PropTypes.string,
     name: PropTypes.string,
     isNew: PropTypes.bool,
+    courseName: PropTypes.string,
   }).isRequired,
 };

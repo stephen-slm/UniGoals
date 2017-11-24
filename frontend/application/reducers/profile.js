@@ -16,6 +16,17 @@ export default function profile(state = { email: null, isNew: true }, action) {
         familyName: null,
       };
     }
+    case actionTypes.UPDATE_COURSE_NAME: {
+      const { courseName } = action;
+
+      if (!_.isNil(courseName) && _.isString(courseName) && courseName.length) {
+        const courseNameUpdate = Object.assign({}, state);
+        courseNameUpdate.courseName = courseName;
+        return courseNameUpdate;
+      }
+      return state;
+
+    }
     default: {
       return state;
     }
