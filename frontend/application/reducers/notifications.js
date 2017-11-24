@@ -13,6 +13,19 @@ export default function notifications(state = {}, action) {
 
       return state;
     }
+
+    case actionTypes.REMOVE_NOTIFICATION: {
+      const { notificationKey: keyIndex } = action;
+
+      if (_.isNil(keyIndex) || !_.isString(keyIndex)) {
+        return state;
+      }
+
+      const removedNotificationContent = Object.assign({}, state);
+
+      delete removedNotificationContent[keyIndex]
+      return removedNotificationContent;
+    }
     default: {
       return state;
     }

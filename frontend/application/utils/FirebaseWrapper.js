@@ -43,7 +43,7 @@ export default class FirebaseWrapper {
    * @param key The key string for the index of the notification
    * @returns {firebase.Promise.<void>}
    */
-  dismissNotifications(key) {
+  dismissNotification(key) {
     return this.database.ref(`users/${this.getUid()}/notifications/${key}`).remove();
   }
 

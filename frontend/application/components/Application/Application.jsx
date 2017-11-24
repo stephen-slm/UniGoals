@@ -43,6 +43,7 @@ export default class Application extends React.Component {
       addUnitTable,
       removeUnitTable,
       updateNotifications,
+      removeNotification,
     } = this.props;
 
     if (!_.isNil(profile.uid)) {
@@ -57,6 +58,7 @@ export default class Application extends React.Component {
                 profile={profile}
                 notifications={notifications}
                 updateNotifications={updateNotifications}
+                removeNotification={removeNotification}
                 units={units}
                 updateUnits={updateUnits}
                 removeUnitRow={removeUnitRow}
@@ -104,6 +106,7 @@ export default class Application extends React.Component {
 
 Application.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
+  removeNotification: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   removeProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,

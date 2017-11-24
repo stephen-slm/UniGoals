@@ -47,6 +47,13 @@ export function updateNotifications(notifications) {
   };
 }
 
+export function removeNotification(notificationKey) {
+  return {
+    type: actionTypes.REMOVE_NOTIFICATION,
+    notificationKey,
+  };
+}
+
 // Units
 export function updateUnits(units) {
   return {

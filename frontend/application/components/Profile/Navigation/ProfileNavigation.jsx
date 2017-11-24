@@ -79,7 +79,15 @@ export default class ProfileNavigation extends React.Component {
 
     if (_.size(this.props.notifications) > 0) {
       notifications = _.map(this.props.notifications, (notification, index) =>
-        (<Notification key={index} title={notification.title} content={notification.message} />));
+        (<Notification
+          key={index}
+          keyIndex={index}
+          title={notification.title}
+          message={notification.message}
+          firebase={this.props.firebase}
+          removeNotification={this.props.removeNotification}
+          exampleUser={this.props.exampleUser}
+        />));
     }
 
     return (

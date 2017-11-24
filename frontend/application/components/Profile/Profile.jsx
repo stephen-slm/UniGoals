@@ -61,6 +61,8 @@ export default class Profile extends React.Component {
           profile={this.profile}
           notifications={this.props.notifications}
           updateNotifications={this.props.updateNotifications}
+          removeNotification={this.props.removeNotification}
+          exampleUser={this.props.profile.exampleUser}
           firebase={this.props.firebase}
         />
         <ProfileSummary
@@ -95,6 +97,7 @@ Profile.propTypes = {
   updateUnitTitle: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
   updateNotifications: PropTypes.func.isRequired,
+  removeNotification: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   notifications: PropTypes.shape().isRequired,
   profile: PropTypes.shape({

@@ -11,6 +11,7 @@ export const REMOVE_PROFILE = 'REMOVE_PROFILE';
 
 // Notifications
 export const UPDATE_NOTIFICATIONS = 'UPDATE_NOTIFICATIONS';
+export const REMOVE_NOTIFICATION = 'REMOVE_NOTIFICATION';
 
 // Units
 export const UPDATE_UNITS = 'UPDATE_UNITS';
