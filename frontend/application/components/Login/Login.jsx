@@ -40,6 +40,8 @@ export default class Login extends React.Component {
     let profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
     const isNew = loginResult.additionalUserInfo.isNewUser;
 
+    debugger;
+
     profile = Object.assign(profile, {
       token: loginResult.credential.accessToken,
       uid: loginResult.user.uid,
@@ -55,14 +57,14 @@ export default class Login extends React.Component {
           return Promise.resolve();
         })
         .catch(error => Promise.reject(error));
+    } else {
+      this.props.firebase.getProfileById()
+        .then((gotProfile) => {
+          this.props.updateProfile(gotProfile);
+          return Promise.resolve();
+        })
+        .catch(error => Promise.reject(error));
     }
-
-    this.props.firebase.getProfileById()
-      .then((gotProfile) => {
-        this.props.updateProfile(gotProfile);
-        return Promise.resolve();
-      })
-      .catch(error => Promise.reject(error));
   }
 
   /**

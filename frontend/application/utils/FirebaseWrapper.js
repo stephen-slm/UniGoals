@@ -62,6 +62,12 @@ export default class FirebaseWrapper {
     return Promise.resolve(insertingNotificationKey.key);
   }
 
+  addUniversityDetails(courseName, courseYear) {
+    this.database.ref(`users/${this.getUid()}/profile/course_name`).set(courseName);
+    this.database.ref(`users/${this.getUid()}/profile/course_year`).set(courseYear);
+    return Promise.resolve();
+  }
+
   /**
    * Gets all the active units for the active google user
    * @returns {firebase.Promise.<*>}
@@ -96,7 +102,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   updateProfileCourse(change) {
-    return this.database.ref(`users/${this.getUid()}/profile/coursename`).set(change);
+    return this.database.ref(`users/${this.getUid()}/profile/course_name`).set(change);
   }
 
   /**

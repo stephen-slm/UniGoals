@@ -1,41 +1,68 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
-import toaster from '../../utils/toaster';
-import { Dialog } from '@blueprintjs/core';
+import { Dialog, Button } from '@blueprintjs/core';
 
 import ProfileNavigation from './Navigation/ProfileNavigation';
 import ProfileSummary from './ProfileSummary/ProfileSummary';
 import Tables from './ProfileTables/Tables';
+import toaster from '../../utils/toaster';
+
+const style = require('./profile.less');
 
 export default class Profile extends React.Component {
   constructor(props) {
     super(props);
 
-    this.isNoLongerNew = this.isNoLongerNew.bind(this);
     this.newUserDialog = this.newUserDialog.bind(this);
+    this.addUniversityDetails = this.addUniversityDetails.bind(this);
 
     this.profile = this.props.profile;
 
     this.state = {
       isNew: this.profile.new,
-      canEscapeKeyClose: true,
+      canEscapeKeyClose: false,
+
+      courseYear: false,
+      courseName: false,
+
     };
   }
 
+  addUniversityDetails() {
+    const courseName = this.universityCourse.value;
+    const courseYear = parseInt(this.universityYear.value, 10);
 
-  isNoLongerNew(e) {
-    e.preventDefault();
-    this.setState({ isNew: false });
-  }
+    let courseYearInvalid = false;
+    let courseNameInvalid = false;
 
-  updateCourseTitle(change, firebase) {
-    if (firebase) {
-      this.props.firebase.updateProfileCourse(change)
-        .catch(error => toaster.danger(error.message));
-    } else {
-      this.props.updateCourseName(change);
+    if (_.isNil(courseYear) || _.isNaN(courseYear) || !_.isNumber(courseYear)) {
+      courseYearInvalid = true;
     }
+
+    if (_.isNil(courseName) || _.isNaN(courseName) || courseName.length < 5) {
+      courseNameInvalid = true;
+    }
+
+    if (courseYearInvalid || courseNameInvalid) {
+      return this.setState({
+        courseYear: courseYearInvalid,
+        courseName: courseNameInvalid,
+      });
+    }
+
+    return this.props.firebase.addUniversityDetails(courseName, courseYear)
+      .then(() => {
+        const profile = Object.assign(this.props.profile, {
+          course_name: courseName,
+          course_year: courseYear,
+        });
+
+        this.props.updateProfile(profile);
+        this.setState({ isNew: false });
+      })
+      .catch(error => toaster.danger(error));
   }
 
   newUserDialog() {
@@ -43,28 +70,36 @@ export default class Profile extends React.Component {
       <Dialog
         iconName="pt-icon-edit"
         title={`Welcome ${this.profile.name}`}
-        isOpen={this.state.isNew}
-        onClose={this.isNoLongerNew}
+        isOpen={this.state.isNew || !this.props.profile.course_name}
+        onClose={this.addUniversityDetails}
         canEscapeKeyClose={this.state.canEscapeKeyClose}
       >
         <div className="pt-dialog-body">
           Thank you for  using unistats-alpha! If you have any problems please email:
-          UP840877@myport.ac.uk or click the little help box in the top right hand corner! <strong>
-          This box will only ever show once!</strong>
-          <br />
-          <br />
+          UP840877@myport.ac.uk or click the little help box in the top right hand corner!
+          <strong> This box will only ever show once!</strong>
+          <br /><br />
           For the time being please may you update the content below.
-          <br />
-          <br />
+          <br /><br />
           Thanks,
-          <br />
-          <br />
+          <br /><br />
           thinknet.xyz
-          <div>
-            <label className="pt-label pt-inline">
-              University course
-              <input className="pt-input" style={{ width: '200px' }} type="text" placeholder="Text input" dir="auto" />
-            </label>
+          <br /><br />
+          Below is some basic information needed to form your profile.
+          Please fill this in and select continue.
+          <br /><br />
+          <div className={style.introductionInputs}>
+            <input ref={(ref) => { this.universityCourse = ref; }} className={`pt-input pt-minimal pt-fill ${(this.state.courseName) ? 'pt-intent-danger' : ''}`} type="text" placeholder="University Course" dir="auto" />
+            <input ref={(ref) => { this.universityYear = ref; }} className={`pt-input pt-minimal pt-fill ${(this.state.courseYear) ? 'pt-intent-danger' : ''}`} type="number" placeholder="University Year" dir="auto" />
+          </div>
+        </div>
+        <div className="pt-dialog-footer">
+          <div className="pt-dialog-footer-actions">
+            <Button
+              className="pt-minimal"
+              onClick={this.addUniversityDetails}
+              text="Continue"
+            />
           </div>
         </div>
       </Dialog>
@@ -119,9 +154,11 @@ Profile.propTypes = {
   removeNotification: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   updateCourseName: PropTypes.func.isRequired,
+  updateProfile: PropTypes.func.isRequired,
   notifications: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
+    course_name: PropTypes.string,
     isNew: PropTypes.bool,
     exampleUser: PropTypes.bool,
   }).isRequired,

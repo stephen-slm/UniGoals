@@ -37,7 +37,7 @@ export default class ProfileSummary extends React.Component {
       <div style={{ minWidth: 75 * _.size(this.props.units) }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
         <div className={style.profileSummaryHeader}>Summary</div>
         <div className={style.profileSummaryHeader}>
-          University Course - {this.props.profile.name}, week: {this.state.currentWeek}
+          {_.defaultTo(this.props.profile.course_name, 'University Course')} - {this.props.profile.name} - Year: {_.defaultTo(this.props.profile.course_year, '1')}, week: {this.state.currentWeek}
         </div>
         <div className={style.profileSummaryAverageWrapper}>
           <ProfileUnitBarChart
@@ -61,6 +61,8 @@ export default class ProfileSummary extends React.Component {
 ProfileSummary.propTypes = {
   units: PropTypes.shape().isRequired,
   profile: PropTypes.shape({
+    course_name: PropTypes.string,
+    course_year: PropTypes.number,
     email: PropTypes.string,
     familyName: PropTypes.string,
     GivenName: PropTypes.string,

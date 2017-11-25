@@ -45,6 +45,7 @@ export default class Application extends React.Component {
       updateNotifications,
       removeNotification,
       updateCourseName,
+      updateProfile,
     } = this.props;
 
     if (!_.isNil(profile.uid)) {
@@ -57,6 +58,7 @@ export default class Application extends React.Component {
               render={history => (<Profile
                 history={history.history}
                 profile={profile}
+                updateProfile={updateProfile}
                 updateCourseName={updateCourseName}
                 notifications={notifications}
                 updateNotifications={updateNotifications}
