@@ -4,6 +4,7 @@ import _ from 'lodash';
 
 import ProfileUnitBarChart from '../ProfileUnitBarChart/ProfileUnitBarChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
+import TotalGrade from '../AverageGrade/TotalGrade';
 
 import style from '../profile.less';
 
@@ -50,6 +51,10 @@ export default class ProfileSummary extends React.Component {
           <AverageGrade
             summaryData={this.props.units}
             isSummary={this.state.isSummary}
+            className={style.SummaryAverageGrade}
+          />
+          <TotalGrade
+            data={this.props.units}
             className={style.SummaryAverageGrade}
           />
         </div>

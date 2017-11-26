@@ -7,6 +7,7 @@ import { Popover, Position, PopoverInteractionKind, Dialog, Button } from '@blue
 import Notification from '../Notifications/Notification';
 import toaster from '../../../utils/toaster';
 
+const style = require('../profile.less');
 
 export default class ProfileNavigation extends React.Component {
   constructor(props) {
@@ -92,7 +93,7 @@ export default class ProfileNavigation extends React.Component {
 
     return (
       <Popover interactionKind={PopoverInteractionKind.CLICK} position={Position.BOTTOM_RIGHT} >
-        <button className="pt-button pt-minimal pt-icon-notifications" />
+        <button className={`pt-button pt-minimal pt-icon-notifications ${(_.size(this.props.notifications) > 0) ? style.notificationFlash : ''}`} />
         <div>
           {notifications}
         </div>
@@ -187,6 +188,8 @@ ProfileNavigation.propTypes = {
   notifications: PropTypes.shape().isRequired,
   firebase: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
+  exampleUser: PropTypes.bool.isRequired,
+  removeNotification: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,

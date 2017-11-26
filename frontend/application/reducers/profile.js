@@ -25,7 +25,6 @@ export default function profile(state = { email: null, isNew: true }, action) {
         return courseNameUpdate;
       }
       return state;
-
     }
     default: {
       return state;

@@ -40,8 +40,6 @@ export default class Login extends React.Component {
     let profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
     const isNew = loginResult.additionalUserInfo.isNewUser;
 
-    debugger;
-
     profile = Object.assign(profile, {
       token: loginResult.credential.accessToken,
       uid: loginResult.user.uid,
@@ -121,8 +119,8 @@ export default class Login extends React.Component {
 
     auth.signInWithPopup(provider)
       .then(result => this.getAccountDetails(result))
-      .then(() => this.getUnits())
       .then(() => this.getNotifications())
+      .then(() => this.getUnits())
       .catch(error => toaster.danger(error.message));
   }
 

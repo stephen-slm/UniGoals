@@ -50,6 +50,7 @@
 }
 
 .profileSummaryAverageWrapper {
+  justify-content: center;
   display: flex;
   margin-top: 15px;
 }
@@ -58,7 +59,31 @@
 }
 
 .introductionInputs input {
-  text-align: center;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+
+.introductionInputs div {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.notificationFlash {
+  animation-name: pulse;
+  animation-duration: 1.5s;
+  animation-timing-function: ease-out;
+  animation-delay: 0s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+  animation-play-state: running;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: transparent;
+  }
+  100% {
+    background-color: orange;
+  }
 }

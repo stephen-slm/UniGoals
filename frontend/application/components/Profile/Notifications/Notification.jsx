@@ -30,7 +30,7 @@ export default class Notification extends React.Component {
         <h5>
           {this.state.title}
           <Button style={{ float: 'right' }} onClick={this.dismissNotification} className="pt-button pt-minimal pt-icon-small-cross" />
-          </h5>
+        </h5>
         <p>{this.state.message}</p>
       </pre>
     );

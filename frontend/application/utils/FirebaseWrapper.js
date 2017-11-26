@@ -1,4 +1,4 @@
-import * as Promise from 'bluebird';
+import Promise from 'bluebird';
 import * as firebase from 'firebase';
 
 export default class FirebaseWrapper {
@@ -196,21 +196,23 @@ export default class FirebaseWrapper {
    */
   createSampleUnitsForNewUser() {
     const sampleOneRef = this.database.ref(`users/${this.getUid()}/units`);
-    const sampleOneKey = sampleOneRef.push({ title: 'Sample', content: {} });
+    const sampleOneKey = sampleOneRef.push({ title: 'Sample Unit', content: {} });
 
     this.insertUnitRowById(sampleOneKey.key)
       .then((unitRow) => {
-        this.updateUnitRowSection('Coursework', sampleOneKey.key, unitRow, 'name')
-          .then(() => this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting'))
-          .then(() => this.updateUnitRowSection('71', sampleOneKey.key, unitRow, 'archived'));
+        this.updateUnitRowSection('Coursework', sampleOneKey.key, unitRow, 'name');
+        this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting');
+        this.updateUnitRowSection('71', sampleOneKey.key, unitRow, 'archived');
       });
 
     this.insertUnitRowById(sampleOneKey.key)
       .then((unitRow) => {
-        this.updateUnitRowSection('Exam', sampleOneKey.key, unitRow, 'name')
-          .then(() => this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting'))
-          .then(() => this.updateUnitRowSection('31', sampleOneKey.key, unitRow, 'archived'));
+        this.updateUnitRowSection('Exam', sampleOneKey.key, unitRow, 'name');
+        this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting');
+        this.updateUnitRowSection('31', sampleOneKey.key, unitRow, 'archived');
       });
+
+    Promise.resolve();
   }
 
   /**

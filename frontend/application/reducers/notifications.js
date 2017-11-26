@@ -23,7 +23,7 @@ export default function notifications(state = {}, action) {
 
       const removedNotificationContent = Object.assign({}, state);
 
-      delete removedNotificationContent[keyIndex]
+      delete removedNotificationContent[keyIndex];
       return removedNotificationContent;
     }
     default: {
