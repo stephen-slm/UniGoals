@@ -93,6 +93,8 @@ export default class Login extends React.Component {
    * logs in with the example user accouont
    */
   authenticateExamplesUser() {
+    this.setState({ loading: true });
+
     this.props.firebase.getExampleUser()
       .then((snapshot) => {
         const exampleUser = snapshot.val();
@@ -106,6 +108,8 @@ export default class Login extends React.Component {
         this.props.updateNotifications(notifications);
         this.props.updateProfile(profile);
         this.props.updateUnits(units);
+
+        this.setState({ loading: false });
       })
       .catch(error => toaster.danger(error.message));
   }
@@ -117,11 +121,17 @@ export default class Login extends React.Component {
     const auth = this.props.firebase.authentication;
     const { provider } = this.props.firebase;
 
+    this.setState({ loading: true });
+
     auth.signInWithPopup(provider)
       .then(result => this.getAccountDetails(result))
       .then(() => this.getNotifications())
       .then(() => this.getUnits())
-      .catch(error => toaster.danger(error.message));
+      .then(() => this.setState({ loading: false }))
+      .catch((error) => {
+        toaster.danger(error.message);
+        this.setState({ loading: false });
+      });
   }
 
   loadingBox() {
@@ -138,10 +148,14 @@ export default class Login extends React.Component {
   loginBox() {
     return (
       <div className={style.loginPage}>
-        <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
-          <button className={style.googleButton} onClick={this.authenticateUser}>
-            Lets Get Started
-          </button>
+      <img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" />
+        <div style={{ margin: '0 auto' }}>
+          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
+            <img className={style.googleButton} onClick={this.authenticateUser} src="components/resources/images/googleButton.png" />
+          </div>
+          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
+            <img onClick={this.authenticateExamplesUser} className={style.googleButton} src="components/resources/images/exampleUser.png" />
+          </div>
         </div>
       </div>
     );
