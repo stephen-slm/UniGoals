@@ -133,6 +133,7 @@ export default class Profile extends React.Component {
         <ProfileSummary
           units={this.props.units}
           profile={this.profile}
+          history={this.props.history}
         />
         <Tables
           insertUnitRow={this.props.insertUnitRow}

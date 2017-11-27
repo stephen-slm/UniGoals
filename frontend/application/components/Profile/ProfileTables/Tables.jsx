@@ -34,7 +34,7 @@ export default class Tables extends React.Component {
       count += 1;
 
       return (
-        <div key={index} className={`pt-card pt-elevation-3 ${style.tableWrapper}`}>
+        <div key={index} id={`${index}`} className={`pt-card pt-elevation-3 ${style.tableWrapper}`}>
           <Table
             tableIndex={index}
             tableNum={count}

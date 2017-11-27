@@ -45,6 +45,7 @@ export default class ProfileSummary extends React.Component {
           <TopFiveSection
             data={this.props.units}
             className={style.topFiveSectionWrapper}
+            history={this.props.history}
           />
           <ProfileUnitBarChart
             data={this.props.units}
@@ -69,7 +70,8 @@ export default class ProfileSummary extends React.Component {
 }
 
 ProfileSummary.propTypes = {
-  units: PropTypes.shape().isRequired,
+  history: PropTypes.shape({}).isRequired,
+  units: PropTypes.shape({}).isRequired,
   profile: PropTypes.shape({
     course_name: PropTypes.string,
     course_year: PropTypes.number,
