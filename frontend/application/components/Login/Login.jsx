@@ -148,13 +148,13 @@ export default class Login extends React.Component {
   loginBox() {
     return (
       <div className={style.loginPage}>
-      <img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" />
+        <img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" alt="Logo" />
         <div style={{ margin: '0 auto' }}>
-          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
-            <img className={style.googleButton} onClick={this.authenticateUser} src="components/resources/images/googleButton.png" />
+          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateUser}>
+            <img className={style.googleButton} src="components/resources/images/googleButton.png" alt="Sign in Google" />
           </div>
-          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.clickGoogleButton}>
-            <img onClick={this.authenticateExamplesUser} className={style.googleButton} src="components/resources/images/exampleUser.png" />
+          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateExamplesUser}>
+            <img className={style.googleButton} src="components/resources/images/exampleUser.png" alt="Example User" />
           </div>
         </div>
       </div>

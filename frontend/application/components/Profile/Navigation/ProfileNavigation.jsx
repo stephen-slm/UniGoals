@@ -30,6 +30,7 @@ export default class ProfileNavigation extends React.Component {
       showNotifications: false,
       showHelp: false,
       showSignOut: false,
+      invalidhelpMessage: false,
     };
   }
 
@@ -63,6 +64,12 @@ export default class ProfileNavigation extends React.Component {
     const { name, email, given_name: givenName } = this.props.profile;
     const { version } = this.props;
 
+
+    if (message.length < 15) {
+      return this.setState({ invalidhelpMessage: true });
+    }
+
+
     this.showHelpBox();
 
     if (_.isNil(this.props.profile.exampleUser)) {
@@ -72,13 +79,14 @@ export default class ProfileNavigation extends React.Component {
         + `usp=pp_url&entry.359427520=${name}&entry.1023136950=${email}&entry.114544494=`
         + `${message}&entry.457088105=${version}`, '_blank');
 
+      this.setState({ invalidhelpMessage: false });
 
-      this.props.firebase.sendHelpMessage(message, name, email)
+      return this.props.firebase.sendHelpMessage(message, name, email)
         .then(() => toaster.success(`Thank you ${givenName} for submitting your help and or question`))
         .catch(error => toaster.danger(error.message));
-    } else {
-      toaster.warning('Sorry the example user cannot send help or feedback messages');
     }
+
+    return toaster.warning('Sorry the example user cannot send help or feedback messages');
   }
 
 
@@ -123,7 +131,7 @@ export default class ProfileNavigation extends React.Component {
               rows={10}
               cols={70}
               maxLength={500}
-              className="pt-input .pt-fill"
+              className={`pt-input .pt-fill ${(this.state.invalidhelpMessage) ? 'pt-intent-danger' : ''}`}
               dir="auto"
               placeholder="If you have any problems or help please ask below and I will email you back!"
             />

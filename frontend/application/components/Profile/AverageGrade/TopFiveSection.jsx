@@ -40,7 +40,7 @@ export default class TopFiveSection extends React.Component {
       <div className={`pt-card pt-elevaton-1 ${this.props.className}`} style={{ width: 280, height: this.props.height }}>
         <div style={{ textAlign: 'center' }}>Unit Ranking</div>
         <div>
-          {(_.map(totalGrade, (data, index) => (<div key={index}><Link to={`${data.link}`}>{index + 1}. {data.title}</Link></div>)))}
+          {(_.map(totalGrade, (data, index) => (<div key={index}><Link href={`${data.link}`} to={`${data.link}`}>{index + 1}. {data.title}</Link></div>)))}
         </div>
       </div>
     );

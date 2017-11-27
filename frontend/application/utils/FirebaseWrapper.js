@@ -196,7 +196,7 @@ export default class FirebaseWrapper {
    */
   createSampleUnitsForNewUser() {
     const sampleOneRef = this.database.ref(`users/${this.getUid()}/units`);
-    const sampleOneKey = sampleOneRef.push({ title: 'Sample Unit', content: {} });
+    const sampleOneKey = sampleOneRef.push({ title: 'Example Unit', content: {} });
 
     this.insertUnitRowById(sampleOneKey.key)
       .then((unitRow) => {
