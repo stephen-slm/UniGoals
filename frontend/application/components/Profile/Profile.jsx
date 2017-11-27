@@ -92,7 +92,7 @@ export default class Profile extends React.Component {
           Please fill this in and select continue.
           <br /><br />
           <div className={style.introductionInputs}>
-            <input ref={(ref) => { this.universityCourse = ref; }} className={`pt-input pt-fill ${(this.state.courseName) ? 'pt-intent-danger' : ''}`} type="text" placeholder="University Course" dir="auto" />
+            <input ref={(ref) => { this.universityCourse = ref; }} maxLength="50" className={`pt-input pt-fill ${(this.state.courseName) ? 'pt-intent-danger' : ''}`} type="text" placeholder="University Course" dir="auto" />
             <div className="pt-select pt-fill">
               <select ref={(ref) => { this.universityYear = ref; }} className={`${(this.state.courseYear) ? 'pt-intent-danger' : ''}`}>
                 <option selected>{(this.state.courseName) ? 'Please Select a University Year' : 'University Year...'}</option>

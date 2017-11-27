@@ -98,8 +98,11 @@ export default class Table extends React.Component {
     this.showDeleteUnitBox();
     toaster.success(`Deleted ${(this.state.tableTitle === null) ? 'the' : this.state.tableTitle} unit`);
     const unitTableIndex = this.props.tableIndex;
-    this.props.firebase.deleteUnitById(unitTableIndex);
     this.props.removeUnitTable(unitTableIndex);
+
+    if (!this.props.exampleUser) {
+      this.props.firebase.deleteUnitById(unitTableIndex);
+    }
   }
 
   mouseOverEdit() {
