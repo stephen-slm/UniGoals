@@ -78,7 +78,7 @@ export default class Profile extends React.Component {
         canEscapeKeyClose={this.state.canEscapeKeyClose}
       >
         <div className="pt-dialog-body">
-          Thank you for  using unistats-alpha! If you have any problems please email:
+          Thank you for  using UniGoals-alpha! If you have any problems please email:
           UP840877@myport.ac.uk or click the little help box in the top right hand corner!
           <strong> This box will only ever show once!</strong>
           <br /><br />

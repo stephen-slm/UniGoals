@@ -60,9 +60,8 @@ export default class ProfileNavigation extends React.Component {
     e.preventDefault();
 
     const message = this.helpText.value;
-    const { name, email } = this.props.profile;
-    const givenName = this.props.profile.given_name;
-    const version = this.props.version;
+    const { name, email, given_name: givenName } = this.props.profile;
+    const { version } = this.props;
 
     this.showHelpBox();
 
@@ -177,7 +176,7 @@ export default class ProfileNavigation extends React.Component {
       <div>
         <nav className="pt-navbar">
           <div className="pt-navbar-group pt-align-left">
-            <div className="pt-navbar-heading">Uni Stats, Welcome {this.profile.name} - {this.profile.email.split('@')[0].toUpperCase()}</div>
+            <div className="pt-navbar-heading">Uni Goals, Welcome {this.profile.name} - {this.profile.email.split('@')[0].toUpperCase()}</div>
           </div>
           <div className="pt-navbar-group pt-align-right">
             <button className="pt-button pt-minimal pt-icon-user" />

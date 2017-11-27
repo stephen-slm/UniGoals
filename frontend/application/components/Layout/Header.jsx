@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="Header">
       <h5>
-        Uni Stats
+        Uni Goals
       </h5>
     </header>
   );

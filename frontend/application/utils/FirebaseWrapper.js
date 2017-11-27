@@ -56,7 +56,7 @@ export default class FirebaseWrapper {
 
     const insertingNotificationKey = insertingWelcomeNotification.push({
       title: `Welcome ${this.authentication.currentUser.displayName}!`,
-      message: 'Welcome to unistats! Any problems click the help button next to me!',
+      message: 'Welcome to UniGoals! Any problems click the help button next to me!',
       timestamp: Date.now(),
     });
     return Promise.resolve(insertingNotificationKey.key);

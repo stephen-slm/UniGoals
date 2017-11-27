@@ -111,6 +111,7 @@ export default class Application extends React.Component {
 }
 
 Application.propTypes = {
+  version: PropTypes.string.isRequired,
   updateNotifications: PropTypes.func.isRequired,
   updateCourseName: PropTypes.func.isRequired,
   removeNotification: PropTypes.func.isRequired,
