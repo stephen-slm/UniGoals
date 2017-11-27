@@ -49,7 +49,7 @@ export default class TopFiveSection extends React.Component {
 
 TopFiveSection.propTypes = {
   data: PropTypes.shape({}),
-  history: PropTypes.shape({}),
+  history: PropTypes.shape({}).isRequired,
   className: PropTypes.string,
   height: PropTypes.number,
 };

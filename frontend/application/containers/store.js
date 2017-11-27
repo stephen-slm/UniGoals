@@ -2,10 +2,8 @@ import { createStore } from 'redux';
 
 import rootReducer from '../reducers/index';
 
-const authentication = { username: null, result: false };
-
 const defaultState = {
-  authentication,
+  version: '0.0.1',
 };
 
 const store = createStore(rootReducer, defaultState);

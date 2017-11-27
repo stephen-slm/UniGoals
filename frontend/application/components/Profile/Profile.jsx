@@ -43,7 +43,8 @@ export default class Profile extends React.Component {
       courseYearInvalid = true;
     }
 
-    if (_.isNil(courseName) || _.isNaN(courseName) || courseName.length < 5 || courseName.length > 50) {
+    if (_.isNil(courseName) || _.isNaN(courseName)
+      || courseName.length < 5 || courseName.length > 50) {
       courseNameInvalid = true;
     }
 
@@ -129,6 +130,7 @@ export default class Profile extends React.Component {
           removeNotification={this.props.removeNotification}
           exampleUser={this.props.profile.exampleUser}
           firebase={this.props.firebase}
+          version={this.props.version}
         />
         <ProfileSummary
           units={this.props.units}
@@ -167,6 +169,7 @@ Profile.propTypes = {
   removeUnitTable: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   notifications: PropTypes.shape().isRequired,
+  version: PropTypes.string.isRequired,
   exampleUser: PropTypes.bool,
   profile: PropTypes.shape({
     email: PropTypes.string,

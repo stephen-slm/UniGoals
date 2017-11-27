@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
-import authentication from './authentication';
+import version from './version';
 import notifications from './notifications';
 import profile from './profile';
 import units from './units';
 
 // setup the master reducer
 const rootReducer = combineReducers({
-  authentication,
+  version,
   notifications,
   profile,
   units,

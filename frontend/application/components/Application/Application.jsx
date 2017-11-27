@@ -46,6 +46,7 @@ export default class Application extends React.Component {
       removeNotification,
       updateCourseName,
       updateProfile,
+      version,
     } = this.props;
 
     if (!_.isNil(profile.uid)) {
@@ -64,6 +65,7 @@ export default class Application extends React.Component {
                 updateNotifications={updateNotifications}
                 removeNotification={removeNotification}
                 units={units}
+                version={version}
                 updateUnits={updateUnits}
                 removeUnitRow={removeUnitRow}
                 insertUnitRow={insertUnitRow}

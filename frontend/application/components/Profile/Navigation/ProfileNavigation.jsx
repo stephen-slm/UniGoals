@@ -62,10 +62,18 @@ export default class ProfileNavigation extends React.Component {
     const message = this.helpText.value;
     const { name, email } = this.props.profile;
     const givenName = this.props.profile.given_name;
+    const version = this.props.version;
 
     this.showHelpBox();
 
     if (_.isNil(this.props.profile.exampleUser)) {
+      // Temp google form
+      window.open('https://docs.google.com/forms/d/e/'
+        + '1FAIpQLSfAZUIjg-jJEPlXLuzRVTpf6bIxGWqdI7HiC6YKVNp5r87Mvg/viewform?'
+        + `usp=pp_url&entry.359427520=${name}&entry.1023136950=${email}&entry.114544494=`
+        + `${message}&entry.457088105=${version}`, '_blank');
+
+
       this.props.firebase.sendHelpMessage(message, name, email)
         .then(() => toaster.success(`Thank you ${givenName} for submitting your help and or question`))
         .catch(error => toaster.danger(error.message));
@@ -189,6 +197,7 @@ ProfileNavigation.propTypes = {
   firebase: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
   exampleUser: PropTypes.bool.isRequired,
+  version: PropTypes.string.isRequired,
   removeNotification: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,

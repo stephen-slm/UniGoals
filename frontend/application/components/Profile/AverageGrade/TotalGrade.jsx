@@ -25,10 +25,6 @@ export default class AverageGrade extends React.Component {
     return parseFloat(totalArchived / 100 / _.size(data)).toFixed(2);
   }
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     const totalGrade = AverageGrade.calulateTotalGrade(this.props.data);
 
@@ -53,5 +49,4 @@ AverageGrade.defaultProps = {
   data: null,
   height: null,
   className: '',
-  isSummary: false,
 };
