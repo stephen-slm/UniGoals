@@ -43,7 +43,7 @@ export default class Profile extends React.Component {
       courseYearInvalid = true;
     }
 
-    if (_.isNil(courseName) || _.isNaN(courseName) || courseName.length < 5) {
+    if (_.isNil(courseName) || _.isNaN(courseName) || courseName.length < 5 || courseName.length > 50) {
       courseNameInvalid = true;
     }
 
