@@ -212,7 +212,7 @@ export default class Table extends React.Component {
     const exitVisibilityStyle = { visibility: (this.state.showDeleteUnit) ? 'visible' : 'hidden' };
 
     return (
-      <h3 onMouseEnter={this.moveOverDeleteUnit} onMouseLeave={this.moveOverhideDeleteUnit}>
+      <h3 id={`${this.props.tableIndex}`} onMouseEnter={this.moveOverDeleteUnit} onMouseLeave={this.moveOverhideDeleteUnit}>
         <EditableText
           placeholder="Unit title"
           maxLength="32"

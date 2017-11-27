@@ -5,6 +5,7 @@ import _ from 'lodash';
 import ProfileUnitBarChart from '../ProfileUnitBarChart/ProfileUnitBarChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 import TotalGrade from '../AverageGrade/TotalGrade';
+import TopFiveSection from '../AverageGrade/TopFiveSection';
 
 import style from '../profile.less';
 
@@ -35,12 +36,16 @@ export default class ProfileSummary extends React.Component {
 
   render() {
     return (
-      <div style={{ minWidth: 75 * _.size(this.props.units) }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
+      <div style={{ minWidth: 625 }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
         <div className={style.profileSummaryHeader}>Summary</div>
         <div className={style.profileSummaryHeader}>
           {_.defaultTo(this.props.profile.course_name, 'University Course')} - {this.props.profile.name} - Year: {_.defaultTo(this.props.profile.course_year, '1')}, week: {this.state.currentWeek}
         </div>
         <div className={style.profileSummaryAverageWrapper}>
+          <TopFiveSection
+            data={this.props.units}
+            className={style.topFiveSectionWrapper}
+          />
           <ProfileUnitBarChart
             data={this.props.units}
             color="#621362"
