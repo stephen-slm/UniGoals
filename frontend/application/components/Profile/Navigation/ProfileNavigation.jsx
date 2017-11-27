@@ -72,7 +72,7 @@ export default class ProfileNavigation extends React.Component {
 
     this.showHelpBox();
 
-    if (_.isNil(this.props.profile.exampleUser)) {
+    if (_.isNil(this.props.exampleUser)) {
       // Temp google form
       window.open('https://docs.google.com/forms/d/e/'
         + '1FAIpQLSfAZUIjg-jJEPlXLuzRVTpf6bIxGWqdI7HiC6YKVNp5r87Mvg/viewform?'
@@ -203,13 +203,16 @@ ProfileNavigation.propTypes = {
   notifications: PropTypes.shape().isRequired,
   firebase: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
-  exampleUser: PropTypes.bool.isRequired,
+  exampleUser: PropTypes.bool,
   version: PropTypes.string.isRequired,
   removeNotification: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
     given_name: PropTypes.string,
-    exampleUser: PropTypes.bool,
   }).isRequired,
+};
+
+ProfileNavigation.defaultProps = {
+  exampleUser: false,
 };
