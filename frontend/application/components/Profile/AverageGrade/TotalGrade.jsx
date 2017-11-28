@@ -10,19 +10,19 @@ export default class AverageGrade extends React.Component {
       return 0;
     }
 
-    let totalArchived = 0;
+    let totalAchieved = 0;
 
     _.forEach(data, (unit) => {
       _.forEach(unit.content, (unitContent) => {
-        if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.archived) && (unitContent.weighting !== '' && unitContent.archived !== '')) {
-          if (parseFloat(unitContent.archived) > 0) {
-            totalArchived += parseFloat(unitContent.weighting) * parseFloat(unitContent.archived);
+        if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.achieved) && (unitContent.weighting !== '' && unitContent.achieved !== '')) {
+          if (parseFloat(unitContent.achieved) > 0) {
+            totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
           }
         }
       });
     });
 
-    return parseFloat(totalArchived / 100 / _.size(data)).toFixed(2);
+    return parseFloat(totalAchieved / 100 / _.size(data)).toFixed(2);
   }
 
   render() {

@@ -55,7 +55,7 @@ export default class ProfileUnitBarChart extends React.Component {
         shortName = name.match(/\b(\w)/g).join('').toUpperCase();
       }
 
-      return { name: shortName, value: parseFloat(unit.archived) };
+      return { name: shortName, value: parseFloat(unit.achieved) };
     });
   }
 
@@ -74,9 +74,9 @@ export default class ProfileUnitBarChart extends React.Component {
       let total = 0;
 
       _.forEach(unit.content, (content) => {
-        if (!_.isNil(content.weighting) && !_.isNil(content.archived)) {
-          if (parseFloat(content.archived) > 0) {
-            total += parseFloat(content.weighting) * parseFloat(content.archived);
+        if (!_.isNil(content.weighting) && !_.isNil(content.achieved)) {
+          if (parseFloat(content.achieved) > 0) {
+            total += parseFloat(content.weighting) * parseFloat(content.achieved);
           }
         }
       });

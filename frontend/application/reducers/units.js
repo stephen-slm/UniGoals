@@ -63,7 +63,7 @@ export default function units(state = {}, action) {
         insertingUnitRow[insertingTableIndex].content = {};
       }
 
-      insertingUnitRow[insertingTableIndex].content[insertingRowId] = { name: '', weighting: '0', archived: '0' };
+      insertingUnitRow[insertingTableIndex].content[insertingRowId] = { name: '', weighting: '0', achieved: '0' };
       return insertingUnitRow;
     }
 

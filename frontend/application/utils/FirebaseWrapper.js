@@ -8,40 +8,12 @@ export default class FirebaseWrapper {
 
     firebase.initializeApp(this.configuration);
 
-    this.databaseCloud = firebase.firestore();
     this.database = firebase.database();
-
-    debugger;
-
     this.authentication = firebase.auth();
     this.authentication.signOut();
 
     this.provider = new firebase.auth.GoogleAuthProvider();
   }
-
-  /**
-   * what needs moving over:
-
-   getUserNotifications
-   dismissNotification
-   insertWelcomeNotification
-   addUniversityDetails
-   getUnitsById
-   getProfileById
-   updateUnitTitle
-   updateProfileCourse
-   updateUnitRowSection
-   deleteUnitRowById
-   insertUnitById
-   if
-   insertUnitRowById
-   if
-   deleteUnitById
-   createSampleUnitsForNewUser
-   createNewUser
-   *
-   */
-
   /**
    * Gets the current active users uid which is used to reference in the database
    * @returns {string}
@@ -52,18 +24,17 @@ export default class FirebaseWrapper {
 
   /**
    * returns the current example users information from the firebase database
-   * @returns {Promise<firebase.firestore.DocumentSnapshot>}
+   * @returns {firebase.Promise.<void>}
    */
   getExampleUser() {
-    return this.databaseCloud.collection('users').doc('example').get();
+    return this.database.ref('users/example').once('value');
   }
 
   /**
    * returns all active notifications (active means actually existing) for that user
-   * @returns {Promise<firebase.firestore.DocumentSnapshot>}
+   * @returns {firebase.Promise.<void>}
    */
   getUserNotifications() {
-    // return this.databaseCloud.collection('users').doc(`${this.getUid()}`).get('notifications');
     return this.database.ref(`users/${this.getUid()}/notifications`).once('value');
   }
 
@@ -187,7 +158,7 @@ export default class FirebaseWrapper {
         }
 
         const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/units/${unitKey}/content`);
-        const insertingUnitRowKey = insertingUnitRowRef.push({ name: 'Section', weighting: '0', archived: '0' });
+        const insertingUnitRowKey = insertingUnitRowRef.push({ name: 'Section', weighting: '0', achieved: '0' });
         return Promise.resolve(insertingUnitRowKey.key);
       });
   }
@@ -231,14 +202,14 @@ export default class FirebaseWrapper {
       .then((unitRow) => {
         this.updateUnitRowSection('Coursework', sampleOneKey.key, unitRow, 'name');
         this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting');
-        this.updateUnitRowSection('71', sampleOneKey.key, unitRow, 'archived');
+        this.updateUnitRowSection('71', sampleOneKey.key, unitRow, 'achieved');
       });
 
     this.insertUnitRowById(sampleOneKey.key)
       .then((unitRow) => {
         this.updateUnitRowSection('Exam', sampleOneKey.key, unitRow, 'name');
         this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting');
-        this.updateUnitRowSection('31', sampleOneKey.key, unitRow, 'archived');
+        this.updateUnitRowSection('31', sampleOneKey.key, unitRow, 'achieved');
       });
 
     Promise.resolve();
@@ -260,27 +231,16 @@ export default class FirebaseWrapper {
       uid,
     } = profile;
 
-      this.databaseCloud.collection(`users`).doc(`${uid}/profile`).set({
-      email,
-      family_name,
+    return this.database.ref(`users/${uid}/profile`).set({
       given_name,
-      hd,
-      name,
+      family_name,
+      email,
       picture,
-    });
-
-
-
-    // return this.database.ref(`users/${uid}/profile`).set({
-    //   given_name,
-    //   family_name,
-    //   email,
-    //   picture,
-    //   name,
-    //   hd,
-    // })
-    //   .then(() => this.createSampleUnitsForNewUser())
-    //   .then(() => this.insertWelcomeNotification())
-    //   .then(() => Promise.resolve(profile));
+      name,
+      hd,
+    })
+      .then(() => this.createSampleUnitsForNewUser())
+      .then(() => this.insertWelcomeNotification())
+      .then(() => Promise.resolve(profile));
   }
 }

@@ -13,19 +13,19 @@ export default class TopFiveSection extends React.Component {
     const listOfTotalGrades = [];
 
     _.forEach(data, (unit, index) => {
-      let totalArchived = 0;
+      let totalAchieved = 0;
 
       _.forEach(unit.content, (unitContent) => {
-        if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.archived) && (unitContent.weighting !== '' && unitContent.archived !== '')) {
-          if (parseFloat(unitContent.archived) > 0) {
-            totalArchived += parseFloat(unitContent.weighting) * parseFloat(unitContent.archived);
+        if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.achieved) && (unitContent.weighting !== '' && unitContent.achieved !== '')) {
+          if (parseFloat(unitContent.achieved) > 0) {
+            totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
           }
         }
       });
 
       listOfTotalGrades.push({
         title: unit.title,
-        total: parseFloat(totalArchived / 100).toFixed(2),
+        total: parseFloat(totalAchieved / 100).toFixed(2),
         link: `${history.location.search}#${index}`,
       });
     });

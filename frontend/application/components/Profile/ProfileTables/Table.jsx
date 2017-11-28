@@ -149,13 +149,13 @@ export default class Table extends React.Component {
   }
 
   generateTableContents() {
-    let totalArchived = 0;
+    let totalAchieved = 0;
     let totalWeighting = 0;
 
     const tables = _.map(this.props.unit.content, (unitContent, index) => {
-      if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.archived) && (unitContent.weighting !== '' && unitContent.archived !== '')) {
-        if (parseFloat(unitContent.archived) > 0) {
-          totalArchived += parseFloat(unitContent.weighting) * parseFloat(unitContent.archived);
+      if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.achieved) && (unitContent.weighting !== '' && unitContent.achieved !== '')) {
+        if (parseFloat(unitContent.achieved) > 0) {
+          totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
         }
         if (!_.isNil(unitContent.weighting) && unitContent.weighting !== '') {
           totalWeighting += parseFloat(unitContent.weighting);
@@ -184,11 +184,11 @@ export default class Table extends React.Component {
           </td>
           <td>
             <EditableText
-              placeholder="% Archived"
+              placeholder="% Achieved"
               maxLength="4"
-              onChange={change => this.updateRowContent(change, index, 'archived')}
-              onConfirm={change => this.updateRowCententDatabase(change, index, 'archived')}
-              value={_.defaultTo(unitContent.archived, '0')}
+              onChange={change => this.updateRowContent(change, index, 'achieved')}
+              onConfirm={change => this.updateRowCententDatabase(change, index, 'achieved')}
+              value={_.defaultTo(unitContent.achieved, '0')}
             />
           </td>
           <td style={{ visibility: (this.state.editing) ? 'visible' : 'hidden' }}>
@@ -202,7 +202,7 @@ export default class Table extends React.Component {
       <tr key={tables.length}>
         <td>Total</td>
         <td>{parseInt(totalWeighting, 10)}</td>
-        <td>{parseFloat(totalArchived / 100).toFixed(2)}</td>
+        <td>{parseFloat(totalAchieved / 100).toFixed(2)}</td>
       </tr>
     ));
 
@@ -259,7 +259,7 @@ export default class Table extends React.Component {
               <tr>
                 <th>Name</th>
                 <th>% Weighting</th>
-                <th>% Archived</th>
+                <th>% Achieved</th>
                 <td style={exitVisibilityStyle}>
                   <Button onClick={this.insertRowBelow} className="pt-button pt-minimal pt-icon-plus" />
                 </td>
