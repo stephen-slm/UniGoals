@@ -57,7 +57,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   getExampleUser() {
-    return this.database.ref('users/example').once('value');
+    return this.databaseCloud.collection('users').doc('example').get();
   }
 
   /**
@@ -261,29 +261,17 @@ export default class FirebaseWrapper {
       picture,
     } = profile;
 
-    const newUserRef = this.databaseCloud.collection('users').add({});
-    return newUserRef.doc('profile').set({
-      email,
-      family_name,
-      given_name,
-      hd,
+    return this.database.ref(`users/${uid}/profile`).set({
       uid,
-      name,
+      given_name,
+      family_name,
+      email,
       picture,
-    });
-
-      // .then(() => this.createSampleUnitsForNewUser())
-      // .then(() => this.insertWelcomeNotification())
-      // .then(() => Promise.resolve(profile));
-    //
-    // return this.database.ref(`users/${uid}/profile`).set({
-    //   uid,
-    //   given_name,
-    //   family_name,
-    //   email,
-    //   picture,
-    //   name,
-    //   hd,
-    // })
+      name,
+      hd,
+    })
+    .then(() => this.createSampleUnitsForNewUser())
+    .then(() => this.insertWelcomeNotification())
+    .then(() => Promise.resolve(profile));
   }
 }

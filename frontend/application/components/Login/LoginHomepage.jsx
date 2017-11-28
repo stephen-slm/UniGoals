@@ -108,10 +108,13 @@ export default class LoginHomepage extends React.Component {
 
     this.props.firebase.getExampleUser()
       .then((snapshot) => {
-        const exampleUser = snapshot.val();
-        const { units } = exampleUser;
 
-        const { profile, notifications } = exampleUser;
+        const exampleUser = snapshot.data();
+
+        const units = { units: exampleUser.units };
+        const profile = exampleUser.profile;
+        const notifications = exampleUser.notifications;
+
         profile.exampleUser = true;
 
         delete profile.units;
