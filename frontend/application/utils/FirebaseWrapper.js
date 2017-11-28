@@ -1,6 +1,5 @@
 import Promise from 'bluebird';
 import * as firebase from 'firebase';
-require('firebase/firestore');
 
 export default class FirebaseWrapper {
   constructor(config) {
