@@ -22,8 +22,6 @@ export default class FirebaseWrapper {
   /**
    * what needs moving over:
 
-   getUid
-   getExampleUser
    getUserNotifications
    dismissNotification
    insertWelcomeNotification
@@ -54,7 +52,7 @@ export default class FirebaseWrapper {
 
   /**
    * returns the current example users information from the firebase database
-   * @returns {firebase.Promise.<*>}
+   * @returns {Promise<firebase.firestore.DocumentSnapshot>}
    */
   getExampleUser() {
     return this.databaseCloud.collection('users').doc('example').get();
@@ -62,9 +60,10 @@ export default class FirebaseWrapper {
 
   /**
    * returns all active notifications (active means actually existing) for that user
-   * @returns {firebase.Promise.<*>}
+   * @returns {Promise<firebase.firestore.DocumentSnapshot>}
    */
   getUserNotifications() {
+    // return this.databaseCloud.collection('users').doc(`${this.getUid()}`).get('notifications');
     return this.database.ref(`users/${this.getUid()}/notifications`).once('value');
   }
 
@@ -256,22 +255,32 @@ export default class FirebaseWrapper {
       family_name,
       given_name,
       hd,
-      uid,
       name,
       picture,
+      uid,
     } = profile;
 
-    return this.database.ref(`users/${uid}/profile`).set({
-      uid,
-      given_name,
-      family_name,
+      this.databaseCloud.collection(`users`).doc(`${uid}/profile`).set({
       email,
-      picture,
-      name,
+      family_name,
+      given_name,
       hd,
-    })
-    .then(() => this.createSampleUnitsForNewUser())
-    .then(() => this.insertWelcomeNotification())
-    .then(() => Promise.resolve(profile));
+      name,
+      picture,
+    });
+
+
+
+    // return this.database.ref(`users/${uid}/profile`).set({
+    //   given_name,
+    //   family_name,
+    //   email,
+    //   picture,
+    //   name,
+    //   hd,
+    // })
+    //   .then(() => this.createSampleUnitsForNewUser())
+    //   .then(() => this.insertWelcomeNotification())
+    //   .then(() => Promise.resolve(profile));
   }
 }
