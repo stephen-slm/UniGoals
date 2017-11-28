@@ -8,7 +8,22 @@ import style from './login.less';
 import { isMobileDevice } from '../../utils/utils';
 
 
-export default class LoginHomepage extends React.Component {
+export default class Login extends React.Component {
+  /**
+   * takes the google login and generates a users profile from the data
+   * @param {object} loginResult Google login result
+   */
+  static generateProfile(loginResult) {
+    const selectionList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
+    const profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
+
+    return Object.assign(profile, {
+      token: loginResult.credential.accessToken,
+      hd: (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd,
+      new: loginResult.additionalUserInfo.isNewUser,
+    });
+  }
+
   constructor(props) {
     super(props);
 
@@ -16,13 +31,24 @@ export default class LoginHomepage extends React.Component {
     this.processGoogleLogin = this.processGoogleLogin.bind(this);
     this.authenticateExamplesUser = this.authenticateExamplesUser.bind(this);
     this.authenticateUserWithGoogle = this.authenticateUserWithGoogle.bind(this);
+    this.updateProfile = this.updateProfile.bind(this);
 
+    /**
+     * Knowing the device is mobile is important to use a different authentication method, by
+     * this we fix a problem related to mobile authetnication (slightly slower) but we also
+     * then allow the faster one for pc always.
+     */
     this.state = {
       loading: isMobileDevice() === true,
       isMobile: isMobileDevice(),
     };
 
 
+    /**
+     * if the user is on a mobile device (or we think they are) we have to listen for
+     * redirction results to authenticate them into the system otherwise they won't
+     * be able to use the database references
+     */
     if (this.state.isMobile) {
       this.props.firebase.authentication.getRedirectResult()
         .then((loginResult) => {
@@ -44,14 +70,11 @@ export default class LoginHomepage extends React.Component {
 
 
   /**
-   * gets the authenticating users units within a promise wrapper, updating the proops
+   * Gets the units for the logged in user
    */
   getUnits() {
     this.props.firebase.getUnitsById()
-      .then((units) => {
-        this.props.updateUnits(units.val());
-        return Promise.resolve();
-      })
+      .then(units => this.props.updateUnits(units.val()))
       .catch(error => Promise.reject(error));
   }
 
@@ -67,37 +90,36 @@ export default class LoginHomepage extends React.Component {
       .catch(error => Promise.reject(error));
   }
 
+  /**
+   * Takes in the loginResult from a google login, taking the important information and creating
+   * the user if the user does not already exist.
+   * @param {object} loginResult login result from google
+   */
   processGoogleLogin(loginResult) {
     return new Promise((resolve, reject) => {
-      const selectionList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
-
-      let profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
-      const isNew = loginResult.additionalUserInfo.isNewUser;
-
-      profile = Object.assign(profile, {
-        token: loginResult.credential.accessToken,
-        uid: loginResult.user.uid,
-        university_id: profile.email.split('@')[0],
-        hd: (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd,
-        new: isNew,
-      });
+      const profile = Login.generateProfile(loginResult);
 
       if (profile.new) {
         this.props.firebase.createNewUser(profile)
-          .then(() => {
-            this.props.updateProfile(profile);
-            return resolve();
-          })
+          .then(() => this.updateProfile(profile))
+          .then(() => resolve())
           .catch(error => reject(error));
       } else {
         this.props.firebase.getProfileById()
-          .then((gotProfile) => {
-            this.props.updateProfile(gotProfile);
-            return resolve();
-          })
+          .then(gotProfile => this.updateProfile(gotProfile))
+          .then(() => resolve())
           .catch(error => reject(error));
       }
     });
+  }
+
+  /**
+   * updates the users profile in redux
+   * @param {object} profile the users profile information
+   */
+  updateProfile(profile) {
+    this.props.updateProfile(profile);
+    return Promise.resolve();
   }
 
   /**
@@ -123,6 +145,9 @@ export default class LoginHomepage extends React.Component {
       .catch(error => toaster.danger(error.message));
   }
 
+  /**
+   * Triggers the authentication steps when the user presses the login button
+   */
   authenticateUserWithGoogle() {
     const auth = this.props.firebase.authentication;
     const { provider } = this.props.firebase;
@@ -143,6 +168,10 @@ export default class LoginHomepage extends React.Component {
     }
   }
 
+  /**
+   * Simple loading box if there is data processing happening, allows the user to know something
+   * is happening int the background instead of it just sitting on the login screen.
+   */
   loadingBox() {
     if (this.state.loading) {
       return (
@@ -178,7 +207,7 @@ export default class LoginHomepage extends React.Component {
   }
 }
 
-LoginHomepage.propTypes = {
+Login.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,

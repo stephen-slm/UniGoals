@@ -110,7 +110,7 @@ export default class AverageGrade extends React.Component {
     }
 
     return (
-      <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: 120, height: this.props.height }}>
+      <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: this.props.width, height: this.props.height }}>
         <div style={{ margin: '60% 23%' }}>
           <Tooltip content="Average Grade" position={Position.TOP}>{`${averageGrade}%`}</Tooltip>
         </div>
@@ -127,6 +127,7 @@ AverageGrade.propTypes = {
   summaryData: PropTypes.shape({}),
   className: PropTypes.string,
   height: PropTypes.number,
+  width: PropTypes.number,
   isSummary: PropTypes.bool,
 };
 
@@ -137,4 +138,5 @@ AverageGrade.defaultProps = {
   summaryData: null,
   className: '',
   isSummary: false,
+  width: 120,
 };

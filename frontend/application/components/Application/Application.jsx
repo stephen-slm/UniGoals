@@ -19,6 +19,10 @@ export default class Application extends React.Component {
 
     this.routePaths = routePaths;
 
+    /**
+     * creating the firebase wrapper that will be used to authenticate and to interact with the
+     * firebase database
+     */
     this.firebase = new FirebaseWrapper({
       apiKey: 'AIzaSyDBSpRMIl4olTWN0AOMCTMVqeIVkhGio_8',
       authDomain: 'organic-lacing-185810.firebaseapp.com',

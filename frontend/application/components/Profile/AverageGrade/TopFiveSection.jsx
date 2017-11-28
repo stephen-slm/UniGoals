@@ -5,6 +5,16 @@ import _ from 'lodash';
 import { HashLink as Link } from 'react-router-hash-link';
 
 export default class TopFiveSection extends React.Component {
+  /**
+   * Applying the weighiting to all the units, getting the overal unit total and ordering
+   * the content based on this information with title, total and a link based on the
+   * current active address, this link being a hash link to the table contntes.
+   *
+   * Finally at the end this is reveresed as the lodash sortBy orders them based on
+   * lowest to highest and we need the vice vera.
+   * @param {object} data the unit data
+   * @param {object} history react-router history object
+   */
   static calulateTopFive(data, history) {
     if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
       return 0;
