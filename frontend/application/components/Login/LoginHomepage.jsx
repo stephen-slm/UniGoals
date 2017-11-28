@@ -5,65 +5,43 @@ import _ from 'lodash';
 
 import toaster from '../../utils/toaster';
 import style from './login.less';
+import { isMobileDevice } from '../../utils/utils';
 
-export default class Login extends React.Component {
+
+export default class LoginHomepage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.authenticateExamplesUser = this.authenticateExamplesUser.bind(this);
     this.loadingBox = this.loadingBox.bind(this);
-
-    this.authenticateUser = this.authenticateUser.bind(this);
-    this.getNotifications = this.getNotifications.bind(this);
-    this.getUnits = this.getUnits.bind(this);
-
-    const { search } = this.props.history.location;
-
-    if (search === '?type=example') {
-      this.authenticateExamplesUser();
-    }
+    this.processGoogleLogin = this.processGoogleLogin.bind(this);
+    this.authenticateExamplesUser = this.authenticateExamplesUser.bind(this);
+    this.authenticateUserWithGoogle = this.authenticateUserWithGoogle.bind(this);
 
     this.state = {
-      loading: search === '?type=example',
+      loading: isMobileDevice() === true,
+      isMobile: isMobileDevice(),
     };
-  }
 
-  /**
-   * Takes the login result and generates the profile for the account, creating the users account
-   * if they don't already exist
-   * @param loginResult The google login result
-   * @returns {Promise.<*>}
-   */
-  getAccountDetails(loginResult) {
-    const selectionList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
 
-    let profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
-    const isNew = loginResult.additionalUserInfo.isNewUser;
-
-    profile = Object.assign(profile, {
-      token: loginResult.credential.accessToken,
-      uid: loginResult.user.uid,
-      university_id: profile.email.split('@')[0],
-      hd: (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd,
-      new: isNew,
-    });
-
-    if (profile.new) {
-      this.props.firebase.createNewUser(profile)
-        .then(() => {
-          this.props.updateProfile(profile);
-          return Promise.resolve();
-        })
-        .catch(error => Promise.reject(error));
-    } else {
-      this.props.firebase.getProfileById()
-        .then((gotProfile) => {
-          this.props.updateProfile(gotProfile);
-          return Promise.resolve();
-        })
-        .catch(error => Promise.reject(error));
+    if (this.state.isMobile) {
+      this.props.firebase.authentication.getRedirectResult()
+        .then((loginResult) => {
+          if (loginResult.credential) {
+            this.props.firebase.authentication.signInWithCredential(loginResult.credential)
+              .then(() => this.processGoogleLogin(loginResult))
+              .then(() => this.getNotifications())
+              .then(() => this.getUnits())
+              .catch((error) => {
+                toaster.danger(error.message);
+                this.setState({ loading: false });
+              });
+          } else {
+            this.setState({ loading: false });
+          }
+        });
     }
   }
+
 
   /**
    * gets the authenticating users units within a promise wrapper, updating the proops
@@ -87,6 +65,39 @@ export default class Login extends React.Component {
         return Promise.resolve();
       })
       .catch(error => Promise.reject(error));
+  }
+
+  processGoogleLogin(loginResult) {
+    return new Promise((resolve, reject) => {
+      const selectionList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
+
+      let profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
+      const isNew = loginResult.additionalUserInfo.isNewUser;
+
+      profile = Object.assign(profile, {
+        token: loginResult.credential.accessToken,
+        uid: loginResult.user.uid,
+        university_id: profile.email.split('@')[0],
+        hd: (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd,
+        new: isNew,
+      });
+
+      if (profile.new) {
+        this.props.firebase.createNewUser(profile)
+          .then(() => {
+            this.props.updateProfile(profile);
+            return resolve();
+          })
+          .catch(error => reject(error));
+      } else {
+        this.props.firebase.getProfileById()
+          .then((gotProfile) => {
+            this.props.updateProfile(gotProfile);
+            return resolve();
+          })
+          .catch(error => reject(error));
+      }
+    });
   }
 
   /**
@@ -114,24 +125,24 @@ export default class Login extends React.Component {
       .catch(error => toaster.danger(error.message));
   }
 
-  /**
-   * Authenticates a standard user
-   */
-  authenticateUser() {
+  authenticateUserWithGoogle() {
     const auth = this.props.firebase.authentication;
     const { provider } = this.props.firebase;
 
     this.setState({ loading: true });
 
-    auth.signInWithPopup(provider)
-      .then(result => this.getAccountDetails(result))
-      .then(() => this.getNotifications())
-      .then(() => this.getUnits())
-      .then(() => this.setState({ loading: false }))
-      .catch((error) => {
-        toaster.danger(error.message);
-        this.setState({ loading: false });
-      });
+    if (this.state.isMobile) {
+      auth.signInWithRedirect(provider);
+    } else {
+      auth.signInWithPopup(provider)
+        .then(result => this.processGoogleLogin(result))
+        .then(() => this.getNotifications())
+        .then(() => this.getUnits())
+        .catch((error) => {
+          toaster.danger(error.message);
+          this.setState({ loading: false });
+        });
+    }
   }
 
   loadingBox() {
@@ -150,7 +161,7 @@ export default class Login extends React.Component {
       <div className={style.loginPage}>
         <img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" alt="Logo" />
         <div style={{ margin: '0 auto' }}>
-          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateUser}>
+          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateUserWithGoogle}>
             <img className={style.googleButton} src="components/resources/images/googleButton.png" alt="Sign in Google" />
           </div>
           <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateExamplesUser}>
@@ -169,10 +180,9 @@ export default class Login extends React.Component {
   }
 }
 
-Login.propTypes = {
+LoginHomepage.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,
   firebase: PropTypes.shape().isRequired,
-  history: PropTypes.shape().isRequired,
 };

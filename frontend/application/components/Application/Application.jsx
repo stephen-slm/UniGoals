@@ -9,7 +9,7 @@ import * as routePaths from './routePaths';
 
 import style from './application.less';
 
-import Login from '../Login/Login';
+import LoginHomepage from '../Login/LoginHomepage';
 import SignOut from '../Login/SignOut';
 import Profile from '../Profile/Profile';
 
@@ -96,8 +96,7 @@ export default class Application extends React.Component {
           <Route
             exact
             path="/"
-            render={history => (<Login
-              history={history.history}
+            render={() => (<LoginHomepage
               updateProfile={this.props.updateProfile}
               updateNotifications={this.props.updateNotifications}
               firebase={this.firebase}
