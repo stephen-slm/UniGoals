@@ -1,5 +1,6 @@
 import Promise from 'bluebird';
 import * as firebase from 'firebase';
+require('firebase/firestore');
 
 export default class FirebaseWrapper {
   constructor(config) {
@@ -7,12 +8,41 @@ export default class FirebaseWrapper {
 
     firebase.initializeApp(this.configuration);
 
+    this.databaseCloud = firebase.firestore();
     this.database = firebase.database();
+
+    debugger;
+
     this.authentication = firebase.auth();
     this.authentication.signOut();
 
     this.provider = new firebase.auth.GoogleAuthProvider();
   }
+
+  /**
+   * what needs moving over:
+
+   getUid
+   getExampleUser
+   getUserNotifications
+   dismissNotification
+   insertWelcomeNotification
+   addUniversityDetails
+   getUnitsById
+   getProfileById
+   updateUnitTitle
+   updateProfileCourse
+   updateUnitRowSection
+   deleteUnitRowById
+   insertUnitById
+   if
+   insertUnitRowById
+   if
+   deleteUnitById
+   createSampleUnitsForNewUser
+   createNewUser
+   *
+   */
 
   /**
    * Gets the current active users uid which is used to reference in the database
@@ -180,14 +210,14 @@ export default class FirebaseWrapper {
    * @returns {Promise.<boolean>}
    */
   sendHelpMessage(message, name, email) {
-    const insertingHelpMessage = this.database.ref('help');
-    insertingHelpMessage.push({
+    this.databaseCloud.collection('help').add({
       message,
       name,
       email,
       timestamp: Date.now(),
-    });
-    return Promise.resolve(true);
+    })
+      .then(() => Promise.resolve(true))
+      .catch(error => Promise.reject(error));
   }
 
   /**
@@ -231,17 +261,29 @@ export default class FirebaseWrapper {
       picture,
     } = profile;
 
-    return this.database.ref(`users/${uid}/profile`).set({
-      uid,
-      given_name,
-      family_name,
+    const newUserRef = this.databaseCloud.collection('users').add({});
+    return newUserRef.doc('profile').set({
       email,
-      picture,
-      name,
+      family_name,
+      given_name,
       hd,
-    })
-      .then(() => this.createSampleUnitsForNewUser())
-      .then(() => this.insertWelcomeNotification())
-      .then(() => Promise.resolve(profile));
+      uid,
+      name,
+      picture,
+    });
+
+      // .then(() => this.createSampleUnitsForNewUser())
+      // .then(() => this.insertWelcomeNotification())
+      // .then(() => Promise.resolve(profile));
+    //
+    // return this.database.ref(`users/${uid}/profile`).set({
+    //   uid,
+    //   given_name,
+    //   family_name,
+    //   email,
+    //   picture,
+    //   name,
+    //   hd,
+    // })
   }
 }

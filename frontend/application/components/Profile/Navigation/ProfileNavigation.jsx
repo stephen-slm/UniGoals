@@ -72,7 +72,7 @@ export default class ProfileNavigation extends React.Component {
 
     this.showHelpBox();
 
-    if (_.isNil(this.props.exampleUser)) {
+    if (_.isNil(this.props.exampleUser) || !this.props.exampleUser) {
       // Temp google form
       window.open('https://docs.google.com/forms/d/e/'
         + '1FAIpQLSfAZUIjg-jJEPlXLuzRVTpf6bIxGWqdI7HiC6YKVNp5r87Mvg/viewform?'
