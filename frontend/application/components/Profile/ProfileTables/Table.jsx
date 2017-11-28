@@ -50,9 +50,16 @@ export default class Table extends React.Component {
   }
 
   insertRowBelow() {
-    this.props.firebase.insertUnitRowById(this.props.tableIndex)
-      .then(key => this.props.insertUnitRow(key, this.props.tableIndex))
-      .catch(error => toaster.danger(error.message));
+    if (!this.props.exampleUser) {
+      this.props.firebase.insertUnitRowById(this.props.tableIndex)
+        .then((key) => {
+          if (!this.props.exampleUser) {
+            return this.props.insertUnitRow(key, this.props.tableIndex);
+          }
+          return Promise.resolve();
+        })
+        .catch(error => toaster.danger(error.message));
+    }
   }
 
   updateRowContent(change, rowIndex, columnIndex) {
@@ -72,22 +79,22 @@ export default class Table extends React.Component {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
     }
 
-    if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
+    const validUpdate = change !== this.props.unit.content[rowIndex][columnIndex];
+
+    if ((!_.isNil(change) || validUpdate) && !this.props.exampleUser) {
       const { tableIndex } = this.props;
       this.props.firebase.updateUnitRowSection(change, tableIndex, rowIndex, columnIndex);
     }
   }
 
   updateUnitTitle(change) {
-    // This means that its the same content as was already there, so there is no need to update
-    // when it does not change.
     if (!_.isNil(change) || change !== this.props.unit.title) {
       this.props.updateUnitTitle(change, this.props.tableIndex);
     }
   }
 
   updateUnitTitleDatabase(change) {
-    if (!_.isNil(change) || change !== this.props.unit.title) {
+    if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.exampleUser) {
       this.props.firebase.updateUnitTitle(change, this.props.tableIndex)
         .catch(error => toaster.danger(error.message));
     }

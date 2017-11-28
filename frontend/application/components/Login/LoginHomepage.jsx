@@ -119,8 +119,6 @@ export default class LoginHomepage extends React.Component {
         this.props.updateNotifications(notifications);
         this.props.updateProfile(profile);
         this.props.updateUnits(units);
-
-        this.setState({ loading: false });
       })
       .catch(error => toaster.danger(error.message));
   }
