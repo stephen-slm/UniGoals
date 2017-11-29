@@ -30,6 +30,13 @@ export default class Profile extends React.Component {
     };
   }
 
+  /**
+   * When a user is first created, they are asked for there courseName and there courseYear
+   * this will be asked every time until a valid courseName is passed, this will validate
+   * if the course name is valid or not. (the database will also validate it) so if it
+   * some how turns out to be invalid the user will have to reenter it when they login
+   * again.
+   */
   addUniversityDetails() {
     const courseName = this.universityCourse.value;
     const courseYear = this.universityYear.value;
@@ -68,6 +75,9 @@ export default class Profile extends React.Component {
       .catch(error => toaster.danger(error));
   }
 
+  /**
+   * New user box for entering the courseName nad courseYear
+   */
   newUserDialog() {
     return (
       <Dialog

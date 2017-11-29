@@ -39,6 +39,11 @@ export default class Table extends React.Component {
     };
   }
 
+  /**
+   * Removes a row from a unit table, requires the row key for removing from both the index
+   * and from the firebase database.
+   * @param {string} rowIndex the row key to remove
+   */
   removeRowById(rowIndex) {
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
       this.props.removeUnitRow(rowIndex, this.props.tableIndex);
@@ -49,6 +54,12 @@ export default class Table extends React.Component {
     }
   }
 
+  /**
+   * inserts a new row at the bottom of the current table, this does not require
+   * any more information but the firebase will return a key which will require
+   * for creating the row in the redux, (without this we cannot update this row for
+   * the firebase or the redux)
+   */
   insertRowBelow() {
     if (!this.props.exampleUser) {
       this.props.firebase.insertUnitRowById(this.props.tableIndex)
@@ -62,6 +73,12 @@ export default class Table extends React.Component {
     }
   }
 
+  /**
+   * Updates a row content based on a key
+   * @param {string} change the change to update
+   * @param {string} rowIndex row key
+   * @param {string} columnIndex column key
+   */
   updateRowContent(change, rowIndex, columnIndex) {
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
@@ -74,6 +91,12 @@ export default class Table extends React.Component {
     }
   }
 
+  /**
+   * Updates a row content based on a key on the firebase database
+   * @param {string} change the change to update
+   * @param {string} rowIndex row key
+   * @param {string} columnIndex column key
+   */
   updateRowCententDatabase(change, rowIndex, columnIndex) {
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
@@ -87,12 +110,20 @@ export default class Table extends React.Component {
     }
   }
 
+  /**
+   * updates a unit title
+   * @param {string} change title change
+   */
   updateUnitTitle(change) {
     if (!_.isNil(change) || change !== this.props.unit.title) {
       this.props.updateUnitTitle(change, this.props.tableIndex);
     }
   }
 
+  /**
+   * updates a unit title on the database
+   * @param {string} change title change
+   */
   updateUnitTitleDatabase(change) {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.exampleUser) {
       this.props.firebase.updateUnitTitle(change, this.props.tableIndex)
@@ -101,6 +132,9 @@ export default class Table extends React.Component {
   }
 
 
+  /**
+   * Removes the table (unit) completely from both firebase and redux
+   */
   deleteUnitTable() {
     this.showDeleteUnitBox();
     toaster.success(`Deleted ${(this.state.tableTitle === null) ? 'the' : this.state.tableTitle} unit`);
@@ -155,6 +189,9 @@ export default class Table extends React.Component {
     });
   }
 
+  /**
+   * Generates each row for the current table based on the content passed down from firebase
+   */
   generateTableContents() {
     let totalAchieved = 0;
     let totalWeighting = 0;

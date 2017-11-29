@@ -17,12 +17,18 @@ export default class Tables extends React.Component {
     this.addUnitTable = this.addUnitTable.bind(this);
   }
 
+  /**
+   * Inserts a new unit on firebase and on redux
+   */
   addUnitTable() {
     this.props.firebase.insertUnitById()
       .then(ref => this.props.addUnitTable(ref))
       .catch(error => toaster.danger(error.message));
   }
 
+  /**
+   * maps out every unit within a table.
+   */
   createTables() {
     if (_.isNil(this.props.units)) {
       return (<div />);

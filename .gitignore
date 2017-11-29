@@ -33,3 +33,9 @@ node_modules
 
 # bundle react
 bundle.js
+
+# firebase
+.vscode
+.firebaserc
+.database.rules.json
+firebase.json

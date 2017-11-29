@@ -16,6 +16,9 @@ export default class Notification extends React.Component {
     };
   }
 
+  /**
+   * Removes the current notification from the firebase database and from redux
+   */
   dismissNotification() {
     if (!this.props.exampleUser) {
       this.props.firebase.dismissNotification(this.state.keyIndex);

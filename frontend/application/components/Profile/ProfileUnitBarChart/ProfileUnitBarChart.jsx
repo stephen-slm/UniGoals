@@ -5,6 +5,11 @@ import _ from 'lodash';
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line } from 'recharts';
 
 export default class ProfileUnitBarChart extends React.Component {
+  /**
+   * Calulates the width for the bar chart, based on the number of data length
+   * @param {string} width prop string
+   * @param {string} dataLen length of data
+   */
   static calculateWidth(width, dataLen) {
     if (!_.isNil(width)) {
       return width;
@@ -43,6 +48,10 @@ export default class ProfileUnitBarChart extends React.Component {
     this.content = this.generateBarData();
   }
 
+  /**
+   * generates bar chart data that is needed for the chart, the data
+   * is shortnamed and used a float format for numbering
+   */
   generateBarData() {
     return _.map(this.state.data, (unit) => {
       const name = _.defaultTo(unit.name, 'Section');
@@ -59,6 +68,11 @@ export default class ProfileUnitBarChart extends React.Component {
     });
   }
 
+  /**
+   * generates bar chart data that is needed for the chart, the data and the data
+   * is shortnamed but we also need to calulate the total for all units, as this
+   * would be for the summary.
+   */
   generateSummaryBarData() {
     return _.map(this.props.data, (unit) => {
       const name = _.defaultTo(unit.title, 'Unit');

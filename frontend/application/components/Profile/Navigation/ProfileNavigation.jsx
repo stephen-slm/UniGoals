@@ -34,36 +34,52 @@ export default class ProfileNavigation extends React.Component {
     };
   }
 
+  /**
+   * Notificaitons are based on a state, adjusting the state will display the
+   * notifications for the user.
+   */
   showNotifications() {
     this.setState({
       showNotifications: !this.state.showNotifications,
     });
   }
 
+  /**
+   * Trigges the overlay for the signed in user when they click the help button
+   */
   showHelpBox() {
     this.setState({
       showHelp: !this.state.showHelp,
     });
   }
 
+  /**
+   * Displays the overlay for the sign out page.
+   */
   showSignOutBox() {
     this.setState({
       showSignOut: !this.state.showSignOut,
     });
   }
 
+  /**
+   * Triggers the sign out process
+   */
   signOut(e) {
     e.preventDefault();
     this.props.history.push('/signout');
   }
 
+  /**
+   * Adds a help message into the firebase help route, this route stores
+   * the message, name, email and timestamp of user sending the help message
+   */
   submitHelpMessage(e) {
     e.preventDefault();
 
     const message = this.helpText.value;
     const { name, email, given_name: givenName } = this.props.profile;
     const { version } = this.props;
-
 
     if (message.length < 15) {
       return this.setState({ invalidhelpMessage: true });
@@ -73,7 +89,8 @@ export default class ProfileNavigation extends React.Component {
     this.showHelpBox();
 
     if (_.isNil(this.props.exampleUser) || !this.props.exampleUser) {
-      // Temp google form
+      // Generates a prefilled link for user generated form for submitting help, thiw will
+      // be a google form.
       window.open('https://docs.google.com/forms/d/e/'
         + '1FAIpQLSfAZUIjg-jJEPlXLuzRVTpf6bIxGWqdI7HiC6YKVNp5r87Mvg/viewform?'
         + `usp=pp_url&entry.359427520=${name}&entry.1023136950=${email}&entry.114544494=`
@@ -89,7 +106,10 @@ export default class ProfileNavigation extends React.Component {
     return toaster.warning('Sorry the example user cannot send help or feedback messages');
   }
 
-
+  /**
+   * Builds the notification jsx for the user, base on if the size of the notifications
+   * are greater than 0 (there are actually notifications)
+   */
   buildNotifications() {
     let notifications = (<pre>No Notifications</pre>);
 
@@ -116,6 +136,10 @@ export default class ProfileNavigation extends React.Component {
     );
   }
 
+  /**
+   * Generates the help button button, which also includes the building of the help section and
+   * submitting to the user.
+   */
   helpButton() {
     return (
       <div>
@@ -149,6 +173,9 @@ export default class ProfileNavigation extends React.Component {
     );
   }
 
+  /**
+   * sign out button and display box for the user.
+   */
   signOutButton() {
     return (
       <div>

@@ -10,6 +10,10 @@ import TopFiveSection from '../AverageGrade/TopFiveSection';
 import style from '../profile.less';
 
 export default class ProfileSummary extends React.Component {
+  /**
+   * Gets the current year week for University, based on the starting week of week 38 of
+   * the university.
+   */
   static getCurrentYearWeek() {
     const uniStartWeek = 38;
     let date = new Date();

@@ -5,6 +5,10 @@ import _ from 'lodash';
 import { Tooltip, Position } from '@blueprintjs/core';
 
 export default class AverageGrade extends React.Component {
+  /**
+   * Calulates the users unit overal grade.
+   * @param {object} data user units
+   */
   static calulateTotalGrade(data) {
     if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
       return 0;
@@ -26,6 +30,7 @@ export default class AverageGrade extends React.Component {
   }
 
   render() {
+    // The users total grade.
     const totalGrade = AverageGrade.calulateTotalGrade(this.props.data);
 
     return (
