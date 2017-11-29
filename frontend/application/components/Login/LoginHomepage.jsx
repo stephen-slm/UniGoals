@@ -175,7 +175,7 @@ export default class Login extends React.Component {
   loadingBox() {
     if (this.state.loading) {
       return (
-        <div className={style.loginPage}>
+        <div className={style.loadingIcon}>
           <Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />
         </div>
       );
@@ -185,15 +185,23 @@ export default class Login extends React.Component {
 
   loginBox() {
     return (
-      <div className={style.loginPage}>
-        <img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" alt="Logo" />
-        <div style={{ margin: '0 auto' }}>
+      <div className={style.homeWrapper}>
+        <header className={style.headerAlt}>
+          <span className={style.homeLogo}><img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" alt="Logo" /></span>
+          <h1>UniGoals</h1>
+          <p>Full Course & Unit tracking University Tool<br />
+            built by a University <a href="https://www.linkedin.com/in/stephen-lineker-miller/">Student</a> for University Students.
+          </p>
+        </header>
+        <div className={style.googleLoginButtonWrapper}>
           <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateUserWithGoogle}>
             <img className={style.googleButton} src="components/resources/images/googleButton.png" alt="Sign in Google" />
           </div>
           <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateExamplesUser}>
             <img className={style.googleButton} src="components/resources/images/exampleUser.png" alt="Example User" />
           </div>
+        </div>
+        <div className={`pt-card ${style.homeContainer}`}>
         </div>
       </div>
     );

@@ -78,7 +78,7 @@ ProfileSummary.propTypes = {
   units: PropTypes.shape({}).isRequired,
   profile: PropTypes.shape({
     course_name: PropTypes.string,
-    course_year: PropTypes.number,
+    course_year: PropTypes.string,
     email: PropTypes.string,
     familyName: PropTypes.string,
     GivenName: PropTypes.string,

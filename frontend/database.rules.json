@@ -6,6 +6,14 @@
         ".write": false
       },
       "$uid": {
+        "notifications": {
+          ".read": "auth != null && auth.uid == $uid",
+          ".write": "auth != null && auth.uid == $uid",
+          "$key": {
+            ".read": "auth != null && auth.uid == $uid",
+            ".write": "auth != null && auth.uid == $uid",
+          },
+        },
         "profile": {
           // Allowing the user to read and write to there profile
           ".write": "auth != null && auth.uid == $uid",
@@ -17,6 +25,12 @@
           },
           "family_name": {
             ".validate": "newData.isString() && newData.val().length < 30 && newData.val().length > 3"
+          },
+          "course_name": {
+            ".validate": "newData.isString() && newData.val().length < 50 && newData.val().length > 5"
+          },
+          "course_year": {
+            ".validate": "newData.isString() && newData.val().length <= 3"
           },
           "given_name": {
             ".validate": "newData.isString() && newData.val().length < 30 && newData.val().length > 3"
