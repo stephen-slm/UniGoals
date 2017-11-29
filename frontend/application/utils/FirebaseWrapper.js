@@ -79,7 +79,7 @@ export default class FirebaseWrapper {
    * Gets the active users profile
    * @returns {firebase.Promise.<*>}
    */
-  getProfileById() {
+  getProfileById() {ß
     return this.database.ref(`users/${this.getUid()}/profile`).once('value')
       .then(ref => ref.val());
   }
@@ -227,10 +227,9 @@ export default class FirebaseWrapper {
       hd,
       name,
       picture,
-      uid,
     } = profile;
 
-    return this.database.ref(`users/${uid}/profile`).set({
+    return this.database.ref(`users/${this.getUid()}/profile`).set({
       given_name,
       family_name,
       email,

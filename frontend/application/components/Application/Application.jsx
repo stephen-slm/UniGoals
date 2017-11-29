@@ -53,7 +53,7 @@ export default class Application extends React.Component {
       version,
     } = this.props;
 
-    if (!_.isNil(profile.uid)) {
+    if (!_.isNil(profile.name)) {
       return (
         <Router>
           <div className={style.applicationStyle}>

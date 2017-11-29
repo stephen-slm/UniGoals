@@ -35,6 +35,7 @@ export default class AverageGrade extends React.Component {
       }
     });
 
+    // Using _size to get the size of the object, this is because we are using objects not arrays
     const average = parseFloat(total / _.size(data)).toFixed(2);
     const max = parseFloat(maxTotalPossible / _.size(data)).toFixed(2);
 
@@ -44,13 +45,12 @@ export default class AverageGrade extends React.Component {
     };
   }
 
+  /**
+   * Gets the average of all the active units for the user
+   * @param {object} data All the units for the user
+   */
   static calculateAverageGradePercentSummary(data) {
-    if (_.size(data) === 0) {
-      return {
-        averageGrade: 0,
-        maxTotalPossible: 0,
-      };
-    } else if (_.size(data[Object.keys(data)[0]]) === 0) {
+    if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
       return {
         averageGrade: 0,
         maxTotalPossible: 0,

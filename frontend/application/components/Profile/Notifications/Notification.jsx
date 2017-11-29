@@ -26,7 +26,6 @@ export default class Notification extends React.Component {
   render() {
     return (
       <pre className={this.state.className}>
-
         <h5>
           {this.state.title}
           <Button style={{ float: 'right' }} onClick={this.dismissNotification} className="pt-button pt-minimal pt-icon-small-cross" />
