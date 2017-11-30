@@ -1,72 +1,94 @@
 {
-  "rules": {
-    "users": {
-      "example": {
-        ".read": true,
-        ".write": false
-      },
-      "$uid": {
-        "notifications": {
-          ".read": "auth != null && auth.uid == $uid",
-          ".write": "auth != null && auth.uid == $uid",
+    "rules": {
+      	"help": {
           "$key": {
-            ".read": "auth != null && auth.uid == $uid",
-            ".write": "auth != null && auth.uid == $uid",
-          },
-        },
-        "profile": {
-          // Allowing the user to read and write to there profile
-          ".write": "auth != null && auth.uid == $uid",
-          ".read": "auth != null && auth.uid == $uid",
+            ".write": true,
+          	".read": false,
 
-          // Profile Properties for email, family_name, given_name, hd, name, picture and uid
-          "email": {
-            ".validate": "newData.isString() && newData.val().length < 50 && newData.val().length > 10"
-          },
-          "family_name": {
-            ".validate": "newData.isString() && newData.val().length < 30 && newData.val().length > 3"
-          },
-          "course_name": {
-            ".validate": "newData.isString() && newData.val().length < 50 && newData.val().length > 5"
-          },
-          "course_year": {
-            ".validate": "newData.isString() && newData.val().length <= 3"
-          },
-          "given_name": {
-            ".validate": "newData.isString() && newData.val().length < 30 && newData.val().length > 3"
-          },
-          "hd": {
-            ".validate": "newData.isString() && newData.val().length < 30 && newData.val().length > 3"
-          },
-          "name": {
-            ".validate": "newData.isString() && newData.val().length < 60 && newData.val().length > 3"
-          },
-          "picture": {
-            ".validate": "newData.isString() && newData.val().length < 200 && newData.val().length > 5"
-          },
-          "uid": {
-            ".validate": "newData.isString() && newData.val().length < 100 && newData.val().length > 5"
-          }
-        },
-        "units": {
-          ".read": "auth != null && auth.uid == $uid",
-          "$key": {
-            ".write": "auth != null && auth.uid == $uid",
-            ".validate": "newData.hasChildren(['title'])",
-            "content": {
-              "name": {
-                ".validate": "newData.isString() && newData.val().length < 33"
+              ".validate": "newData.hasChildren(['name', 'email', 'message', 'timestamp'])",
+
+            "name": {
+                        ".validate": "newData.isString() && newData.val().length <= 60 && newData.val().length > 3"
+                    },
+              "email": {
+                        ".validate": "newData.isString() && newData.val().length <= 50 && newData.val().length > 10"
+                    },
+              "message": {
+                ".validate": "newData.isString() && newData.val().length <= 500 && newData.val().length > 5"
               },
-              "archived": {
-                ".validate": "newData.isString() && newData.val().length < 5"
-              },
-              "weighting": {
-                ".validate": "newData.isString() && newData.val().length < 5"
+            	"timestamp": {
+                ".validate": "newData.isNumber()"
               }
-            }
           }
         },
-      },
-    },
-  }
+        "users": {
+            "example": {
+                ".read": true,
+                ".write": false
+            },
+            "$uid": {
+                "notifications": {
+                    // Allowing the user to read and write to there profile
+                    ".write": "auth != null && auth.uid == $uid",
+                    ".read": "auth != null && auth.uid == $uid",
+                      "$key": {
+                        ".validate": "newData.hasChildren(['message', 'title', 'timestamp'])"
+                      }
+
+                },
+                "profile": {
+                    // Allowing the user to read and write to there profile
+                    ".write": "auth != null && auth.uid == $uid",
+                    ".read": "auth != null && auth.uid == $uid",
+
+                    // Profile Properties for email, family_name, given_name, hd, name, picture and uid
+                    "email": {
+                        ".validate": "newData.isString() && newData.val().length <= 50 && newData.val().length > 10"
+                    },
+                    "family_name": {
+                        ".validate": "newData.isString() && newData.val().length <= 30 && newData.val().length > 3"
+                    },
+                    "course_name": {
+                        ".validate": "newData.isString() && newData.val().length <= 50 && newData.val().length > 3"
+                    },
+                    "course_year": {
+                        ".validate": "newData.isNumber() || (newData.isString() && newData.val().length <= 2)"
+                    },
+                    "given_name": {
+                        ".validate": "newData.isString() && newData.val().length <= 30 && newData.val().length > 3"
+                    },
+                    "hd": {
+                        ".validate": "newData.isString() && newData.val().length <= 30 && newData.val().length > 3"
+                    },
+                    "name": {
+                        ".validate": "newData.isString() && newData.val().length <= 60 && newData.val().length > 3"
+                    },
+                    "picture": {
+                        ".validate": "newData.isString() && newData.val().length <= 200 && newData.val().length > 5"
+                    },
+                    "uid": {
+                        ".validate": "newData.isString() && newData.val().length <= 100 && newData.val().length > 5"
+                    }
+                },
+                "units": {
+                    ".read": "auth != null && auth.uid == $uid",
+                    "$key": {
+                        ".write": "auth != null && auth.uid == $uid",
+                        ".validate": "newData.hasChildren(['title'])",
+                        "content": {
+                            "name": {
+                                ".validate": "newData.isString() && newData.val().length <= 32"
+                            },
+                            "achieved": {
+                                ".validate": "newData.isString() && newData.val().length <= 4"
+                            },
+                            "weighting": {
+                                ".validate": "newData.isString() && newData.val().length <= 4"
+                            }
+                        }
+                    }
+                },
+            },
+        },
+    }
 }
