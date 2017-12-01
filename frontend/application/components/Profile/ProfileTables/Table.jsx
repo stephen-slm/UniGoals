@@ -192,13 +192,11 @@ export default class Table extends React.Component {
     let totalWeighting = 0;
 
     const tables = _.map(this.props.unit.content, (unitContent, index) => {
-      if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.achieved) && (unitContent.weighting !== '' && unitContent.achieved !== '')) {
-        if (parseFloat(unitContent.achieved) > 0) {
-          totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
-        }
-        if (!_.isNil(unitContent.weighting) && unitContent.weighting !== '') {
-          totalWeighting += parseFloat(unitContent.weighting);
-        }
+      if (parseFloat(unitContent.achieved) > 0 && parseFloat(unitContent.weighting) > 0) {
+        totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
+      }
+      if (parseFloat(unitContent.weighting) > 0) {
+        totalWeighting += parseFloat(unitContent.weighting);
       }
 
       return (
