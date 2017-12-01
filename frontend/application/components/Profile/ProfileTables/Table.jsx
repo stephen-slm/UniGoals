@@ -63,12 +63,7 @@ export default class Table extends React.Component {
   insertRowBelow() {
     if (!this.props.exampleUser) {
       this.props.firebase.insertUnitRowById(this.props.tableIndex)
-        .then((key) => {
-          if (!this.props.exampleUser) {
-            return this.props.insertUnitRow(key, this.props.tableIndex);
-          }
-          return Promise.resolve();
-        })
+        .then(key => this.props.insertUnitRow(key, this.props.tableIndex))
         .catch(error => toaster.danger(error.message));
     }
   }
@@ -358,5 +353,5 @@ Table.defaultProps = {
   unit: {
     content: {},
   },
-  exampleUser: null,
+  exampleUser: false,
 };
