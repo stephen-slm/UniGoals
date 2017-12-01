@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Line } from 'recharts';
+import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Area } from 'recharts';
 
 export default class ProfileUnitBarChart extends React.Component {
   /**
@@ -40,7 +40,7 @@ export default class ProfileUnitBarChart extends React.Component {
       className: this.props.className,
       color: this.props.color,
       height: this.props.height,
-      lineOnly: this.props.lineOnly,
+      areaOnly: this.props.areaOnly,
       isSummary: this.props.isSummary,
       displayText: this.props.displayText,
     };
@@ -115,14 +115,14 @@ export default class ProfileUnitBarChart extends React.Component {
         style={{ maxWidth: width, height: this.state.height }}
       >
         <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={width} height={200} data={data}>
+          <Area type="monotone" dataKey="value" fill={this.state.color} stroke={this.state.color} />
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="name">
             <Label value={this.state.displayText} offset={0} position="bottom" />
           </XAxis>
           <YAxis />
           <Tooltip />
-          {(!this.state.lineOnly) ? (<Bar dataKey="value" fill={this.state.color} />) : null}
-          <Line type="monotone" dataKey="value" stroke="#ff7300" />
+          {(!this.state.areaOnly) ? (<Bar dataKey="value" fill={this.state.color} />) : null}
         </ComposedChart>
       </div>
     );
@@ -136,7 +136,7 @@ ProfileUnitBarChart.propTypes = {
   className: PropTypes.string,
   color: PropTypes.string,
   displayText: PropTypes.string,
-  lineOnly: PropTypes.bool,
+  areaOnly: PropTypes.bool,
   isSummary: PropTypes.bool,
 };
 
@@ -145,7 +145,7 @@ ProfileUnitBarChart.defaultProps = {
   height: 'auto',
   className: '',
   color: '#009FE3',
-  lineOnly: false,
+  areaOnly: false,
   isSummary: false,
   data: {},
   displayText: 'Unit Process',

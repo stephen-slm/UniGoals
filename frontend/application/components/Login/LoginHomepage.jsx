@@ -3,9 +3,14 @@ import PropTypes from 'prop-types';
 import { Spinner, Intent, Classes } from '@blueprintjs/core';
 import _ from 'lodash';
 
+import ProfileSummary from '../Profile/ProfileSummary/ProfileSummary';
+import SampleTable from '../Profile/ProfileTables/SampleTable';
+
 import toaster from '../../utils/toaster';
-import style from './login.less';
 import { isMobileDevice } from '../../utils/utils';
+import * as homePageData from './homePageData';
+
+import style from './login.less';
 
 
 export default class Login extends React.Component {
@@ -184,13 +189,15 @@ export default class Login extends React.Component {
   }
 
   loginBox() {
+    const exampleUser = true;
+
     return (
       <div className={style.homeWrapper}>
         <header className={style.headerAlt}>
           <span className={style.homeLogo}><img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" alt="Logo" /></span>
           <h1>UniGoals</h1>
           <p>Full Course & Unit tracking University Tool<br />
-            built by a University <a href="https://www.linkedin.com/in/stephen-lineker-miller/">Student</a> for University Students.
+            built by a University <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">Student</a> for University Students.
           </p>
         </header>
         <div className={style.googleLoginButtonWrapper}>
@@ -202,6 +209,33 @@ export default class Login extends React.Component {
           </div>
         </div>
         <div className={`pt-card ${style.homeContainer}`}>
+          UniGoals is a modern University unit tracking tool designed to let you know where
+          you currently stand on your course. Using quick and simple percentages and charts
+          to provide fast and accurate content about your course. Simply add your units with
+          there weighting (e.g.coursework, exam, presentations, etc) and quickly see your
+          current percent, average and total maximum grade! Real-time instant results.
+          <div className={style.homeSummaryContainer}>
+            <ProfileSummary
+              units={homePageData.units}
+              profile={homePageData.profile}
+              history={this.props.history}
+              exampleUser={exampleUser}
+            />
+          </div>
+          Your own unqiue summary page that display everything you need to quickly know about your
+          units! Including your <strong>unit ranks</strong>, how they are compared to other units,
+          <strong> Average</strong>, <strong>Max</strong> and <strong>Total Grade</strong>. Try
+          hovering over the chart and percentages. Each unit looks like the one below, providing
+          a <strong>Title</strong>, <strong>Name</strong>, <strong> Weighting</strong>, and
+          <strong> Achieved</strong> column. Filling these will allow you to make the most of
+          the site. The chart and percentages will also update in real time as you update the rows.
+          <div className={`pt-card pt-elevation-3 ${style.homeTablesContainer}`}>
+            <SampleTable
+              tableNum={1}
+              unit={homePageData.units[Object.keys(homePageData.units)[2]]}
+              exampleUser={exampleUser}
+            />
+          </div>
         </div>
       </div>
     );
@@ -219,5 +253,18 @@ Login.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,
-  firebase: PropTypes.shape().isRequired,
+  firebase: PropTypes.shape({
+    getExampleUser: PropTypes.func,
+    createNewUser: PropTypes.func,
+    getProfileById: PropTypes.func,
+    getUnitsById: PropTypes.func,
+    getUserNotifications: PropTypes.func,
+    provider: PropTypes.shape({}),
+    authentication: PropTypes.shape({
+      getRedirectResult: PropTypes.func,
+      signInWithCredential: PropTypes.func,
+    }),
+
+  }).isRequired,
+  history: PropTypes.shape({}).isRequired,
 };

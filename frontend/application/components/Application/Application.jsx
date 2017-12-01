@@ -100,11 +100,12 @@ export default class Application extends React.Component {
           <Route
             exact
             path="/"
-            render={() => (<LoginHomepage
+            render={history => (<LoginHomepage
               updateProfile={this.props.updateProfile}
               updateNotifications={this.props.updateNotifications}
               firebase={this.firebase}
               updateUnits={this.props.updateUnits}
+              history={history.history}
             />)}
           />
         </div>
