@@ -64,7 +64,7 @@ export default class ProfileUnitBarChart extends React.Component {
         shortName = name.match(/\b(\w)/g).join('').toUpperCase();
       }
 
-      return { name: shortName, value: parseFloat(unit.achieved) };
+      return { name: shortName, value: parseFloat(unit.achieved) || 0 };
     });
   }
 
@@ -94,7 +94,7 @@ export default class ProfileUnitBarChart extends React.Component {
           }
         }
       });
-      return { name: shortName, value: total / 100, target: 100 };
+      return { name: shortName, value: total / 100 };
     });
   }
 
