@@ -1,5 +1,7 @@
 {
     "name": "UniGoals",
+    "short_name": "UniGoals",
+    "description": "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
     "icons": [
         {
             "src": "components/resources/favicons/android-chrome-192x192.png",
@@ -12,7 +14,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+    "related_applications": [{
+        "platform": "web"
+    }]
 }
