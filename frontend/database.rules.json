@@ -51,6 +51,9 @@
                     "course_name": {
                         ".validate": "newData.isString() && newData.val().length <= 50 && newData.val().length > 3"
                     },
+                    "course_university": {
+                        ".validate": "newData.isString() && newData.val().length <= 50 && newData.val().length > 3"
+                    },
                     "course_year": {
                         ".validate": "newData.isNumber() || (newData.isString() && newData.val().length <= 2)"
                     },

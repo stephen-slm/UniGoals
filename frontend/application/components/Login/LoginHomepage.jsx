@@ -222,7 +222,7 @@ export default class Login extends React.Component {
               exampleUser={exampleUser}
             />
           </div>
-          Your own unqiue summary page that display everything you need to quickly know about your
+          Your own unqiue summary page that displays everything you need to quickly know about your
           units! Including your <strong>unit ranks</strong>, how they are compared to other units,
           <strong> Average</strong>, <strong>Max</strong> and <strong>Total Grade</strong>. Try
           hovering over the chart and percentages. Each unit looks like the one below, providing

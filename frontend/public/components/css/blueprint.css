@@ -5075,7 +5075,13 @@ span.pt-icon {
   padding: 5px;
   list-style: none;
   text-align: left;
-  color: #182026; }
+  color: #182026; 
+  max-width: 400px;
+  max-height: 300px;
+  overflow: auto;
+  padding: 0;
+}
+  
 
 .pt-menu-divider {
   display: block;
@@ -5175,8 +5181,6 @@ span.pt-icon {
     font-size: 16px;
     font-weight: 400;
     font-style: normal;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
     float: left;
     margin-right: 7px; }
   .pt-menu-item::before, .pt-menu-item::after {

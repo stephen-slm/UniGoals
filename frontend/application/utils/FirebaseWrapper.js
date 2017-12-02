@@ -61,9 +61,10 @@ export default class FirebaseWrapper {
     return Promise.resolve(insertingNotificationKey.key);
   }
 
-  addUniversityDetails(courseName, courseYear) {
+  addUniversityDetails(courseName, courseYear, courseUniversity) {
     this.database.ref(`users/${this.getUid()}/profile/course_name`).set(courseName);
     this.database.ref(`users/${this.getUid()}/profile/course_year`).set(courseYear);
+    this.database.ref(`users/${this.getUid()}/profile/course_university`).set(courseUniversity);
     return Promise.resolve();
   }
 
