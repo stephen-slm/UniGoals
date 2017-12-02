@@ -2806,7 +2806,6 @@ a.pt-button {
   transition: box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
   -webkit-appearance: none;
      -moz-appearance: none;
-          appearance: none;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -3168,8 +3167,7 @@ a.pt-button {
   font-weight: 400;
   transition: box-shadow 100ms cubic-bezier(0.4, 1, 0.75, 0.9);
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none; }
+     -moz-appearance: none; }
   .pt-input::-webkit-input-placeholder {
     opacity: 1;
     color: rgba(92, 112, 128, 0.5); }

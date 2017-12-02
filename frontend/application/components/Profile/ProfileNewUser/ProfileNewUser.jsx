@@ -177,7 +177,7 @@ export default class ProfileNewUser extends React.Component {
                 onItemSelect={this.handleValueChangeUni}
                 popoverProps={{ minimal }}
               >
-                <Button className={`pt-fill pt-minimal ${(this.state.invalidCourseUni) ? 'pt-intent-danger' : ''}`} rightIconName="caret-down" text={university ? university : 'Select a University'} />
+                <Button className={`pt-fill pt-minimal ${(this.state.invalidCourseUni) ? 'pt-intent-danger' : ''}`} rightIconName="caret-down" text={_.defaultTo(university, 'Select a University')} />
               </Select>
             </div>
             <div>
@@ -189,7 +189,7 @@ export default class ProfileNewUser extends React.Component {
                 onItemSelect={this.handleValueChangeYear}
                 popoverProps={{ minimal }}
               >
-                <Button className={`pt-fill pt-minimal ${(this.state.invalidCourseYear) ? 'pt-intent-danger' : ''}`} rightIconName="caret-down" text={year ? year : 'Select a University Year'} />
+                <Button className={`pt-fill pt-minimal ${(this.state.invalidCourseYear) ? 'pt-intent-danger' : ''}`} rightIconName="caret-down" text={_.defaultTo(year, 'Select a University Year')} />
               </Select>
             </div>
             <div>
@@ -201,7 +201,7 @@ export default class ProfileNewUser extends React.Component {
                 onItemSelect={this.handleValueChange}
                 popoverProps={{ minimal }}
               >
-                <Button className={`pt-fill pt-minimal ${(this.state.invalidCourseName) ? 'pt-intent-danger' : ''}`} rightIconName="caret-down" text={course ? course : 'Select a University Course'} />
+                <Button className={`pt-fill pt-minimal ${(this.state.invalidCourseName) ? 'pt-intent-danger' : ''}`} rightIconName="caret-down" text={_.defaultTo(course, 'Select a University Course')} />
               </Select>
             </div>
           </div>

@@ -207,11 +207,15 @@ export default class ProfileNavigation extends React.Component {
 
 
   render() {
+    const { profile } = this.props;
+
     return (
       <div>
         <nav className="pt-navbar">
           <div className="pt-navbar-group pt-align-left">
-            <div className="pt-navbar-heading">Uni Goals, Welcome {this.profile.name} - {this.profile.email.split('@')[0].toUpperCase()}</div>
+            <div className="pt-navbar-heading">
+              Uni Goals, Welcome {profile.name} - {profile.email.split('@')[0].toUpperCase()}, {profile.course_university}
+            </div>
           </div>
           <div className="pt-navbar-group pt-align-right">
             <button className="pt-button pt-minimal pt-icon-user" />
@@ -236,6 +240,7 @@ ProfileNavigation.propTypes = {
   profile: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
+    course_university: PropTypes.string,
     given_name: PropTypes.string,
   }).isRequired,
 };
