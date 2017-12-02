@@ -197,7 +197,8 @@ export default class Login extends React.Component {
           <span className={style.homeLogo}><img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" alt="Logo" /></span>
           <h1>UniGoals</h1>
           <p>Full Course & Unit tracking University Tool<br />
-            built by a University <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">Student</a> for University Students.
+            built by a University <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">Student</a> for University Students.<br />
+            Version: {this.props.version}
           </p>
         </header>
         <div className={style.googleLoginButtonWrapper}>
@@ -253,6 +254,7 @@ Login.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateUnits: PropTypes.func.isRequired,
+  version: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     getExampleUser: PropTypes.func,
     createNewUser: PropTypes.func,

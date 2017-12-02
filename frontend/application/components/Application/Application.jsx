@@ -106,6 +106,7 @@ export default class Application extends React.Component {
               firebase={this.firebase}
               updateUnits={this.props.updateUnits}
               history={history.history}
+              version={version}
             />)}
           />
         </div>
