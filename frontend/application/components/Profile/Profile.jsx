@@ -19,6 +19,7 @@ export default class Profile extends React.Component {
           profile={this.profile}
           firebase={this.props.firebase}
           updateProfile={this.props.updateProfile}
+          exampleUser={this.props.profile.exampleUser}
         />
         <ProfileNavigation
           history={this.props.history}

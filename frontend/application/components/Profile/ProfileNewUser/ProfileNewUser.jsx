@@ -137,11 +137,10 @@ export default class ProfileNewUser extends React.Component {
 
     let isOpen = false;
 
-    if (!profile.course_name
-    || !profile.course_year
-    || profile.new
-    || this.props.exampleUser
-    || !profile.course_university) {
+    if ((!profile.course_name
+      || !profile.course_year
+      || profile.new
+      || !profile.course_university) && !this.props.exampleUser) {
       isOpen = true;
     }
 
