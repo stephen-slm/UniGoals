@@ -6,48 +6,46 @@ import ProfileSummary from './ProfileSummary/ProfileSummary';
 import ProfileNewUser from './ProfileNewUser/ProfileNewUser';
 import Tables from './ProfileTables/Tables';
 
-export default class Profile extends React.Component {
-  render() {
-    const { profile } = this.props;
+export default function Profile(props) {
+  const { profile } = props;
 
-    return (
-      <div>
-        <ProfileNewUser
-          profile={profile}
-          firebase={this.props.firebase}
-          updateProfile={this.props.updateProfile}
-          exampleUser={this.props.exampleUser}
-        />
-        <ProfileNavigation
-          history={this.props.history}
-          profile={this.profile}
-          notifications={this.props.notifications}
-          updateNotifications={this.props.updateNotifications}
-          removeNotification={this.props.removeNotification}
-          exampleUser={this.props.exampleUser}
-          firebase={this.props.firebase}
-          version={this.props.version}
-        />
-        <ProfileSummary
-          units={this.props.units}
-          profile={this.profile}
-          history={this.props.history}
-        />
-        <Tables
-          insertUnitRow={this.props.insertUnitRow}
-          updateUnits={this.props.updateUnits}
-          updateRowContent={this.props.updateRowContent}
-          removeUnitRow={this.props.removeUnitRow}
-          updateUnitTitle={this.props.updateUnitTitle}
-          addUnitTable={this.props.addUnitTable}
-          removeUnitTable={this.props.removeUnitTable}
-          firebase={this.props.firebase}
-          exampleUser={this.props.exampleUser}
-          units={this.props.units}
-        />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <ProfileNewUser
+        profile={profile}
+        firebase={props.firebase}
+        updateProfile={props.updateProfile}
+        exampleUser={props.exampleUser}
+      />
+      <ProfileNavigation
+        history={props.history}
+        profile={profile}
+        notifications={props.notifications}
+        updateNotifications={props.updateNotifications}
+        removeNotification={props.removeNotification}
+        exampleUser={props.exampleUser}
+        firebase={props.firebase}
+        version={props.version}
+      />
+      <ProfileSummary
+        units={props.units}
+        profile={profile}
+        history={props.history}
+      />
+      <Tables
+        insertUnitRow={props.insertUnitRow}
+        updateUnits={props.updateUnits}
+        updateRowContent={props.updateRowContent}
+        removeUnitRow={props.removeUnitRow}
+        updateUnitTitle={props.updateUnitTitle}
+        addUnitTable={props.addUnitTable}
+        removeUnitTable={props.removeUnitTable}
+        firebase={props.firebase}
+        exampleUser={props.exampleUser}
+        units={props.units}
+      />
+    </div>
+  );
 }
 
 Profile.propTypes = {
