@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Spinner, Intent, Classes } from '@blueprintjs/core';
 import _ from 'lodash';
 
-import ProfileSummary from '../Profile/ProfileSummary/ProfileSummary';
-import SampleTable from '../Profile/ProfileTables/SampleTable';
+import HomeSummary from '../Home/HomeSummary/HomeSummary';
+import SampleTable from '../Home/HomeTables/SampleTable';
 
 import toaster from '../../utils/toaster';
 import { isMobileDevice } from '../../utils/utils';
@@ -216,7 +216,7 @@ export default class Login extends React.Component {
           there weighting (e.g.coursework, exam, presentations, etc) and quickly see your
           current percent, average and total maximum grade! Real-time instant results.
           <div className={style.homeSummaryContainer}>
-            <ProfileSummary
+            <HomeSummary
               units={homePageData.units}
               profile={homePageData.profile}
               history={this.props.history}

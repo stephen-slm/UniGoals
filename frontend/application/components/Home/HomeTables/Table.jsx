@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import _ from 'lodash';
 
 import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
-import ProfileUnitBarChart from '../ProfileUnitBarChart/ProfileUnitBarChart';
+import HomeUnitBarChart from '../HomeUnitBarChart/HomeUnitBarChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 
 
@@ -308,7 +308,7 @@ export default class Table extends React.Component {
             </tbody>
           </table>
         </div>
-        <ProfileUnitBarChart
+        <HomeUnitBarChart
           data={this.props.unit.content}
           color={this.state.tableColor}
           className={style.tableCoreBarChart}

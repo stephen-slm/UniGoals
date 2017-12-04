@@ -7,9 +7,9 @@ import { Popover, Position, PopoverInteractionKind, Dialog, Button } from '@blue
 import Notification from '../Notifications/Notification';
 import toaster from '../../../utils/toaster';
 
-const style = require('../profile.less');
+const style = require('../home.less');
 
-export default class ProfileNavigation extends React.Component {
+export default class HomeNavigation extends React.Component {
   constructor(props) {
     super(props);
 
@@ -230,7 +230,7 @@ export default class ProfileNavigation extends React.Component {
   }
 }
 
-ProfileNavigation.propTypes = {
+HomeNavigation.propTypes = {
   notifications: PropTypes.shape().isRequired,
   firebase: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
@@ -245,6 +245,6 @@ ProfileNavigation.propTypes = {
   }).isRequired,
 };
 
-ProfileNavigation.defaultProps = {
+HomeNavigation.defaultProps = {
   exampleUser: false,
 };

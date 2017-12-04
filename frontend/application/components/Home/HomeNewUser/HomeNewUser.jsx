@@ -8,9 +8,9 @@ import { Select } from '@blueprintjs/labs';
 import toaster from '../../../utils/toaster';
 import { courseNames, courseYears, universitiesList } from './courseData';
 
-const style = require('./profileNewUser.less');
+const style = require('./homeNewUser.less');
 
-export default class ProfileNewUser extends React.Component {
+export default class HomeNewUser extends React.Component {
   static filterCourse(query, course, index) {
     return `${index + 1}. ${course.toLowerCase()}`.indexOf(query.toLowerCase()) >= 0;
   }
@@ -171,8 +171,8 @@ export default class ProfileNewUser extends React.Component {
               <Select
                 items={universitiesList}
                 noResults={<MenuItem disabled text="No results." />}
-                itemRenderer={ProfileNewUser.renderCourseMenuItem}
-                itemPredicate={ProfileNewUser.filterCourse}
+                itemRenderer={HomeNewUser.renderCourseMenuItem}
+                itemPredicate={HomeNewUser.filterCourse}
                 onItemSelect={this.handleValueChangeUni}
                 popoverProps={{ minimal }}
               >
@@ -183,8 +183,8 @@ export default class ProfileNewUser extends React.Component {
               <Select
                 items={courseYears}
                 noResults={<MenuItem disabled text="No results." />}
-                itemRenderer={ProfileNewUser.renderCourseMenuItem}
-                itemPredicate={ProfileNewUser.filterCourse}
+                itemRenderer={HomeNewUser.renderCourseMenuItem}
+                itemPredicate={HomeNewUser.filterCourse}
                 onItemSelect={this.handleValueChangeYear}
                 popoverProps={{ minimal }}
               >
@@ -195,8 +195,8 @@ export default class ProfileNewUser extends React.Component {
               <Select
                 items={courseNames}
                 noResults={<MenuItem disabled text="No results." />}
-                itemRenderer={ProfileNewUser.renderCourseMenuItem}
-                itemPredicate={ProfileNewUser.filterCourse}
+                itemRenderer={HomeNewUser.renderCourseMenuItem}
+                itemPredicate={HomeNewUser.filterCourse}
                 onItemSelect={this.handleValueChange}
                 popoverProps={{ minimal }}
               >
@@ -219,7 +219,7 @@ export default class ProfileNewUser extends React.Component {
   }
 }
 
-ProfileNewUser.propTypes = {
+HomeNewUser.propTypes = {
   firebase: PropTypes.shape().isRequired,
   updateProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
@@ -232,6 +232,6 @@ ProfileNewUser.propTypes = {
   exampleUser: PropTypes.bool,
 };
 
-ProfileNewUser.defaultProps = {
+HomeNewUser.defaultProps = {
   exampleUser: false,
 };

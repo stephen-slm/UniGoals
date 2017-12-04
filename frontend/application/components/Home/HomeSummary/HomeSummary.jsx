@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
-import ProfileUnitBarChart from '../ProfileUnitBarChart/ProfileUnitBarChart';
+import HomeUnitBarChart from '../HomeUnitBarChart/HomeUnitBarChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 import TotalGrade from '../AverageGrade/TotalGrade';
 import TopFiveSection from '../AverageGrade/TopFiveSection';
 
-import style from '../profile.less';
+import style from '../home.less';
 
-export default class ProfileSummary extends React.Component {
+export default class HomeSummary extends React.Component {
   /**
    * Gets the current year week for University, based on the starting week of week 38 of
    * the university.
@@ -34,7 +34,7 @@ export default class ProfileSummary extends React.Component {
 
     this.state = {
       isSummary: true,
-      currentWeek: ProfileSummary.getCurrentYearWeek(),
+      currentWeek: HomeSummary.getCurrentYearWeek(),
     };
   }
 
@@ -51,7 +51,7 @@ export default class ProfileSummary extends React.Component {
             className={style.topFiveSectionWrapper}
             history={this.props.history}
           />
-          <ProfileUnitBarChart
+          <HomeUnitBarChart
             data={this.props.units}
             color="#621362"
             className={style.ProfileSummaryChart}
@@ -73,7 +73,7 @@ export default class ProfileSummary extends React.Component {
   }
 }
 
-ProfileSummary.propTypes = {
+HomeSummary.propTypes = {
   history: PropTypes.shape({}).isRequired,
   units: PropTypes.shape({}).isRequired,
   profile: PropTypes.shape({

@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Area } from 'recharts';
 
-export default class ProfileUnitBarChart extends React.Component {
+export default class HomeUnitBarChart extends React.Component {
   /**
    * Calulates the width for the bar chart, based on the number of data length
    * @param {string} width prop string
@@ -107,7 +107,7 @@ export default class ProfileUnitBarChart extends React.Component {
       data = this.generateBarData();
     }
 
-    const width = ProfileUnitBarChart.calculateWidth(this.props.width, _.size(this.props.data));
+    const width = HomeUnitBarChart.calculateWidth(this.props.width, _.size(this.props.data));
 
     return (
       <div
@@ -129,7 +129,7 @@ export default class ProfileUnitBarChart extends React.Component {
   }
 }
 
-ProfileUnitBarChart.propTypes = {
+HomeUnitBarChart.propTypes = {
   width: PropTypes.number,
   data: PropTypes.shape({}),
   height: PropTypes.string,
@@ -140,7 +140,7 @@ ProfileUnitBarChart.propTypes = {
   isSummary: PropTypes.bool,
 };
 
-ProfileUnitBarChart.defaultProps = {
+HomeUnitBarChart.defaultProps = {
   width: null,
   height: 'auto',
   className: '',

@@ -9,9 +9,9 @@ import * as routePaths from './routePaths';
 
 import style from './application.less';
 
-import LoginHomepage from '../Login/LoginHomepage';
+import Login from '../Login/Login';
 import SignOut from '../Login/SignOut';
-import Profile from '../Profile/Profile';
+import Home from '../Home/Home';
 
 export default class Application extends React.Component {
   constructor(props) {
@@ -60,7 +60,7 @@ export default class Application extends React.Component {
             <Route
               exact
               path="/"
-              render={history => (<Profile
+              render={history => (<Home
                 history={history.history}
                 profile={profile}
                 updateProfile={updateProfile}
@@ -100,7 +100,7 @@ export default class Application extends React.Component {
           <Route
             exact
             path="/"
-            render={history => (<LoginHomepage
+            render={history => (<Login
               updateProfile={this.props.updateProfile}
               updateNotifications={this.props.updateNotifications}
               firebase={this.firebase}

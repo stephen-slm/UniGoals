@@ -1,23 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import ProfileNavigation from './Navigation/ProfileNavigation';
-import ProfileSummary from './ProfileSummary/ProfileSummary';
-import ProfileNewUser from './ProfileNewUser/ProfileNewUser';
-import Tables from './ProfileTables/Tables';
+import HomeNavigation from './HomeNavigation/HomeNavigation';
+import HomeSummary from './HomeSummary/HomeSummary';
+import HomeNewUser from './HomeNewUser/HomeNewUser';
+import Tables from './HomeTables/Tables';
 
-export default function Profile(props) {
+export default function Home(props) {
   const { profile } = props;
 
   return (
     <div>
-      <ProfileNewUser
+      <HomeNewUser
         profile={profile}
         firebase={props.firebase}
         updateProfile={props.updateProfile}
         exampleUser={props.exampleUser}
       />
-      <ProfileNavigation
+      <HomeNavigation
         history={props.history}
         profile={profile}
         notifications={props.notifications}
@@ -27,7 +27,7 @@ export default function Profile(props) {
         firebase={props.firebase}
         version={props.version}
       />
-      <ProfileSummary
+      <HomeSummary
         units={props.units}
         profile={profile}
         history={props.history}
@@ -48,7 +48,7 @@ export default function Profile(props) {
   );
 }
 
-Profile.propTypes = {
+Home.propTypes = {
   firebase: PropTypes.shape().isRequired,
   updateUnits: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
@@ -73,6 +73,6 @@ Profile.propTypes = {
   }).isRequired,
 };
 
-Profile.defaultProps = {
+Home.defaultProps = {
   exampleUser: false,
 };
