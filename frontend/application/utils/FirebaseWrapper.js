@@ -81,6 +81,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   getProfileById() {
+    this.database.ref(`users/${this.getUid()}/profile/last_login`).set(Date().now());
     return this.database.ref(`users/${this.getUid()}/profile`).once('value')
       .then(ref => ref.val());
   }
