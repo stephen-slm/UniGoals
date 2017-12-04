@@ -7,19 +7,16 @@ import ProfileNewUser from './ProfileNewUser/ProfileNewUser';
 import Tables from './ProfileTables/Tables';
 
 export default class Profile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.profile = this.props.profile;
-  }
-
   render() {
+    const { profile } = this.props;
+
     return (
       <div>
         <ProfileNewUser
-          profile={this.profile}
+          profile={profile}
           firebase={this.props.firebase}
           updateProfile={this.props.updateProfile}
-          exampleUser={this.props.profile.exampleUser}
+          exampleUser={this.props.exampleUser}
         />
         <ProfileNavigation
           history={this.props.history}
@@ -27,7 +24,7 @@ export default class Profile extends React.Component {
           notifications={this.props.notifications}
           updateNotifications={this.props.updateNotifications}
           removeNotification={this.props.removeNotification}
-          exampleUser={this.props.profile.exampleUser}
+          exampleUser={this.props.exampleUser}
           firebase={this.props.firebase}
           version={this.props.version}
         />
@@ -45,7 +42,7 @@ export default class Profile extends React.Component {
           addUnitTable={this.props.addUnitTable}
           removeUnitTable={this.props.removeUnitTable}
           firebase={this.props.firebase}
-          exampleUser={this.props.profile.exampleUser}
+          exampleUser={this.props.exampleUser}
           units={this.props.units}
         />
       </div>
