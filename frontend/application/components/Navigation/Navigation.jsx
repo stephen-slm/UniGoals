@@ -4,12 +4,12 @@ import _ from 'lodash';
 
 import { Popover, Position, PopoverInteractionKind, Dialog, Button } from '@blueprintjs/core';
 
-import Notification from '../Notifications/Notification';
-import toaster from '../../../utils/toaster';
+import Notification from '../Home/Notifications/Notification';
+import toaster from '../../utils/toaster';
 
-const style = require('../home.less');
+const style = require('../Home/home.less');
 
-export default class HomeNavigation extends React.Component {
+export default class Navigation extends React.Component {
   constructor(props) {
     super(props);
 
@@ -230,7 +230,7 @@ export default class HomeNavigation extends React.Component {
   }
 }
 
-HomeNavigation.propTypes = {
+Navigation.propTypes = {
   notifications: PropTypes.shape().isRequired,
   firebase: PropTypes.shape().isRequired,
   history: PropTypes.shape().isRequired,
@@ -245,6 +245,6 @@ HomeNavigation.propTypes = {
   }).isRequired,
 };
 
-HomeNavigation.defaultProps = {
+Navigation.defaultProps = {
   exampleUser: false,
 };

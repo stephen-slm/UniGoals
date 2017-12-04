@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import HomeNavigation from './HomeNavigation/HomeNavigation';
+import Navigation from '../Navigation/Navigation';
 import HomeSummary from './HomeSummary/HomeSummary';
 import HomeNewUser from './HomeNewUser/HomeNewUser';
 import Tables from './HomeTables/Tables';
@@ -17,7 +17,7 @@ export default function Home(props) {
         updateProfile={props.updateProfile}
         exampleUser={props.exampleUser}
       />
-      <HomeNavigation
+      <Navigation
         history={props.history}
         profile={profile}
         notifications={props.notifications}
