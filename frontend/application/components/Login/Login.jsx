@@ -9,6 +9,7 @@ import SampleTable from '../Home/HomeTables/SampleTable';
 import toaster from '../../utils/toaster';
 import { isMobileDevice } from '../../utils/utils';
 import * as homePageData from './homePageData';
+import * as constants from '../../utils/constants';
 
 import style from './login.less';
 
@@ -19,7 +20,7 @@ export default class Login extends React.Component {
    * @param {object} loginResult Google login result
    */
   static generateProfile(loginResult) {
-    const selectionList = ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'];
+    const selectionList = constants.PROFILE_SELECTION;
     const profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
 
     return Object.assign(profile, {

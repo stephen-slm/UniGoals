@@ -6,11 +6,26 @@ import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
 import HomeUnitBarChart from '../HomeUnitBarChart/HomeUnitBarChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 
-
 import toaster from '../../../utils/toaster';
+import * as constants from '../../../utils/constants';
 import style from './tables.less';
 
 export default class Table extends React.Component {
+  static validateChangeUpdate(columnIndex, change) {
+    if (columnIndex === 'name' && change.length > constants.TABLE.NAME.MAX) {
+      return false;
+    } else if (columnIndex === 'name' && change.length < constants.TABLE.NAME.MIN) {
+      return false;
+    } else if (columnIndex === 'weighting' && change.length > constants.TABLE.WEIGHT.MAX) {
+      return false;
+    } else if (columnIndex === 'achieved' && change.length > constants.TABLE.ACHIEVED.MAX) {
+      return false;
+    } else if ((columnIndex === 'weighting' || columnIndex === 'achieved') && change !== '' && _.isNaN(parseInt(change, 10))) {
+      return false;
+    }
+    return true;
+  }
+
   constructor(props) {
     super(props);
 
@@ -32,7 +47,8 @@ export default class Table extends React.Component {
     this.state = {
       isDeletingUnit: false,
       tableTitle: this.props.unit.title,
-      tableColor: (this.props.tableNum % 2 === 0) ? '#621362' : '#009FE3',
+      tableColor: (this.props.tableNum % 2 === 0) ?
+        constants.TABLE.COLORS[0] : constants.TABLE.COLORS[1],
       editing: false,
       showDeleteUnit: false,
       showInsertRow: false,
@@ -87,7 +103,8 @@ export default class Table extends React.Component {
   }
 
   /**
-   * Updates a row content based on a key on the firebase database
+   * Updates a row content based on a key on the firebase database and when updating the
+   * database we also check that the table content being updated is valid with validateChangeUpdate
    * @param {string} change the change to update
    * @param {string} rowIndex row key
    * @param {string} columnIndex column key
@@ -95,6 +112,8 @@ export default class Table extends React.Component {
   updateRowCententDatabase(change, rowIndex, columnIndex) {
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
+    } else if (!Table.validateChangeUpdate(columnIndex, change)) {
+      toaster.danger(`${columnIndex} update did not meet requirements`);
     }
 
     const validUpdate = change !== this.props.unit.content[rowIndex][columnIndex];

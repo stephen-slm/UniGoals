@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { Popover, Position, PopoverInteractionKind, Dialog, Button } from '@blueprintjs/core';
 
 import Notification from '../Home/Notifications/Notification';
+import * as constants from '../../utils/constants';
 import toaster from '../../utils/toaster';
 
 const style = require('../Home/home.less');
@@ -81,7 +82,8 @@ export default class Navigation extends React.Component {
     const { name, email, given_name: givenName } = this.props.profile;
     const { version } = this.props;
 
-    if (message.length < 15) {
+    if (message.length < constants.HELP_MESSAGE.MIN
+      || message.length > constants.HELP_MESSAGE_MAX) {
       return this.setState({ invalidhelpMessage: true });
     }
 
@@ -154,7 +156,7 @@ export default class Navigation extends React.Component {
               ref={(ref) => { this.helpText = ref; }}
               rows={10}
               cols={70}
-              maxLength={500}
+              maxLength={constants.HELP_MESSAGE.MAX}
               className={`pt-input .pt-fill ${(this.state.invalidhelpMessage) ? 'pt-intent-danger' : ''}`}
               dir="auto"
               placeholder="If you have any problems or help please ask below and I will email you back!"
