@@ -181,7 +181,7 @@ export default class FirebaseWrapper {
    * @returns {Promise.<boolean>}
    */
   sendHelpMessage(message, name, email) {
-    this.databaseCloud.collection('help').add({
+    return this.database.ref('help').push({
       message,
       name,
       email,

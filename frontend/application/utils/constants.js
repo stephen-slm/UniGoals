@@ -16,17 +16,16 @@ const constants = {
       MAX: 4,
       MIN: 0,
     },
-
-    // Messages being send to be stored for request help
-    HELP_MESSAGE: {
-      MAX: 500,
-      MIN: 15,
-    },
   },
 
   // The attributes that will be pulled for storing for the users profile when they first sign up
   PROFILE_SELECTION: ['email', 'family_name', 'given_name', 'hd', 'name', 'picture', 'verified_email'],
 
+  // Messages being send to be stored for request help
+  HELP_MESSAGE: {
+    MAX: 500,
+    MIN: 15,
+  },
 };
 
 const errors = {
