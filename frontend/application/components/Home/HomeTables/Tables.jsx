@@ -84,7 +84,6 @@ Tables.propTypes = {
   firebase: PropTypes.shape({
     insertUnitById: PropTypes.func,
   }).isRequired,
-  history: PropTypes.shape({}).isRequired,
   units: PropTypes.shape({}).isRequired,
   exampleUser: PropTypes.bool,
   insertUnitRow: PropTypes.func.isRequired,
