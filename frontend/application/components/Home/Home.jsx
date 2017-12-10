@@ -68,7 +68,7 @@ Home.propTypes = {
   profile: PropTypes.shape({
     email: PropTypes.string,
     course_name: PropTypes.string,
-    isNew: PropTypes.bool,
+    new: PropTypes.bool,
     exampleUser: PropTypes.bool,
   }).isRequired,
 };

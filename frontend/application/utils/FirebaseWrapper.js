@@ -238,6 +238,7 @@ export default class FirebaseWrapper {
       picture,
       name,
       hd,
+      last_login: Date.now(),
     })
       .then(() => this.createSampleUnitsForNewUser())
       .then(() => this.insertWelcomeNotification())

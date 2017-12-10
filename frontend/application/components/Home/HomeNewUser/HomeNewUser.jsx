@@ -118,6 +118,7 @@ export default class HomeNewUser extends React.Component {
           course_name: courseName,
           course_year: courseYear,
           course_university: courseUniversity,
+          new: false,
         });
 
         this.props.updateProfile(profile);
@@ -227,7 +228,7 @@ HomeNewUser.propTypes = {
     course_name: PropTypes.string,
     course_year: PropTypes.string,
     course_university: PropTypes.string,
-    isNew: PropTypes.bool,
+    new: PropTypes.bool,
   }).isRequired,
   exampleUser: PropTypes.bool,
 };

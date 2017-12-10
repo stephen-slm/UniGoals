@@ -84,7 +84,7 @@ HomeSummary.propTypes = {
     GivenName: PropTypes.string,
     imageUrl: PropTypes.string,
     name: PropTypes.string,
-    isNew: PropTypes.bool,
+    new: PropTypes.bool,
     courseName: PropTypes.string,
   }).isRequired,
 };
