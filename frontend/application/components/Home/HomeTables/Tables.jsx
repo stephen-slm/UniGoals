@@ -15,6 +15,7 @@ export default class Tables extends React.Component {
 
     this.createTables = this.createTables.bind(this);
     this.addUnitTable = this.addUnitTable.bind(this);
+    this.addAndNavigateToTable = this.addAndNavigateToTable.bind(this);
   }
 
   /**
@@ -22,8 +23,19 @@ export default class Tables extends React.Component {
    */
   addUnitTable() {
     this.props.firebase.insertUnitById()
-      .then(ref => this.props.addUnitTable(ref))
+      .then(ref => this.addAndNavigateToTable(ref))
       .catch(error => toaster.danger(error.message));
+  }
+
+  /**
+   * Creates the unit in users redux and then navigates to that via a hash
+   * @param {string} ref table reference hash
+   */
+  addAndNavigateToTable(ref) {
+    this.props.addUnitTable(ref);
+    const element = document.getElementById(ref);
+    element.scrollIntoView();
+    Promise.resolve();
   }
 
   /**
@@ -69,8 +81,11 @@ export default class Tables extends React.Component {
 }
 
 Tables.propTypes = {
-  firebase: PropTypes.shape().isRequired,
-  units: PropTypes.shape().isRequired,
+  firebase: PropTypes.shape({
+    insertUnitById: PropTypes.func,
+  }).isRequired,
+  history: PropTypes.shape({}).isRequired,
+  units: PropTypes.shape({}).isRequired,
   exampleUser: PropTypes.bool,
   insertUnitRow: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,

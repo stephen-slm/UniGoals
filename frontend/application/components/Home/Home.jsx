@@ -33,6 +33,7 @@ export default function Home(props) {
         history={props.history}
       />
       <Tables
+        history={props.history}
         insertUnitRow={props.insertUnitRow}
         updateUnits={props.updateUnits}
         updateRowContent={props.updateRowContent}
