@@ -69,8 +69,8 @@
                     "picture": {
                         ".validate": "newData.isString() && newData.val().length <= 200 && newData.val().length > 5"
                     },
-                    "uid": {
-                        ".validate": "newData.isString() && newData.val().length <= 100 && newData.val().length > 5"
+                    "last_login": {
+                        ".validate": "newData.isNumber()"
                     }
                 },
                 "units": {
