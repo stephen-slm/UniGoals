@@ -224,16 +224,16 @@ export default class FirebaseWrapper {
   createNewUser(profile) {
     const {
       email,
-      family_name,
-      given_name,
+      family_name: familyName,
+      given_name: givenName,
       hd,
       name,
       picture,
     } = profile;
 
     return this.database.ref(`users/${this.getUid()}/profile`).set({
-      given_name,
-      family_name,
+      given_name: familyName,
+      family_name: givenName,
       email,
       picture,
       name,

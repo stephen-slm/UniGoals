@@ -1,4 +1,4 @@
-
+import createBrowserHistory from 'history/createBrowserHistory';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -7,17 +7,21 @@ import _ from 'lodash';
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import * as routePaths from './routePaths';
 
-import style from './application.less';
-
+import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
 import SignOut from '../Login/SignOut';
 import Home from '../Home/Home';
+
+const style = require('./application.less');
 
 export default class Application extends React.Component {
   constructor(props) {
     super(props);
 
     this.routePaths = routePaths;
+    this.history = createBrowserHistory();
+
+    this.history.replace('/');
 
     /**
      * creating the firebase wrapper that will be used to authenticate and to interact with the
@@ -57,35 +61,43 @@ export default class Application extends React.Component {
       return (
         <Router>
           <div className={style.applicationStyle}>
-            <Route
-              exact
-              path="/"
-              render={history => (<Home
-                history={history.history}
-                profile={profile}
-                updateProfile={updateProfile}
-                updateCourseName={updateCourseName}
-                notifications={notifications}
-                updateNotifications={updateNotifications}
-                removeNotification={removeNotification}
-                units={units}
-                version={version}
-                updateUnits={updateUnits}
-                removeUnitRow={removeUnitRow}
-                insertUnitRow={insertUnitRow}
-                updateRowContent={updateRowContent}
-                updateUnitTitle={updateUnitTitle}
-                addUnitTable={addUnitTable}
-                removeUnitTable={removeUnitTable}
-                firebase={this.firebase}
-                exampleUser={this.props.profile.exampleUser}
-              />)}
-            />
+            <Navigation
+              history={this.history}
+              routePaths={this.routePaths}
+              profile={profile}
+              notifications={notifications}
+              updateNotifications={updateNotifications}
+              removeNotification={removeNotification}
+              exampleUser={profile.exampleUser}
+              firebase={this.firebase}
+              version={version}
+            >
+              <Route
+                exact
+                path="/"
+                render={() => (<Home
+                  history={this.history}
+                  profile={profile}
+                  updateProfile={updateProfile}
+                  updateCourseName={updateCourseName}
+                  units={units}
+                  updateUnits={updateUnits}
+                  removeUnitRow={removeUnitRow}
+                  insertUnitRow={insertUnitRow}
+                  updateRowContent={updateRowContent}
+                  updateUnitTitle={updateUnitTitle}
+                  addUnitTable={addUnitTable}
+                  removeUnitTable={removeUnitTable}
+                  firebase={this.firebase}
+                  exampleUser={profile.exampleUser}
+                />)}
+              />
+            </Navigation>
             <Route
               path={this.routePaths.signOut}
-              render={history => (<SignOut
+              render={() => (<SignOut
                 removeProfile={removeProfile}
-                history={history.history}
+                history={this.history}
                 firebase={this.firebase}
               />)}
             />
@@ -99,13 +111,13 @@ export default class Application extends React.Component {
         <div className={style.applicationStyle}>
           <Route
             exact
-            path="/"
-            render={history => (<Login
+            path="*"
+            render={() => (<Login
               updateProfile={this.props.updateProfile}
               updateNotifications={this.props.updateNotifications}
               firebase={this.firebase}
               updateUnits={this.props.updateUnits}
-              history={history.history}
+              history={this.history}
               version={version}
             />)}
           />

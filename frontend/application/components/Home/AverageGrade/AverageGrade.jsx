@@ -4,6 +4,8 @@ import _ from 'lodash';
 
 import { Tooltip, Position } from '@blueprintjs/core';
 
+const style = require('./averageGrade.less');
+
 export default class AverageGrade extends React.Component {
   /**
    * Gets the average grade from the unit content, e.g the section of the unit
@@ -110,12 +112,14 @@ export default class AverageGrade extends React.Component {
     }
 
     return (
-      <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: this.props.width, height: this.props.height }}>
-        <div style={{ margin: '60% 23%' }}>
-          <Tooltip content="Average Grade" position={Position.TOP}>{`${averageGrade}%`}</Tooltip>
+      <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: this.props.width, height: this.props.height, position: 'relative' }}>
+        <div style={{ textAlign: 'center', marginTop: 25 }}>
+          <div>Average Grade</div>
+          <Tooltip content="Average Grade" position={Position.BOTTOM}>{`${averageGrade}%`}</Tooltip>
         </div>
-        <div style={{ margin: '85% 23%' }}>
-          <Tooltip content="Max Grade" position={Position.BOTTOM}>{`${maxTotalPossible}%`}</Tooltip>
+        <div className={style.maxGradeShift}>
+          <div>Maximum Grade</div>
+          <Tooltip content="Maximum Grade" position={Position.BOTTOM}>{`${maxTotalPossible}%`}</Tooltip>
         </div>
       </div>
     );
@@ -138,5 +142,5 @@ AverageGrade.defaultProps = {
   summaryData: null,
   className: '',
   isSummary: false,
-  width: 120,
+  width: 150,
 };

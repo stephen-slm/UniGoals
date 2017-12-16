@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Navigation from '../Navigation/Navigation';
 import HomeSummary from './HomeSummary/HomeSummary';
 import HomeNewUser from './HomeNewUser/HomeNewUser';
 import Tables from './HomeTables/Tables';
@@ -16,16 +15,6 @@ export default function Home(props) {
         firebase={props.firebase}
         updateProfile={props.updateProfile}
         exampleUser={props.exampleUser}
-      />
-      <Navigation
-        history={props.history}
-        profile={profile}
-        notifications={props.notifications}
-        updateNotifications={props.updateNotifications}
-        removeNotification={props.removeNotification}
-        exampleUser={props.exampleUser}
-        firebase={props.firebase}
-        version={props.version}
       />
       <HomeSummary
         units={props.units}
@@ -58,12 +47,8 @@ Home.propTypes = {
   updateRowContent: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
-  updateNotifications: PropTypes.func.isRequired,
-  removeNotification: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
-  notifications: PropTypes.shape().isRequired,
-  version: PropTypes.string.isRequired,
   exampleUser: PropTypes.bool,
   profile: PropTypes.shape({
     email: PropTypes.string,

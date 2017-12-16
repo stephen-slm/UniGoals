@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
 
@@ -25,7 +26,6 @@ export default class Navigation extends React.Component {
 
     this.helpButton = this.helpButton.bind(this);
     this.signOutButton = this.signOutButton.bind(this);
-    this.signOut = this.signOut.bind(this);
 
     this.state = {
       showNotifications: false,
@@ -61,14 +61,6 @@ export default class Navigation extends React.Component {
     this.setState({
       showSignOut: !this.state.showSignOut,
     });
-  }
-
-  /**
-   * Triggers the sign out process
-   */
-  signOut(e) {
-    e.preventDefault();
-    this.props.history.push('/signout');
   }
 
   /**
@@ -196,10 +188,11 @@ export default class Navigation extends React.Component {
                 onClick={this.showSignOutBox}
                 text="No"
               />
-              <Button
-                onClick={this.signOut}
-                text="Yes"
-              />
+              <Link href={this.props.routePaths.signOut} to={this.props.routePaths.signOut}>
+                <Button
+                  text="Yes"
+                />
+              </Link>
             </div>
           </div>
         </Dialog>
@@ -220,22 +213,25 @@ export default class Navigation extends React.Component {
             </div>
           </div>
           <div className="pt-navbar-group pt-align-right">
-            <button className="pt-button pt-minimal pt-icon-user" />
             <span className="pt-navbar-divider" />
             {this.buildNotifications()}
             {this.helpButton()}
             {this.signOutButton()}
           </div>
         </nav>
+        {this.props.children}
       </div>
     );
   }
 }
 
 Navigation.propTypes = {
-  notifications: PropTypes.shape().isRequired,
-  firebase: PropTypes.shape().isRequired,
-  history: PropTypes.shape().isRequired,
+  notifications: PropTypes.shape({}).isRequired,
+  firebase: PropTypes.shape({
+    sendHelpMessage: PropTypes.func,
+  }).isRequired,
+  children: PropTypes.shape({}).isRequired,
+  routePaths: PropTypes.shape().isRequired,
   exampleUser: PropTypes.bool,
   version: PropTypes.string.isRequired,
   removeNotification: PropTypes.func.isRequired,
