@@ -35,7 +35,8 @@ export default class AverageGrade extends React.Component {
 
     return (
       <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: 120, height: this.props.height }}>
-        <div style={{ margin: '60% 23%' }}>
+        <div style={{ textAlign: 'center', marginTop: 25 }}>
+          <div>Total Grade</div>
           <Tooltip content="Total Grade" position={Position.TOP}>{`${totalGrade}%`}</Tooltip>
         </div>
       </div>
