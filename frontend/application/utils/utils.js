@@ -8,3 +8,5 @@ function isMobileDevice() {
 export {
   isMobileDevice,
 };
+
+export default isMobileDevice;
