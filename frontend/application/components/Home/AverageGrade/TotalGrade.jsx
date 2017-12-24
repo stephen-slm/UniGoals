@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 import { Tooltip, Position } from '@blueprintjs/core';
 
-export default class AverageGrade extends React.Component {
+export default class TotalGrade extends React.Component {
   /**
    * Calulates the users unit overal grade.
    * @param {object} data user units
@@ -31,27 +31,27 @@ export default class AverageGrade extends React.Component {
 
   render() {
     // The users total grade.
-    const totalGrade = AverageGrade.calulateTotalGrade(this.props.data);
+    const totalGrade = TotalGrade.calulateTotalGrade(this.props.data);
 
     return (
       <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: 120, height: this.props.height }}>
         <div style={{ textAlign: 'center', marginTop: 25 }}>
           <div>Total Grade</div>
-          <Tooltip content="Total Grade" position={Position.TOP}>{`${totalGrade}%`}</Tooltip>
+          <Tooltip content="Total Grade" position={Position.BOTTOM}>{`${totalGrade}%`}</Tooltip>
         </div>
       </div>
     );
   }
 }
 
-AverageGrade.propTypes = {
+TotalGrade.propTypes = {
   data: PropTypes.shape({}),
   className: PropTypes.string,
   height: PropTypes.number,
 };
 
 
-AverageGrade.defaultProps = {
+TotalGrade.defaultProps = {
   data: null,
   height: null,
   className: '',
