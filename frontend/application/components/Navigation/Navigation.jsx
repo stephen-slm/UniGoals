@@ -118,6 +118,8 @@ export default class Navigation extends React.Component {
           removeNotification={this.props.removeNotification}
           exampleUser={this.props.exampleUser}
         />));
+
+      notifications = _.reverse(notifications);
     }
 
     return (
