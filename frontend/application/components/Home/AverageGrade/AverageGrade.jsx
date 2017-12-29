@@ -31,15 +31,15 @@ export default class AverageGrade extends React.Component {
     _.forEach(data, (content) => {
       if (parseFloat(content.achieved) > 0) {
         total += parseFloat(content.achieved);
-        maxTotalPossible += parseFloat(content.achieved);
+        maxTotalPossible += parseFloat(content.weighting) * parseFloat(content.achieved);
       } else {
-        maxTotalPossible += 100;
+        maxTotalPossible += 100 * parseFloat(content.weighting);
       }
     });
 
     // Using _size to get the size of the object, this is because we are using objects not arrays
     const average = parseFloat(total / _.size(data)).toFixed(2);
-    const max = parseFloat(maxTotalPossible / _.size(data)).toFixed(2);
+    const max = parseFloat(maxTotalPossible / 100).toFixed(2);
 
     return {
       averageGrade: (average < 0) ? 0 : average,

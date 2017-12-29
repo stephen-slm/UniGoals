@@ -126,7 +126,8 @@ export default class Table extends React.Component {
     const validUpdate = updatedChange !== this.props.unit.content[rowIndex][columnIndex];
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.exampleUser) {
-      this.props.firebase.updateUnitRowSection(updatedChange, this.props.tableIndex, rowIndex, columnIndex);
+      const { tableIndex } = this.props;
+      this.props.firebase.updateUnitRowSection(updatedChange, tableIndex, rowIndex, columnIndex);
     }
   }
 
