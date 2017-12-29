@@ -110,17 +110,23 @@ export default class Table extends React.Component {
    * @param {string} columnIndex column key
    */
   updateRowCententDatabase(change, rowIndex, columnIndex) {
+    let updatedChange = change;
+
+    if ((columnIndex === 'achieved' || columnIndex === 'weighting') && updatedChange === '') {
+      this.updateRowContent('0', rowIndex, columnIndex);
+      updatedChange = '0';
+    }
+
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
-    } else if (!Table.validateChangeUpdate(columnIndex, change)) {
+    } else if (!Table.validateChangeUpdate(columnIndex, updatedChange)) {
       toaster.danger(`${columnIndex} update did not meet requirements`);
     }
 
-    const validUpdate = change !== this.props.unit.content[rowIndex][columnIndex];
+    const validUpdate = updatedChange !== this.props.unit.content[rowIndex][columnIndex];
 
-    if ((!_.isNil(change) || validUpdate) && !this.props.exampleUser) {
-      const { tableIndex } = this.props;
-      this.props.firebase.updateUnitRowSection(change, tableIndex, rowIndex, columnIndex);
+    if ((!_.isNil(updatedChange) || validUpdate) && !this.props.exampleUser) {
+      this.props.firebase.updateUnitRowSection(updatedChange, this.props.tableIndex, rowIndex, columnIndex);
     }
   }
 
