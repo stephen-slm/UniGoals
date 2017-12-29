@@ -1,7 +1,7 @@
 {
     "name": "unigoals",
-    "version": "0.0.5",
-    "author": "smmstephenmiller@gmail.com",
+    "version": "0.0.6",
+    "author": "slinekermiller@gmail.com",
     "description": "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
     "scripts": {
         "build:hot": "webpack-dashboard -- webpack-dev-server --content-base ./public -d --hot --history-api-fallback true --config ./webpack.config.development.js",
