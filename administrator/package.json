@@ -1,0 +1,37 @@
+{
+  "name": "unigoals-admin",
+  "version": "0.0.1",
+  "author": "slinekermiller@gmail.com",
+  "description": "The administration for the backend of UniGoals",
+  "scripts": {
+    "build": "npm run build:ts && npm run tslint",
+    "build:ts": "tsc",
+    "watch:ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "start": "npm run build && node ./dist/index.js",
+    "start:debug": "node --inspect ./dist/index.js",
+    "test": "node ./node_modules/mocha/bin/mocha --exit ./dist/tests/index.test.js",
+    "test:travis": "SET TRAVIS=true && node ./node_modules/mocha/bin/mocha --exit ./dist/tests/index.test.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "3.5.1",
+    "body-parser": "1.18.2",
+    "firebase-admin": "^5.6.0",
+    "lodash": "4.17.4",
+    "winston": "2.4.0"
+  },
+  "devDependencies": {
+    "@types/async": "^2.0.40",
+    "@types/bluebird": "^3.5.18",
+    "@types/body-parser": "^1.16.8",
+    "@types/dotenv": "^2.0.20",
+    "@types/lodash": "^4.14.80",
+    "@types/node": "^7.0.12",
+    "@types/winston": "^2.3.7",
+    "babel-eslint": "8.0.3",
+    "tslint": "^5.8.0",
+    "tslint-config-airbnb": "^5.4.2",
+    "typescript": "^2.4.0"
+  }
+}
