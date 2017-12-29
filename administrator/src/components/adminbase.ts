@@ -46,8 +46,10 @@ export function deployNotification(notification: IUniNotification, debug: boolea
     insertNotification(notification, 'ymzDhOAX50e5jRAMiWDApNkgNHd2');
   } else {
     getAllUserKeys((keys: IUniKeyObject[]) => {
+      console.log(`\nInserting new notification\ntitle: ${notification.title}\nMessage: ${notification.message}\n Users: ${keys.length}\n`);
+
       _.forEach(keys, (key: IUniKeyObject) => {
-        console.log(`Inserted new notification for user${key.profile.name}`);
+        console.log(`Inserted new notification for user ${key.profile.name}`);
         insertNotification(notification, key.uid);
       });
     });
