@@ -93,14 +93,30 @@ export function getAllUserKeys(callback: (content: IUniKeyObject[]) => void) {
  * This will get the users key that relates to the users email, allowing to target just that user
  * @param email the users email addresss
  */
-export function getKeyByEmail(email: string): string {
-  return '';
+export function getKeyByEmail(email: string, callback: (content: IUniKeyObject | null) => void) {
+  getAllUserKeys((users: IUniKeyObject[]) => {
+    _.forEach(users, (user, index) => {
+      if (user.profile.email === email) {
+        callback(user);
+      } else if (index === users.length) {
+        callback(null);
+      }
+    });
+  });
 }
 
 /**
  * This will get the users key that relates to the users fuull name, allowing to target just that user
  * @param name The users full name
  */
-export function getKeyByFullName(name: string): string {
-  return '';
+export function getKeyByFullName(name: string, callback: (content: IUniKeyObject | null) => void) {
+  getAllUserKeys((users: IUniKeyObject[]) => {
+    _.forEach(users, (user, index) => {
+      if (user.profile.name === name) {
+        callback(user);
+      } else if (index === users.length) {
+        callback(null);
+      }
+    });
+  });
 }
