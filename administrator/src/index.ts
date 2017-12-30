@@ -6,4 +6,4 @@ const sampleNotification: adminbase.IUniNotification  = {
   title: 'Version: 0.0.6',
 };
 
-adminbase.deployNotification(sampleNotification, true);
+adminbase.deployNotification(sampleNotification, false);
