@@ -1,9 +1,13 @@
 import * as admin from 'firebase-admin';
+import * as _ from 'lodash';
+import * as readline from 'readline';
+import { logger } from './logger';
+
 import * as adminService from './serviceAccount';
 
-import * as _ from 'lodash';
-
 const serviceAccount: any = adminService.serviceAccount;
+
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
 export interface IUniNotification {
   message: string;
@@ -46,11 +50,18 @@ export function deployNotification(notification: IUniNotification, debug: boolea
     insertNotification(notification, 'ymzDhOAX50e5jRAMiWDApNkgNHd2');
   } else {
     getAllUserKeys((keys: IUniKeyObject[]) => {
-      console.log(`\nInserting new notification\ntitle: ${notification.title}\nMessage: ${notification.message}\n Users: ${keys.length}\n`);
+      logger.info(`\nInserting new notification\n\ntitle: ${notification.title}` +
+      `\nMessage: ${notification.message}\nUsers: ${keys.length}\n`);
 
-      _.forEach(keys, (key: IUniKeyObject) => {
-        console.log(`Inserted new notification for user ${key.profile.name}`);
-        insertNotification(notification, key.uid);
+      rl.question(`Are you sure you want to send ${keys.length} users the above notification? y/n: `, (answer: string) => {
+        const lowerAnswer = answer.toLowerCase();
+
+        if (lowerAnswer === 'yes' || lowerAnswer === 'y') {
+          _.forEach(keys, (key: IUniKeyObject) => {
+            logger.info(`Inserted new notification for user ${key.profile.name}`);
+            insertNotification(notification, key.uid);
+          });
+        }
       });
     });
   }
