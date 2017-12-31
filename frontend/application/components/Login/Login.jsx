@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Spinner, Intent, Classes } from '@blueprintjs/core';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import HomeSummary from '../Home/HomeSummary/HomeSummary';
 import SampleTable from '../Home/HomeTables/SampleTable';

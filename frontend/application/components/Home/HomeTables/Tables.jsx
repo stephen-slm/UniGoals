@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import { Button } from '@blueprintjs/core';
 import toaster from '../../../utils/toaster';

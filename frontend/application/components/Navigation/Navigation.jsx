@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import { Popover, Position, PopoverInteractionKind, Dialog, Button } from '@blueprintjs/core';
 
