@@ -1,9 +1,9 @@
+import * as _ from 'lodash';
+
 import * as adminbase from './components/adminbase';
 
 const sampleNotification: adminbase.IUniNotification  = {
   timestamp: Date.now(),
-  message: 'New version! minor bug fixes, adjusted\nmathematics around maximum grade and reversed\nthe notification order to display newest first',
-  title: 'Version: 0.0.6',
+  message: '',
+  title: '',
 };
-
-adminbase.deployNotification(sampleNotification, false);

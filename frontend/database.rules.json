@@ -1,5 +1,9 @@
 {
     "rules": {
+        "universities": {
+            ".write": false,
+          	".read": true,
+        },
       	"help": {
           "$key": {
             ".write": true,

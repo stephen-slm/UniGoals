@@ -2,7 +2,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import * as routePaths from './routePaths';

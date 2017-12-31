@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import * as firebase from 'firebase';
 
 export default class FirebaseWrapper {
@@ -214,6 +213,27 @@ export default class FirebaseWrapper {
       });
 
     Promise.resolve();
+  }
+
+  /**
+   * Gets the University Courses for the user
+   */
+  getUniversityCourses() {
+    return this.database.ref('/universities/courses').once('value')
+      .then(courses => Promise.resolve(courses.val()));
+  }
+
+  /**
+   * Gets the current active University listings (all of the list in a array format)
+   */
+  getUniversityList() {
+    return this.database.ref('/universities/uk').once('value')
+      .then(list => Promise.resolve(list.val()));
+  }
+
+  getUniversityContents() {
+    return this.database.ref('/universities').once('value')
+      .then(content => Promise.resolve(content.val()));
   }
 
   /**

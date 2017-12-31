@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 import { Dialog, Button, MenuItem, Classes } from '@blueprintjs/core';
 import { Select } from '@blueprintjs/labs';
 
 import toaster from '../../../utils/toaster';
-import { courseNames, courseYears, universitiesList } from './courseData';
 
 const style = require('./homeNewUser.less');
 
@@ -47,11 +46,27 @@ export default class HomeNewUser extends React.Component {
       university: this.props.profile.course_university || null,
       minimal: false,
 
+      universityContent: {
+        courses: [],
+        years: [],
+        uk: [],
+      },
+
       invalidCourseName: false,
       invalidCourseYear: false,
       invalidCourseUni: false,
 
     };
+  }
+
+  /**
+   * Gets all the university content if the content is already empty in the state.
+   */
+  getUniversityContent() {
+    if (_.isNil(this.state.universityContent.courses[0])) {
+      this.props.firebase.getUniversityContents()
+        .then(content => this.setState({ universityContent: content }));
+    }
   }
 
   handleValueChange(course) {
@@ -143,6 +158,8 @@ export default class HomeNewUser extends React.Component {
       || profile.new
       || !profile.course_university) && !this.props.exampleUser) {
       isOpen = true;
+
+      this.getUniversityContent();
     }
 
     return (
@@ -170,7 +187,7 @@ export default class HomeNewUser extends React.Component {
           <div className={style.introductionInputs}>
             <div>
               <Select
-                items={universitiesList}
+                items={this.state.universityContent.uk}
                 noResults={<MenuItem disabled text="No results." />}
                 itemRenderer={HomeNewUser.renderCourseMenuItem}
                 itemPredicate={HomeNewUser.filterCourse}
@@ -182,7 +199,7 @@ export default class HomeNewUser extends React.Component {
             </div>
             <div>
               <Select
-                items={courseYears}
+                items={this.state.universityContent.years}
                 noResults={<MenuItem disabled text="No results." />}
                 itemRenderer={HomeNewUser.renderCourseMenuItem}
                 itemPredicate={HomeNewUser.filterCourse}
@@ -194,7 +211,7 @@ export default class HomeNewUser extends React.Component {
             </div>
             <div>
               <Select
-                items={courseNames}
+                items={this.state.universityContent.courses}
                 noResults={<MenuItem disabled text="No results." />}
                 itemRenderer={HomeNewUser.renderCourseMenuItem}
                 itemPredicate={HomeNewUser.filterCourse}

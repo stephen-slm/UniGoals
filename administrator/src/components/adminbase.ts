@@ -3,6 +3,11 @@ import * as _ from 'lodash';
 import * as readline from 'readline';
 import { logger } from './logger';
 
+/**
+ * When the user size will get too big we will have to begin by doing some form of biniary search
+ * to filter down to our selected user
+ */
+
 import * as adminService from './serviceAccount';
 
 const serviceAccount: any = adminService.serviceAccount;
