@@ -231,9 +231,17 @@ export default class FirebaseWrapper {
       .then(list => Promise.resolve(list.val()));
   }
 
+  /**
+   * Returns all the University content stored in the database
+   */
   getUniversityContents() {
     return this.database.ref('/universities').once('value')
       .then(content => Promise.resolve(content.val()));
+  }
+
+  // Gets a built ref for the live listeners for updated notifications
+  getNotificationRef() {
+    return this.database.ref(`users/${this.getUid()}/notifications`);
   }
 
   /**

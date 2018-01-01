@@ -27,6 +27,12 @@ export default class Navigation extends React.Component {
     this.helpButton = this.helpButton.bind(this);
     this.signOutButton = this.signOutButton.bind(this);
 
+    const notificationRef = this.props.firebase.getNotificationRef();
+
+    notificationRef.on('value', (snapshot) => {
+      this.props.updateNotifications(snapshot.val());
+    });
+
     this.state = {
       showNotifications: false,
       showHelp: false,
@@ -231,12 +237,14 @@ Navigation.propTypes = {
   notifications: PropTypes.shape({}).isRequired,
   firebase: PropTypes.shape({
     sendHelpMessage: PropTypes.func,
+    getNotificationRef: PropTypes.func,
   }).isRequired,
   children: PropTypes.shape({}).isRequired,
   routePaths: PropTypes.shape().isRequired,
   exampleUser: PropTypes.bool,
   version: PropTypes.string.isRequired,
   removeNotification: PropTypes.func.isRequired,
+  updateNotifications: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
