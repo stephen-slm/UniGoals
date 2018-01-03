@@ -7,8 +7,8 @@
         "build:hot": "webpack-dashboard -- webpack-dev-server --content-base ./public -d --hot --history-api-fallback true --config ./webpack.config.development.js",
         "build:dev": "webpack -d --progress --watch --config ./webpack.config.development.js",
         "build": "npm run lint && webpack -p --progress --config ./webpack.config.production.js",
-        "lint": "eslint -c ../.eslintrc.js --ext .js,.jsx --ignore-path ../.gitignore .",
-        "lint:fix": "eslint -c ../.eslintrc.js --ext .js,.jsx --ignore-path ../.gitignore . --fix",
+        "lint": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../../.gitignore .",
+        "lint:fix": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../../.gitignore . --fix",
         "deploy": "npm run build && firebase deploy"
     },
     "license": "MIT",
