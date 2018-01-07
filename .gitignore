@@ -42,4 +42,4 @@ firebase.json
 
 # admin panel
 serviceAccount.ts
-administrator/dist
+dist

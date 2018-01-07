@@ -38,7 +38,7 @@ export default class Login extends React.Component {
     this.authenticateExamplesUser = this.authenticateExamplesUser.bind(this);
     this.authenticateUserWithGoogle = this.authenticateUserWithGoogle.bind(this);
     this.updateProfile = this.updateProfile.bind(this);
-
+    this.updateLoginCountForUser = this.updateLoginCountForUser.bind(this);
     /**
      * Knowing the device is mobile is important to use a different authentication method, by
      * this we fix a problem related to mobile authetnication (slightly slower) but we also
@@ -61,6 +61,7 @@ export default class Login extends React.Component {
           if (loginResult.credential) {
             this.props.firebase.authentication.signInWithCredential(loginResult.credential)
               .then(() => this.processGoogleLogin(loginResult))
+              .then(() => this.updateLoginCountForUser())
               .then(() => this.getNotifications())
               .then(() => this.getUnits())
               .catch((error) => {
@@ -93,6 +94,15 @@ export default class Login extends React.Component {
         this.props.updateNotifications(notifications.val());
         return Promise.resolve();
       })
+      .catch(error => Promise.reject(error));
+  }
+
+  /**
+   * Updates the current user login count
+   */
+  updateLoginCountForUser() {
+    this.pro.props.firebase.updateLoginCountForUser()
+      .then(() => Promise.resolve())
       .catch(error => Promise.reject(error));
   }
 

@@ -75,6 +75,10 @@
                     },
                     "last_login": {
                         ".validate": "newData.isNumber()"
+                    },
+                    "login_count": {
+                        ".validate": "newData.isNumber()",
+                        ".read": false
                     }
                 },
                 "units": {

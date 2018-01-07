@@ -81,6 +81,14 @@ export default class FirebaseWrapper {
    */
   getProfileById() {
     this.database.ref(`users/${this.getUid()}/profile/last_login`).set(Date.now());
+
+    this.database.ref(`users/${this.getUid()}/profile/login_count`).once('value')
+      .then((snapshot) => {
+        const count = snapshot.val();
+        const newLoginCount = (count === null || count === undefined) ? 0 : count + 1;
+        this.database.ref(`users/${this.getUid()}/profile/login_count`).set(newLoginCount);
+      });
+
     return this.database.ref(`users/${this.getUid()}/profile`).once('value')
       .then(ref => ref.val());
   }
