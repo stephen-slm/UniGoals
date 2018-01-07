@@ -29,6 +29,8 @@ export default class Navigation extends React.Component {
 
     const notificationRef = this.props.firebase.getNotificationRef();
 
+    // Live notificaiton updates which are triggered every time a notification is added to the
+    // users data entry
     notificationRef.on('value', (snapshot) => {
       this.props.updateNotifications(snapshot.val());
     });
