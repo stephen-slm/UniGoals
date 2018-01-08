@@ -12,6 +12,7 @@ export default class FirebaseWrapper {
 
     this.provider = new firebase.auth.GoogleAuthProvider();
   }
+
   /**
    * Gets the current active users uid which is used to reference in the database
    * @returns {string}

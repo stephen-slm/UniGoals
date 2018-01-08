@@ -27,13 +27,16 @@ export default class Navigation extends React.Component {
     this.helpButton = this.helpButton.bind(this);
     this.signOutButton = this.signOutButton.bind(this);
 
-    const notificationRef = this.props.firebase.getNotificationRef();
+    if (!this.props.exampleUser) {
+      const notificationRef = this.props.firebase.getNotificationRef();
 
-    // Live notificaiton updates which are triggered every time a notification is added to the
-    // users data entry
-    notificationRef.on('value', (snapshot) => {
-      this.props.updateNotifications(snapshot.val());
-    });
+      // Live notificaiton updates which are triggered every time a notification is added to the
+      // users data entry
+      notificationRef.on('value', (snapshot) => {
+        this.props.updateNotifications(snapshot.val());
+      });
+    }
+
 
     this.state = {
       showNotifications: false,
