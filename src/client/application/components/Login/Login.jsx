@@ -101,7 +101,7 @@ export default class Login extends React.Component {
    * Updates the current user login count
    */
   updateLoginCountForUser() {
-    this.pro.props.firebase.updateLoginCountForUser()
+    this.props.firebase.updateLoginCountForUser()
       .then(() => Promise.resolve())
       .catch(error => Promise.reject(error));
   }
