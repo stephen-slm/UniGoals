@@ -10,6 +10,7 @@ const logLevels = {
     warn: 1,
   },
 };
+
 export const logger = new winston.Logger({
   exitOnError: false,
   levels: logLevels.levels,
