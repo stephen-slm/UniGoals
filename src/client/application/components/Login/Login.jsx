@@ -38,7 +38,6 @@ export default class Login extends React.Component {
     this.authenticateExamplesUser = this.authenticateExamplesUser.bind(this);
     this.authenticateUserWithGoogle = this.authenticateUserWithGoogle.bind(this);
     this.updateProfile = this.updateProfile.bind(this);
-    this.updateLoginCountForUser = this.updateLoginCountForUser.bind(this);
     /**
      * Knowing the device is mobile is important to use a different authentication method, by
      * this we fix a problem related to mobile authetnication (slightly slower) but we also
