@@ -1,7 +1,7 @@
 {
   "name": "unigoals-admin",
   "version": "0.0.1",
-  "author": "slinekermiller@gmail.com",
+  "author": "MambaSoftware",
   "description": "The administration for the backend of UniGoals",
   "scripts": {
     "build": "npm run build:ts && npm run tslint",
