@@ -1,7 +1,7 @@
 <div>
     <h3 align="center">UniGoals</h3>
     <p align="center">
-        <img align="center" style="height: 250px" src=https://unigoals.co.uk/components/resources/images/logo.png>
+        <img align="center" height=250px width=auto src=https://unigoals.co.uk/components/resources/images/logo.png>
         <br>Full Course & Unit tracking<br>
     built by a University Student for University Students.
     </p>
