@@ -1,14 +1,14 @@
 {
     "name": "unigoals",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "author": "MambaSoftware",
     "description": "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
     "scripts": {
         "build:hot": "webpack-dashboard -- webpack-dev-server --content-base ./public -d --hot --history-api-fallback true --config ./webpack.config.development.js",
         "build:dev": "webpack -d --progress --watch --config ./webpack.config.development.js",
         "build": "npm run lint && webpack -p --progress --config ./webpack.config.production.js",
-        "lint": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../../.gitignore .",
-        "lint:fix": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../../.gitignore . --fix",
+        "lint": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../.gitignore .",
+        "lint:fix": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../.gitignore . --fix",
         "deploy": "npm run build && firebase deploy"
     },
     "license": "MIT",
