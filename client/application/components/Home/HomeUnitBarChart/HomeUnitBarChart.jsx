@@ -122,6 +122,7 @@ export default class HomeUnitBarChart extends React.Component {
       data: {
         labels: data.names,
         datasets: [{
+          label: this.state.displayText,
           backgroundColor: _.map(this.props.data, () => `rgba(${this.state.color[0]}, ${this.state.color[1]}, ${this.state.color[2]}, 0.2)`),
           borderColor: _.map(this.props.data, () => `rgba(${this.state.color[0]}, ${this.state.color[1]}, ${this.state.color[2]}, 1)`),
           data: data.values,
