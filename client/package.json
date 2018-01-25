@@ -20,6 +20,7 @@
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",
         "body-parser": "^1.18.2",
+        "chart.js": "^2.7.1",
         "css-loader": "^0.28.7",
         "express": "^4.16.2",
         "firebase": "^4.7.0",
@@ -37,10 +38,10 @@
         "react-router-dom": "^4.2.2",
         "react-router-hash-link": "^1.1.1",
         "react-router-redux": "^5.0.0-alpha.8",
-        "recharts": "^1.0.0-beta.5",
         "redux": "^3.7.2",
         "style-loader": "^0.18.2",
-        "superagent": "^3.8.1"
+        "superagent": "^3.8.1",
+        "uuid": "^3.2.1"
     },
     "devDependencies": {
         "babel-eslint": "^8.0.3",

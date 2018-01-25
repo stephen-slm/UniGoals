@@ -2,11 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 
+
 import { EditableText, Button, Alert, Intent } from '@blueprintjs/core';
 import HomeUnitBarChart from '../HomeUnitBarChart/HomeUnitBarChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 
 import style from './tables.less';
+import * as constants from '../../../utils/constants';
 
 export default class SampleTable extends React.Component {
   constructor(props) {
@@ -23,10 +25,12 @@ export default class SampleTable extends React.Component {
     this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
     this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
 
+    const colors = constants.TABLE.COLORS;
+
     this.state = {
       isDeletingUnit: false,
       tableTitle: this.props.unit.title,
-      tableColor: (this.props.tableNum % 2 === 0) ? '#621362' : '#009FE3',
+      tableColor: (this.props.tableNum % 2 === 0) ? colors[0] : colors[1],
       editing: false,
       showDeleteUnit: false,
       showInsertRow: false,

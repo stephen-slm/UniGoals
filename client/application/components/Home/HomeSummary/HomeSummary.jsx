@@ -2,10 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
 
-import HomeUnitBarChart from '../HomeUnitBarChart/HomeUnitBarChart';
+import * as constants from '../../../utils/constants';
+import HomeUnitPieChart from '../HomeUnitBarChart/HomeUnitPieChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 import TotalGrade from '../AverageGrade/TotalGrade';
 import TopFiveSection from '../AverageGrade/TopFiveSection';
+
 
 import style from '../home.less';
 
@@ -51,9 +53,9 @@ export default class HomeSummary extends React.Component {
             className={style.topFiveSectionWrapper}
             history={this.props.history}
           />
-          <HomeUnitBarChart
+          <HomeUnitPieChart
             data={this.props.units}
-            color="#621362"
+            color={constants.TABLE.COMPLETE_COLORS}
             className={style.ProfileSummaryChart}
             isSummary={this.state.isSummary}
             displayText="Overall Process"

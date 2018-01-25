@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
+import Chart from 'chart.js';
 
-import { ComposedChart, CartesianGrid, XAxis, YAxis, Tooltip, Label, Bar, Area } from 'recharts';
+import * as uuid from 'uuid/v4';
 
-export default class HomeUnitBarChart extends React.Component {
+export default class HomeUnitPieChart extends React.Component {
   /**
    * Calulates the width for the bar chart, based on the number of data length
    * @param {string} width prop string
@@ -34,13 +35,13 @@ export default class HomeUnitBarChart extends React.Component {
     super(props);
 
     this.generateBarData = this.generateBarData.bind(this);
+    this.uuid = uuid.default();
 
     this.state = {
       data: this.props.data,
       className: this.props.className,
       color: this.props.color,
       height: this.props.height,
-      areaOnly: this.props.areaOnly,
       isSummary: this.props.isSummary,
       displayText: this.props.displayText,
     };
@@ -48,24 +49,24 @@ export default class HomeUnitBarChart extends React.Component {
     this.content = this.generateBarData();
   }
 
+  componentDidMount() { this.buildCharts(); }
+  componentDidUpdate() { this.buildCharts(); }
+
   /**
    * generates bar chart data that is needed for the chart, the data
    * is shortnamed and used a float format for numbering
    */
   generateBarData() {
-    return _.map(this.state.data, (unit) => {
-      const name = _.defaultTo(unit.name, 'Section');
-      const { shortName: unitShortName } = unit;
-      let shortName = 'Section';
+    const names = [];
+    const values = [];
 
-      if (!_.isNil(unitShortName)) {
-        shortName = unitShortName;
-      } else if (!_.isNil(name) && name !== '') {
-        shortName = name.match(/\b(\w)/g).join('').toUpperCase();
-      }
-
-      return { name: shortName, value: parseFloat(unit.achieved) || 0 };
+    _.forEach(this.state.data, (unit) => {
+      const name = _.defaultTo(unit.name, 'Unit');
+      names.push(name.match(/\b(\w)/g).join('').toUpperCase());
+      values.push(parseFloat(unit.achieved || 0));
     });
+
+    return { names, values };
   }
 
   /**
@@ -74,16 +75,18 @@ export default class HomeUnitBarChart extends React.Component {
    * would be for the summary.
    */
   generateSummaryBarData() {
-    return _.map(this.props.data, (unit) => {
-      const name = _.defaultTo(unit.title, 'Unit');
-      const { shortName: unitShortName } = unit;
-      let shortName = 'Section';
+    const names = [];
+    const values = [];
 
-      if (!_.isNil(unitShortName)) {
-        shortName = unitShortName;
-      } else if (!_.isNil(name) && name !== '') {
-        shortName = name.match(/\b(\w)/g).join('').toUpperCase();
+    _.forEach(this.props.data, (unit) => {
+      const name = _.defaultTo(unit.title === '' ? null : unit.title, 'Unit');
+
+      if (!_.isNil(name.split(' ')[1])) {
+        names.push(name.match(/\b(\w)/g).join('').toUpperCase());
+      } else {
+        names.push(name.split('')[0].toUpperCase());
       }
+
 
       let total = 0;
 
@@ -94,11 +97,16 @@ export default class HomeUnitBarChart extends React.Component {
           }
         }
       });
-      return { name: shortName, value: total / 100 };
+
+      values.push(total / 100);
     });
+
+    return { names, values };
   }
 
-  render() {
+
+  buildCharts() {
+    const ctx = document.getElementById(this.uuid);
     let data;
 
     if (this.state.isSummary) {
@@ -107,45 +115,48 @@ export default class HomeUnitBarChart extends React.Component {
       data = this.generateBarData();
     }
 
-    const width = HomeUnitBarChart.calculateWidth(this.props.width, _.size(this.props.data));
+    return new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: data.names,
+        datasets: [{
+          label: this.state.displayText,
+          data: data.values,
+          backgroundColor: this.state.color,
+        }],
+      },
+    });
+  }
+
+  render() {
+    const width = HomeUnitPieChart.calculateWidth(this.props.width, _.size(this.props.data));
 
     return (
       <div
         className={`pt-card pt-elevation-1 ${this.state.className}`}
         style={{ maxWidth: width, height: this.state.height }}
       >
-        <ComposedChart margin={{ bottom: 15 }} style={{ marginLeft: '-50px' }} width={width} height={200} data={data}>
-          <Area type="monotone" dataKey="value" fill={this.state.color} stroke={this.state.color} />
-          <CartesianGrid stroke="#f5f5f5" />
-          <XAxis dataKey="name">
-            <Label value={this.state.displayText} offset={0} position="bottom" />
-          </XAxis>
-          <YAxis />
-          <Tooltip />
-          {(!this.state.areaOnly) ? (<Bar dataKey="value" fill={this.state.color} />) : null}
-        </ComposedChart>
+        <canvas id={this.uuid} width="400" height="400" />
       </div>
     );
   }
 }
 
-HomeUnitBarChart.propTypes = {
+HomeUnitPieChart.propTypes = {
   width: PropTypes.number,
   data: PropTypes.shape({}),
   height: PropTypes.string,
   className: PropTypes.string,
-  color: PropTypes.string,
+  color: PropTypes.arrayOf(PropTypes.string),
   displayText: PropTypes.string,
-  areaOnly: PropTypes.bool,
   isSummary: PropTypes.bool,
 };
 
-HomeUnitBarChart.defaultProps = {
+HomeUnitPieChart.defaultProps = {
   width: null,
   height: 'auto',
   className: '',
-  color: '#009FE3',
-  areaOnly: false,
+  color: ['rgb(201, 203, 207)'],
   isSummary: false,
   data: {},
   displayText: 'Unit Process',

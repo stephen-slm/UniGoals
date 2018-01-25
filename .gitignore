@@ -43,3 +43,4 @@ firebase.json
 # admin panel
 serviceAccount.ts
 dist
+package-lock.json
