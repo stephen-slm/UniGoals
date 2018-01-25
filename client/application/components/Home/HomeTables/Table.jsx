@@ -64,7 +64,7 @@ export default class Table extends React.Component {
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
       this.props.removeUnitRow(rowIndex, this.props.tableIndex);
 
-      if (_.isNil(this.props.exampleUser)) {
+      if (!this.props.exampleUser) {
         this.props.firebase.deleteUnitRowById(rowIndex, this.props.tableIndex);
       }
     }
