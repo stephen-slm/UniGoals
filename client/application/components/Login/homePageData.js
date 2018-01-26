@@ -16,12 +16,12 @@ const units = {
         weighting: '40',
       },
       '-KzyIZQZgWnvTA8ZKB5Q': {
-        achieved: '0',
+        achieved: '40',
         name: 'Exam',
         weighting: '50',
       },
       '-KzyKZiLEVNw7izu8eAp': {
-        achieved: '0',
+        achieved: '80',
         name: 'Log book',
         weighting: '10',
       },
