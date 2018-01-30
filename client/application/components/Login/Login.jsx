@@ -107,11 +107,13 @@ export default class Login extends React.Component {
       if (profile.new) {
         this.props.firebase.createNewUser(profile)
           .then(() => this.updateProfile(profile))
+          .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => resolve())
           .catch(error => reject(error));
       } else {
         this.props.firebase.getProfileById()
           .then(gotProfile => this.updateProfile(gotProfile))
+          .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => resolve())
           .catch(error => reject(error));
       }
@@ -256,6 +258,7 @@ Login.propTypes = {
   updateUnits: PropTypes.func.isRequired,
   version: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
+    updateLoginCountAndDate: PropTypes.func,
     getExampleUser: PropTypes.func,
     createNewUser: PropTypes.func,
     getProfileById: PropTypes.func,
