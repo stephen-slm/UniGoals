@@ -125,6 +125,11 @@ export default class HomeUnitPieChart extends React.Component {
           backgroundColor: this.state.color,
         }],
       },
+      options: {
+        animation: {
+          duration: 0,
+        },
+      },
     });
   }
 

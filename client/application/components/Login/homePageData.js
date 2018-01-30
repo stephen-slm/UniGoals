@@ -13,12 +13,17 @@ const units = {
       '-KzyIZQY2TUhf3xYTR5Q': {
         achieved: '0',
         name: 'Coursework',
-        weighting: '40',
+        weighting: '30',
+      },
+      '-asdfklsjdfklsajdflkj': {
+        achieved: '15',
+        weighting: '20',
+        name: 'Coursework 2',
       },
       '-KzyIZQZgWnvTA8ZKB5Q': {
         achieved: '40',
         name: 'Exam',
-        weighting: '50',
+        weighting: '40',
       },
       '-KzyKZiLEVNw7izu8eAp': {
         achieved: '80',

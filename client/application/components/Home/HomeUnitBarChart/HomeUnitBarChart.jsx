@@ -130,6 +130,15 @@ export default class HomeUnitBarChart extends React.Component {
         }],
       },
       options: {
+        scales: {
+          yAxes: [{
+            ticks: {
+              beginAtZero: true,
+              scaleSteps: 10,
+              scaleStepWidth: 10,
+            }
+          }],
+        },
         animation: {
           duration: 0,
         },
