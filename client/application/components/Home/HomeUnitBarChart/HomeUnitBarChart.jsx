@@ -136,7 +136,7 @@ export default class HomeUnitBarChart extends React.Component {
               beginAtZero: true,
               scaleSteps: 10,
               scaleStepWidth: 10,
-            }
+            },
           }],
         },
         animation: {
