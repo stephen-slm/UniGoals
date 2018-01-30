@@ -81,7 +81,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   getProfileById() {
-    return this.database.ref(`users/${this.getUid()}/profile`).once('value')
+    return this.database.ref(`users/${this.getUid()}/profile`).once('value');
   }
 
   /**
@@ -89,13 +89,13 @@ export default class FirebaseWrapper {
    */
   updateLoginCountAndDate() {
     this.database.ref(`users/${this.getUid()}/profile/last_login`).set(Date.now());
-    
+
     return this.database.ref(`users/${this.getUid()}/profile/login_count`).once('value')
-    .then((snapshot) => {
-      const count = snapshot.val();
-      const newLoginCount = (count === null || count === undefined) ? 0 : count + 1;
-      return this.database.ref(`users/${this.getUid()}/profile/login_count`).set(newLoginCount);
-    });
+      .then((snapshot) => {
+        const count = snapshot.val();
+        const newLoginCount = (count === null || count === undefined) ? 0 : count + 1;
+        return this.database.ref(`users/${this.getUid()}/profile/login_count`).set(newLoginCount);
+      });
   }
 
   /**
