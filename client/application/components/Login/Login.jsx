@@ -112,7 +112,7 @@ export default class Login extends React.Component {
           .catch(error => reject(error));
       } else {
         this.props.firebase.getProfileById()
-          .then(gotProfile => this.updateProfile(gotProfile))
+          .then(gotProfile => this.updateProfile(gotProfile.val()))
           .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => resolve())
           .catch(error => reject(error));
