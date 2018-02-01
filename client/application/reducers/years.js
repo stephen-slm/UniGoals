@@ -2,11 +2,11 @@ import * as _ from 'lodash';
 
 import * as actionTypes from '../actions/actionTypes';
 
-export default function units(state = {}, action) {
+export default function years(state = {}, action) {
   switch (action.type) {
-    case actionTypes.UPDATE_UNITS: {
-      if (!_.isNil(action.units)) {
-        return action.units;
+    case actionTypes.UPDATE_YEARS: {
+      if (!_.isNil(action.years)) {
+        return action.years;
       }
       return state;
     }
@@ -31,15 +31,19 @@ export default function units(state = {}, action) {
     }
 
     case actionTypes.REMOVE_UNIT_TABLE: {
-      const { unitTableIndex: removingUnitTableIndex } = action;
+      const { yearIndex, unitTableIndex: removingUnitTableIndex } = action;
 
       if (_.isNil(removingUnitTableIndex) || !_.isString(removingUnitTableIndex)) {
         return state;
       }
 
+      if (_.isNil(yearIndex) || !_.isString(yearIndex)) {
+        return state;
+      }
+
       const adjustedUnitRow = Object.assign({}, state);
 
-      delete adjustedUnitRow[removingUnitTableIndex];
+      delete adjustedUnitRow[yearIndex].units[removingUnitTableIndex];
       return adjustedUnitRow;
     }
 
@@ -49,26 +53,29 @@ export default function units(state = {}, action) {
      * up with firebase.
      */
     case actionTypes.INSERT_UNIT_ROW: {
-      const { tableIndex: insertingTableIndex, rowKeyId: insertingRowId } = action;
+      const { yearIndex, tableIndex: insertingTableIndex, rowKeyId: insertingRowId } = action;
 
       if (_.isNil(insertingRowId) || !_.isString(insertingRowId)) {
         return state;
       } else if (_.isNil(insertingTableIndex) || !_.isString(insertingTableIndex)) {
         return state;
+      } else if (_.isNil(yearIndex) || !_.isString(yearIndex)) {
+        return false;
       }
 
       const insertingUnitRow = Object.assign({}, state);
 
-      if (_.isNil(insertingUnitRow[insertingTableIndex].content)) {
-        insertingUnitRow[insertingTableIndex].content = {};
+      if (_.isNil(insertingUnitRow[yearIndex].units[insertingTableIndex].content)) {
+        insertingUnitRow[yearIndex].units[insertingTableIndex].content = {};
       }
 
-      insertingUnitRow[insertingTableIndex].content[insertingRowId] = { name: '', weighting: '0', achieved: '0' };
+      insertingUnitRow[yearIndex].units[insertingTableIndex].content[insertingRowId] = { name: '', weighting: '0', achieved: '0' };
       return insertingUnitRow;
     }
 
     case actionTypes.UPDATE_UNIT_ROW_CONTENT: {
       const {
+        yearIndex,
         change: updateUnitChange,
         tableIndex: updateUnitTableIndex,
         rowIndex: updateUnitRowIndex,
@@ -83,11 +90,13 @@ export default function units(state = {}, action) {
         return state;
       } else if (_.isNil(updateUnitColumnIndex) || !_.isString(updateUnitColumnIndex)) {
         return state;
+      } else if (_.isNil(yearIndex) || !_.isString(yearIndex)) {
+        return state;
       }
 
       const updateUnitContent = Object.assign({}, state);
 
-      updateUnitContent[updateUnitTableIndex]
+      updateUnitContent[yearIndex].units[updateUnitTableIndex]
         .content[updateUnitRowIndex][updateUnitColumnIndex] = updateUnitChange;
       return updateUnitContent;
     }
@@ -97,7 +106,7 @@ export default function units(state = {}, action) {
      * contacting the firebase we just update the title.
      */
     case actionTypes.UPDATE_UNIT_TITLE: {
-      const { title: updateUnitTitle, tableIndex: updateTableIndex } = action;
+      const { yearIndex, title: updateUnitTitle, tableIndex: updateTableIndex } = action;
 
       if (_.isNil(updateTableIndex) || !_.isString(updateTableIndex)) {
         return state;
@@ -106,8 +115,12 @@ export default function units(state = {}, action) {
         return state;
       }
 
+      if (_.isNil(yearIndex) || !_.isString(yearIndex)) {
+        return state;
+      }
+
       const updateUnitTitleContent = Object.assign({}, state);
-      updateUnitTitleContent[updateTableIndex].title = updateUnitTitle;
+      updateUnitTitleContent[yearIndex].units[updateTableIndex].title = updateUnitTitle;
 
       return updateUnitTitleContent;
     }
@@ -118,7 +131,7 @@ export default function units(state = {}, action) {
      */
     case actionTypes.ADD_UNIT_TABLE: {
       const unitTableAdd = Object.assign({}, state);
-      unitTableAdd[action.key] = { title: '', content: {} };
+      unitTableAdd[action.yearIndex].units[action.key] = { title: '', content: {} };
       return unitTableAdd;
     }
 

@@ -77,9 +77,11 @@ export default class Table extends React.Component {
    * the firebase or the redux)
    */
   insertRowBelow() {
+    const { tableIndex, yearIndex } = this.props;
+
     if (!this.props.exampleUser) {
-      this.props.firebase.insertUnitRowById(this.props.tableIndex)
-        .then(key => this.props.insertUnitRow(key, this.props.tableIndex))
+      this.props.firebase.insertUnitRowById(yearIndex, tableIndex)
+        .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
         .catch(error => toaster.danger(error.message));
     }
   }
@@ -98,7 +100,7 @@ export default class Table extends React.Component {
     // This means that its the same content as was already there, so there is no need to update
     // when it does not change.
     if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
-      this.props.updateRowContent(change, this.props.tableIndex, rowIndex, columnIndex);
+      this.props.updateRowContent(change, this.props.yearIndex, this.props.tableIndex, rowIndex, columnIndex);
     }
   }
 
@@ -126,8 +128,8 @@ export default class Table extends React.Component {
     const validUpdate = updatedChange !== this.props.unit.content[rowIndex][columnIndex];
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.exampleUser) {
-      const { tableIndex } = this.props;
-      this.props.firebase.updateUnitRowSection(updatedChange, tableIndex, rowIndex, columnIndex);
+      const { tableIndex, yearIndex } = this.props;
+      this.props.firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
     }
   }
 
@@ -137,7 +139,7 @@ export default class Table extends React.Component {
    */
   updateUnitTitle(change) {
     if (!_.isNil(change) || change !== this.props.unit.title) {
-      this.props.updateUnitTitle(change, this.props.tableIndex);
+      this.props.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex);
     }
   }
 
@@ -147,7 +149,7 @@ export default class Table extends React.Component {
    */
   updateUnitTitleDatabase(change) {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.exampleUser) {
-      this.props.firebase.updateUnitTitle(change, this.props.tableIndex)
+      this.props.firebase.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
         .catch(error => toaster.danger(error.message));
     }
   }
@@ -159,11 +161,14 @@ export default class Table extends React.Component {
   deleteUnitTable() {
     this.showDeleteUnitBox();
     toaster.success(`Deleted ${(this.state.tableTitle === null) ? 'the' : this.state.tableTitle} unit`);
+    
     const unitTableIndex = this.props.tableIndex;
-    this.props.removeUnitTable(unitTableIndex);
+    const yearIndex = this.props.yearIndex;
+
+    this.props.removeUnitTable(yearIndex, unitTableIndex);
 
     if (!this.props.exampleUser) {
-      this.props.firebase.deleteUnitById(unitTableIndex);
+      this.props.firebase.deleteUnitById(yearIndex, unitTableIndex);
     }
   }
 
@@ -351,6 +356,7 @@ export default class Table extends React.Component {
 
 
 Table.propTypes = {
+  yearIndex: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     deleteUnitById: PropTypes.func,
     updateUnitTitle: PropTypes.func,

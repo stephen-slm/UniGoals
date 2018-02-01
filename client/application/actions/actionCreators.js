@@ -66,6 +66,17 @@ export function updateUnits(units) {
 }
 
 /**
+ * Updates all the current users year unit content 
+ * @param {object} years all the users unit data
+ */
+export function updateYears(years) {
+  return {
+    type: actionTypes.UPDATE_YEARS,
+    years,
+  }
+}
+
+/**
  * Removes a unit by the uit key
  * @param {string} unitId unit key
  */
@@ -94,11 +105,12 @@ export function removeUnitRow(rowId, tableIndex) {
  * @param {string} rowKeyId row index
  * @param {string} tableIndex unit index
  */
-export function insertUnitRow(rowKeyId, tableIndex) {
+export function insertUnitRow(rowKeyId, yearIndex, tableIndex) {
   return {
     type: actionTypes.INSERT_UNIT_ROW,
     rowKeyId,
     tableIndex,
+    yearIndex,
   };
 }
 
@@ -107,11 +119,12 @@ export function insertUnitRow(rowKeyId, tableIndex) {
  * @param {string} title unit title change
  * @param {string} tableIndex unit table
  */
-export function updateUnitTitle(title, tableIndex) {
+export function updateUnitTitle(title, yearIndex, tableIndex) {
   return {
     type: actionTypes.UPDATE_UNIT_TITLE,
     title,
     tableIndex,
+    yearIndex,
   };
 }
 
@@ -119,9 +132,10 @@ export function updateUnitTitle(title, tableIndex) {
  * adds a new unit at the bottom based on the key
  * @param {string} key firebase unit key
  */
-export function addUnitTable(key) {
+export function addUnitTable(yearIndex, key) {
   return {
     type: actionTypes.ADD_UNIT_TABLE,
+    yearIndex,
     key,
   };
 }
@@ -130,10 +144,11 @@ export function addUnitTable(key) {
  * Removes the whole unit table based on the firebase key
  * @param {string} unitTableIndex unit key
  */
-export function removeUnitTable(unitTableIndex) {
+export function removeUnitTable(yearIndex, unitTableIndex) {
   return {
     type: actionTypes.REMOVE_UNIT_TABLE,
     unitTableIndex,
+    yearIndex,
   };
 }
 
@@ -144,9 +159,10 @@ export function removeUnitTable(unitTableIndex) {
  * @param {string} rowIndex the row key to update
  * @param {string} columnIndex the column name to update (name, achieved, weighting)
  */
-export function updateRowContent(change, tableIndex, rowIndex, columnIndex) {
+export function updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex) {
   return {
     type: actionTypes.UPDATE_UNIT_ROW_CONTENT,
+    yearIndex,
     change,
     tableIndex,
     rowIndex,

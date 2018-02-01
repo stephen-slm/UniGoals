@@ -61,7 +61,7 @@ export default class Login extends React.Component {
             this.props.firebase.authentication.signInWithCredential(loginResult.credential)
               .then(() => this.processGoogleLogin(loginResult))
               .then(() => this.getNotifications())
-              .then(() => this.getUnits())
+              .then(() => this.getYears())
               .catch((error) => {
                 toaster.danger(error.message);
                 this.setState({ loading: false });
@@ -77,9 +77,9 @@ export default class Login extends React.Component {
   /**
    * Gets the units for the logged in user
    */
-  getUnits() {
-    this.props.firebase.getUnitsById()
-      .then(units => this.props.updateUnits(units.val()))
+  getYears() {
+    this.props.firebase.getAllYearUnits()
+      .then(years => this.props.updateYears(years.val()))
       .catch(error => Promise.reject(error));
   }
 
@@ -167,7 +167,7 @@ export default class Login extends React.Component {
       auth.signInWithPopup(provider)
         .then(result => this.processGoogleLogin(result))
         .then(() => this.getNotifications())
-        .then(() => this.getUnits())
+        .then(() => this.getYears())
         .catch((error) => {
           toaster.danger(error.message);
           this.setState({ loading: false });
@@ -255,7 +255,7 @@ export default class Login extends React.Component {
 Login.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
-  updateUnits: PropTypes.func.isRequired,
+  updateYears: PropTypes.func.isRequired,
   version: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     updateLoginCountAndDate: PropTypes.func,

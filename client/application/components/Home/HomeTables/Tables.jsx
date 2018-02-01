@@ -22,7 +22,7 @@ export default class Tables extends React.Component {
    * Inserts a new unit on firebase and on redux
    */
   addUnitTable() {
-    this.props.firebase.insertUnitById()
+    this.props.firebase.insertUnitById(this.props.index)
       .then(ref => this.addAndNavigateToTable(ref))
       .catch(error => toaster.danger(error.message));
   }
@@ -32,7 +32,7 @@ export default class Tables extends React.Component {
    * @param {string} ref table reference hash
    */
   addAndNavigateToTable(ref) {
-    this.props.addUnitTable(ref);
+    this.props.addUnitTable(this.props.index, ref);
     const element = document.getElementById(ref);
     element.scrollIntoView();
     Promise.resolve();
@@ -54,6 +54,7 @@ export default class Tables extends React.Component {
       return (
         <div key={index} id={`${index}`} className={`pt-card pt-elevation-3 ${style.tableWrapper}`}>
           <Table
+            yearIndex={this.props.index}
             tableIndex={index}
             tableNum={count}
             updateRowContent={this.props.updateRowContent}
@@ -81,6 +82,7 @@ export default class Tables extends React.Component {
 }
 
 Tables.propTypes = {
+  index: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     insertUnitById: PropTypes.func,
   }).isRequired,

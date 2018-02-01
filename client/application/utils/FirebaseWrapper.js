@@ -77,6 +77,13 @@ export default class FirebaseWrapper {
   }
 
   /**
+   * Gets all the content for all the users years.
+   */
+  getAllYearUnits() {
+    return this.database.ref(`users/${this.getUid()}/years`).once('value');
+  }
+
+  /**
    * Gets the active users profile
    * @returns {firebase.Promise.<*>}
    */
@@ -105,8 +112,8 @@ export default class FirebaseWrapper {
    * @param key The key of the unit updating it.
    * @returns {firebase.Promise.<void>}
    */
-  updateUnitTitle(change, key) {
-    return this.database.ref(`users/${this.getUid()}/units/${key}/title`).set(change);
+  updateUnitTitle(change, yearKey, unitKey) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/title`).set(change);
   }
 
   /**
@@ -127,8 +134,8 @@ export default class FirebaseWrapper {
    * @param columnIndex the type (name, archieved or weighting)
    * @returns {firebase.Promise.<void>}
    */
-  updateUnitRowSection(change, tableIndex, rowIndex, columnIndex) {
-    return this.database.ref(`users/${this.getUid()}/units/${tableIndex}/content/${rowIndex}/${columnIndex}`).set(change);
+  updateUnitRowSection(change, yearIndex, tableIndex, rowIndex, columnIndex) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/content/${rowIndex}/${columnIndex}`).set(change);
   }
 
   /**
@@ -137,22 +144,22 @@ export default class FirebaseWrapper {
    * @param tableUnitKey the row key which is being deleted
    * @returns {firebase.Promise.<void>}
    */
-  deleteUnitRowById(unitRowKey, tableUnitKey) {
-    return this.database.ref(`users/${this.getUid()}/units/${tableUnitKey}/content/${unitRowKey}`).remove();
+  deleteUnitRowById(yearIndex, unitRowKey, tableUnitKey) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableUnitKey}/content/${unitRowKey}`).remove();
   }
 
   /**
    * inserts a new unit at the bottom of the units list
    * @returns {firebase.Promise.<*>}
    */
-  insertUnitById() {
-    return this.database.ref(`users/${this.getUid()}/units`).once('value')
+  insertUnitById(yearIndex) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`).once('value')
       .then((currentUnitState) => {
         if (currentUnitState.numChildren() >= 8) {
           return Promise.reject(new Error('Only a maximum of 8 units at anyone time.'));
         }
 
-        const insertUnitRef = this.database.ref(`users/${this.getUid()}/units`);
+        const insertUnitRef = this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`);
         const insertKey = insertUnitRef.push({ title: '', content: {} });
         return Promise.resolve(insertKey.key);
       });
@@ -163,14 +170,14 @@ export default class FirebaseWrapper {
    * @param unitKey The unit key to insert into
    * @returns {firebase.Promise.<*>}
    */
-  insertUnitRowById(unitKey) {
-    return this.database.ref(`users/${this.getUid()}/units/${unitKey}/content`).once('value')
+  insertUnitRowById(yearKey, unitKey) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`).once('value')
       .then((currentRowState) => {
         if (currentRowState.numChildren() >= 20) {
           return Promise.reject(new Error('Only a maximum of 20 unit rows at anyone time.'));
         }
 
-        const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/units/${unitKey}/content`);
+        const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`);
         const insertingUnitRowKey = insertingUnitRowRef.push({ name: 'Section', weighting: '0', achieved: '0' });
         return Promise.resolve(insertingUnitRowKey.key);
       });
@@ -181,8 +188,8 @@ export default class FirebaseWrapper {
    * @param unitIndex The unit index key used for this process
    * @returns {firebase.Promise.<void>}
    */
-  deleteUnitById(unitIndex) {
-    return this.database.ref(`users/${this.getUid()}/units/${unitIndex}`).remove();
+  deleteUnitById(yearIndex, unitIndex) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${unitIndex}`).remove();
   }
 
   /**
@@ -203,26 +210,34 @@ export default class FirebaseWrapper {
       .catch(error => Promise.reject(error));
   }
 
+  createNewYear(name) {
+    const newYearRef = this.database.ref(`users/${this.getUid()}/years`).push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
+    return newYearRef;
+  }
+
   /**
    * when a user is created, sample units are created, this is by using the above function
    * for inserting a unit and updating rows.
    */
   createSampleUnitsForNewUser() {
-    const sampleOneRef = this.database.ref(`users/${this.getUid()}/units`);
+    const firstYear = this.createNewYear();
+
+
+    const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${firstYear.key}/units`);
     const sampleOneKey = sampleOneRef.push({ title: 'Example Unit', content: {} });
 
-    this.insertUnitRowById(sampleOneKey.key)
+    this.insertUnitRowById(firstYear.key, sampleOneKey.key)
       .then((unitRow) => {
-        this.updateUnitRowSection('Coursework', sampleOneKey.key, unitRow, 'name');
-        this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting');
-        this.updateUnitRowSection('71', sampleOneKey.key, unitRow, 'achieved');
+        this.updateUnitRowSection('Coursework', firstYear.key, sampleOneKey.key, unitRow, 'name');
+        this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
+        this.updateUnitRowSection('71', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
       });
 
-    this.insertUnitRowById(sampleOneKey.key)
+    this.insertUnitRowById(firstYear.key, sampleOneKey.key)
       .then((unitRow) => {
-        this.updateUnitRowSection('Exam', sampleOneKey.key, unitRow, 'name');
-        this.updateUnitRowSection('50', sampleOneKey.key, unitRow, 'weighting');
-        this.updateUnitRowSection('31', sampleOneKey.key, unitRow, 'achieved');
+        this.updateUnitRowSection('Exam', firstYear.key, sampleOneKey.key, unitRow, 'name');
+        this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
+        this.updateUnitRowSection('31', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
       });
 
     Promise.resolve();
