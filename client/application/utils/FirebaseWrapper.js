@@ -1,4 +1,5 @@
 import * as firebase from 'firebase';
+import * as _ from 'lodash';
 
 export default class FirebaseWrapper {
   constructor(config) {
@@ -213,6 +214,22 @@ export default class FirebaseWrapper {
   createNewYear(name) {
     const newYearRef = this.database.ref(`users/${this.getUid()}/years`).push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
     return newYearRef;
+  }
+
+  insertNewYear() {
+    const yearsRef = this.database.ref(`users/${this.getUid()}/years`);
+    let yearlen = 0;
+
+    return yearsRef.once('value')
+      .then((yearsData) => {
+        const years = yearsData.val();
+        yearlen = Object.keys(years).length + 1;
+        return this.createNewYear(`Year ${yearlen}`);
+      }).then((newYearRef) => {
+        const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${newYearRef.key}/units`);
+        const sampleKey = sampleOneRef.push({ title: 'Example Unit', content: {} });
+        return { yearKey: newYearRef.key, title: `Year ${yearlen}`, unitKey: sampleKey.key };
+      });
   }
 
   /**

@@ -97,10 +97,12 @@ export default class Table extends React.Component {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
     }
 
+    const { yearIndex, tableIndex } = this.props;
+
     // This means that its the same content as was already there, so there is no need to update
     // when it does not change.
     if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
-      this.props.updateRowContent(change, this.props.yearIndex, this.props.tableIndex, rowIndex, columnIndex);
+      this.props.updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex);
     }
   }
 
@@ -129,7 +131,13 @@ export default class Table extends React.Component {
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.exampleUser) {
       const { tableIndex, yearIndex } = this.props;
-      this.props.firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
+      this.props.firebase.updateUnitRowSection(
+        updatedChange,
+        yearIndex,
+        tableIndex,
+        rowIndex,
+        columnIndex,
+      );
     }
   }
 
@@ -161,9 +169,8 @@ export default class Table extends React.Component {
   deleteUnitTable() {
     this.showDeleteUnitBox();
     toaster.success(`Deleted ${(this.state.tableTitle === null) ? 'the' : this.state.tableTitle} unit`);
-    
-    const unitTableIndex = this.props.tableIndex;
-    const yearIndex = this.props.yearIndex;
+
+    const { tableIndex: unitTableIndex, yearIndex } = this.props;
 
     this.props.removeUnitTable(yearIndex, unitTableIndex);
 

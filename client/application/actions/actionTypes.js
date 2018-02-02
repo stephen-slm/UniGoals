@@ -27,3 +27,4 @@ export const REMOVE_UNIT_TABLE = 'REMOVE_UNIT_TABLE';
 
 // Years
 export const UPDATE_YEARS = 'UPDATE_YEARS';
+export const INSERT_YEAR = 'INSERT_YEAR';

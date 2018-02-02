@@ -138,7 +138,7 @@ export default class Login extends React.Component {
     this.props.firebase.getExampleUser()
       .then((snapshot) => {
         const exampleUser = snapshot.val();
-        const { units } = exampleUser;
+        const { years } = exampleUser;
 
         const { profile, notifications } = exampleUser;
         profile.exampleUser = true;
@@ -147,7 +147,7 @@ export default class Login extends React.Component {
 
         this.props.updateNotifications(notifications);
         this.props.updateProfile(profile);
-        this.props.updateUnits(units);
+        this.props.updateYears(years);
       })
       .catch(error => toaster.danger(error.message));
   }
@@ -258,6 +258,7 @@ Login.propTypes = {
   updateYears: PropTypes.func.isRequired,
   version: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
+    getAllYearUnits: PropTypes.func,
     updateLoginCountAndDate: PropTypes.func,
     getExampleUser: PropTypes.func,
     createNewUser: PropTypes.func,

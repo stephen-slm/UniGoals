@@ -135,6 +135,35 @@ export default function years(state = {}, action) {
       return unitTableAdd;
     }
 
+    case actionTypes.INSERT_YEAR: {
+      const newYearKey = action.yearKey;
+      const newYearTitle = action.title;
+      const newYearUnitKey = action.unitKey;
+
+
+      if (_.isNil(newYearKey) || !_.isString(newYearKey)) {
+        return state;
+      } else if (_.isNil(newYearTitle) || !_.isString(newYearTitle)) {
+        return state;
+      } else if (_.isNil(newYearUnitKey) || !_.isString(newYearUnitKey)) {
+        return false;
+      }
+
+      const insertNewYears = Object.assign({}, state);
+
+      insertNewYears[newYearKey] = {
+        title: newYearTitle,
+        units: {},
+      };
+
+      insertNewYears[newYearKey].units[newYearUnitKey] = {
+        title: 'Example Unit',
+        content: {},
+      };
+
+      return insertNewYears;
+    }
+
     default: {
       return state;
     }

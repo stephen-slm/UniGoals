@@ -46,6 +46,7 @@ export default class Application extends React.Component {
       updateYears,
       removeUnitRow,
       insertUnitRow,
+      insertNewYear,
       updateRowContent,
       updateUnitTitle,
       addUnitTable,
@@ -83,6 +84,7 @@ export default class Application extends React.Component {
                   years={years}
                   updateYears={updateYears}
                   removeUnitRow={removeUnitRow}
+                  insertNewYear={insertNewYear}
                   insertUnitRow={insertUnitRow}
                   updateRowContent={updateRowContent}
                   updateUnitTitle={updateUnitTitle}
@@ -137,15 +139,16 @@ Application.propTypes = {
   updateYears: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
+  insertNewYear: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   profile: PropTypes.shape().isRequired,
   notifications: PropTypes.shape().isRequired,
-  units: PropTypes.shape({}),
+  years: PropTypes.shape({}),
 };
 
 Application.defaultProps = {
-  units: {},
+  years: {},
 };

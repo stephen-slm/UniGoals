@@ -66,14 +66,14 @@ export function updateUnits(units) {
 }
 
 /**
- * Updates all the current users year unit content 
+ * Updates all the current users year unit content
  * @param {object} years all the users unit data
  */
 export function updateYears(years) {
   return {
     type: actionTypes.UPDATE_YEARS,
     years,
-  }
+  };
 }
 
 /**
@@ -170,3 +170,11 @@ export function updateRowContent(change, yearIndex, tableIndex, rowIndex, column
   };
 }
 
+export function insertNewYear(yearKey, title, unitKey) {
+  return {
+    type: actionTypes.INSERT_YEAR,
+    yearKey,
+    title,
+    unitKey,
+  };
+}
