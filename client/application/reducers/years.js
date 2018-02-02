@@ -65,6 +65,8 @@ export default function years(state = {}, action) {
 
       const insertingUnitRow = Object.assign({}, state);
 
+      debugger;
+
       if (_.isNil(insertingUnitRow[yearIndex].units[insertingTableIndex].content)) {
         insertingUnitRow[yearIndex].units[insertingTableIndex].content = {};
       }
@@ -157,11 +159,27 @@ export default function years(state = {}, action) {
       };
 
       insertNewYears[newYearKey].units[newYearUnitKey] = {
-        title: 'Example Unit',
+        title: 'Unit',
         content: {},
       };
 
       return insertNewYears;
+    }
+
+    case actionTypes.UPDATE_YEAR_TITLE: {
+      const updatedYearTitle = action.yearTitle;
+      const updatedYearIndex = action.yearIndex;
+
+      if (_.isNil(updatedYearTitle) || !_.isString(updatedYearTitle)) {
+        return state;
+      } else if (_.isNil(updatedYearIndex) || !_.isString(updatedYearIndex)) {
+        return state;
+      }
+
+      const updatedTitleState = Object.assign({}, state);
+
+      updatedTitleState[updatedYearIndex].title = updatedYearTitle;
+      return updatedTitleState;
     }
 
     default: {

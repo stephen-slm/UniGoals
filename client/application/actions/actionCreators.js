@@ -152,6 +152,14 @@ export function removeUnitTable(yearIndex, unitTableIndex) {
   };
 }
 
+export function updateYearTitle(yearIndex, yearTitle) {
+  return {
+    type: actionTypes.UPDATE_YEAR_TITLE,
+    yearIndex,
+    yearTitle,
+  }
+}
+
 /**
  * Updates a column with the change, columns are either name, achieved or weighting
  * @param {string} change change to make in the column

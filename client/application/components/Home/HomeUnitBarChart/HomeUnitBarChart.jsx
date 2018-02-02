@@ -49,8 +49,13 @@ export default class HomeUnitBarChart extends React.Component {
     this.content = this.generateBarData();
   }
 
-  componentDidMount() { this.buildCharts(); }
-  componentDidUpdate() { this.buildCharts(); }
+  componentDidMount() {
+    this.buildCharts();
+  }
+
+  componentDidUpdate() { 
+    this.buildCharts();
+  }
 
   /**
    * generates bar chart data that is needed for the chart, the data

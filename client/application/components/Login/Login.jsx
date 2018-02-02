@@ -219,10 +219,13 @@ export default class Login extends React.Component {
           current percent, average and total maximum grade! Real-time instant results.
           <div className={style.homeSummaryContainer}>
             <HomeSummary
+              firebase={this.props.firebase}
               units={homePageData.units}
               profile={homePageData.profile}
               history={this.props.history}
               exampleUser={exampleUser}
+              updateYearTitle={this.props.updateYearTitle}
+              yearIndex="Year 1"
             />
           </div>
           Your own unqiue summary page that displays everything you need to quickly know about your
@@ -253,6 +256,7 @@ export default class Login extends React.Component {
 }
 
 Login.propTypes = {
+  updateYearTitle: PropTypes.func.isRequired,
   updateNotifications: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateYears: PropTypes.func.isRequired,

@@ -54,6 +54,7 @@ export default class Application extends React.Component {
       updateNotifications,
       removeNotification,
       updateCourseName,
+      updateYearTitle,
       updateProfile,
       version,
     } = this.props;
@@ -83,6 +84,7 @@ export default class Application extends React.Component {
                   updateCourseName={updateCourseName}
                   years={years}
                   updateYears={updateYears}
+                  updateYearTitle={updateYearTitle}
                   removeUnitRow={removeUnitRow}
                   insertNewYear={insertNewYear}
                   insertUnitRow={insertUnitRow}
@@ -117,6 +119,7 @@ export default class Application extends React.Component {
             render={() => (<Login
               updateProfile={this.props.updateProfile}
               updateNotifications={this.props.updateNotifications}
+              updateYearTitle={this.props.updateYearTitle}
               firebase={this.firebase}
               updateYears={this.props.updateYears}
               history={this.history}
@@ -133,6 +136,7 @@ Application.propTypes = {
   version: PropTypes.string.isRequired,
   updateNotifications: PropTypes.func.isRequired,
   updateCourseName: PropTypes.func.isRequired,
+  updateYearTitle: PropTypes.func.isRequired,
   removeNotification: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   removeProfile: PropTypes.func.isRequired,

@@ -363,7 +363,7 @@ export default class Table extends React.Component {
 
 
 Table.propTypes = {
-  yearIndex: PropTypes.string.isRequired,
+  yearIndex: PropTypes.string,
   firebase: PropTypes.shape({
     deleteUnitById: PropTypes.func,
     updateUnitTitle: PropTypes.func,

@@ -107,6 +107,15 @@ export default class FirebaseWrapper {
   }
 
   /**
+   * Update a year title
+   * @param {string} yearIndex selected year
+   * @param {string} title the new title
+   */
+  updateYearTitle(yearIndex, title) {
+    this.database.ref(`users/${this.getUid()}/years/${yearIndex}`).update({ title });
+  }
+
+  /**
    * updates a units title in the firebase for the active user based on the unit key, validation
    * is done client and on the firebase database
    * @param change The change (string) happening on the server
@@ -227,7 +236,7 @@ export default class FirebaseWrapper {
         return this.createNewYear(`Year ${yearlen}`);
       }).then((newYearRef) => {
         const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${newYearRef.key}/units`);
-        const sampleKey = sampleOneRef.push({ title: 'Example Unit', content: {} });
+        const sampleKey = sampleOneRef.push({ title: 'Unit', content: {} });
         return { yearKey: newYearRef.key, title: `Year ${yearlen}`, unitKey: sampleKey.key };
       });
   }

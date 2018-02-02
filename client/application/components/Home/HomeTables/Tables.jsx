@@ -54,7 +54,7 @@ export default class Tables extends React.Component {
       return (
         <div key={index} id={`${index}`} className={`pt-card pt-elevation-3 ${style.tableWrapper}`}>
           <Table
-            yearIndex={this.props.index}
+            yearIndex={this.props.yearIndex}
             tableIndex={index}
             tableNum={count}
             updateRowContent={this.props.updateRowContent}
@@ -82,7 +82,7 @@ export default class Tables extends React.Component {
 }
 
 Tables.propTypes = {
-  index: PropTypes.string.isRequired,
+  yearIndex: PropTypes.string,
   firebase: PropTypes.shape({
     insertUnitById: PropTypes.func,
   }).isRequired,

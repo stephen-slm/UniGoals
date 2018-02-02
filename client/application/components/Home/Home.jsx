@@ -12,31 +12,42 @@ export default class Home extends React.Component {
   constructor() {
     super();
 
+    this.state = {
+      selectedId: ''
+    }
+
     this.generateTabs = this.generateTabs.bind(this);
     this.getTabContent = this.getTabContent.bind(this);
-    this.insertNewYear = this.insertNewYear.bind(this);
+    this.updateId = this.updateId.bind(this);
   }
 
   getTabContent(index, year) {
     const { profile } = this.props;
 
+    _.isNil(year.units) ? year.units = {} : null;
+
     return (
       <div>
         <HomeNewUser
-          index={index}
+          yearIndex={index}
           profile={profile}
           firebase={this.props.firebase}
           updateProfile={this.props.updateProfile}
           exampleUser={this.props.exampleUser}
         />
         <HomeSummary
-          index={index}
+          yearIndex={index}
           units={year.units}
+          yearTitle={year.title}
           profile={profile}
           history={this.props.history}
+          firebase={this.props.firebase}
+          exampleUser={this.props.exampleUser}
+          insertNewYear={this.props.insertNewYear}
+          updateYearTitle={this.props.updateYearTitle}
         />
         <Tables
-          index={index}
+          yearIndex={index}
           insertUnitRow={this.props.insertUnitRow}
           updateYears={this.props.updateYears}
           updateRowContent={this.props.updateRowContent}
@@ -46,6 +57,7 @@ export default class Home extends React.Component {
           removeUnitTable={this.props.removeUnitTable}
           firebase={this.props.firebase}
           exampleUser={this.props.exampleUser}
+          
           units={year.units}
         />
       </div>
@@ -65,17 +77,27 @@ export default class Home extends React.Component {
     />));
   }
 
-  insertNewYear() {
-    this.props.firebase.insertNewYear()
-      .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey));
+
+  updateId(newTabId, prevTabId, event) {
+    this.setState({ selectedId: newTabId });
   }
 
   render() {
+    if (this.state.selectedId == '' &&  !_.isNil(Object.keys(this.props.years)[0])) {
+      this.setState({
+        selectedId: Object.keys(this.props.years)[0],
+      });
+    }
+
     const tabContent = this.generateTabs();
     return (
       <div>
-        <Tabs2 defaultSelectedTabId={Object.keys(this.props.years)[0]} id="YearTabs">
-          <Button onClick={this.insertNewYear} className="pt-button pt-minimal pt-icon-plus" />
+        <Tabs2
+        renderActiveTabPanelOnly={true}
+        selectedTabId={this.state.selectedId}
+        onChange={this.updateId}
+        id="YearTabs"
+        >
           {tabContent}
         </Tabs2>
       </div>
@@ -87,6 +109,7 @@ Home.propTypes = {
   firebase: PropTypes.shape().isRequired,
   updateYears: PropTypes.func.isRequired,
   insertNewYear: PropTypes.func.isRequired,
+  updateYearTitle: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
   years: PropTypes.shape().isRequired,
   removeUnitRow: PropTypes.func.isRequired,
