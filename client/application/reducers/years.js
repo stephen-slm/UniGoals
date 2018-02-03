@@ -16,17 +16,19 @@ export default function years(state = {}, action) {
      * but they will both be removed at the same time. by the key.
      */
     case actionTypes.REMOVE_UNIT_ROW: {
-      const { rowId: removingRowId, tableIndex: removeRowTableIndex } = action;
+      const { yearIndex, rowId: removingRowId, tableIndex: removeRowTableIndex } = action;
 
       if (_.isNil(removingRowId) || !_.isString(removingRowId)) {
         return state;
       } else if (_.isNil(removeRowTableIndex) || !_.isString(removeRowTableIndex)) {
         return state;
+      } else if (_.isNil(yearIndex) || !_.isString(yearIndex)) {
+        return false;
       }
 
       const adjustedUnitRow = Object.assign({}, state);
 
-      delete adjustedUnitRow[removeRowTableIndex].content[removingRowId];
+      delete adjustedUnitRow[yearIndex].units[removeRowTableIndex].content[removingRowId];
       return adjustedUnitRow;
     }
 

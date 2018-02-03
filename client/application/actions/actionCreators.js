@@ -92,11 +92,12 @@ export function removeUnit(unitId) {
  * @param {string} rowId the row key
  * @param {string} tableIndex the table index, which unit to remove from
  */
-export function removeUnitRow(rowId, tableIndex) {
+export function removeUnitRow(yearIndex, rowId, tableIndex) {
   return {
     type: actionTypes.REMOVE_UNIT_ROW,
     rowId,
     tableIndex,
+    yearIndex,
   };
 }
 

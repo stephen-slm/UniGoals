@@ -63,7 +63,7 @@ export default class HomeUnitPieChart extends React.Component {
     _.forEach(this.state.data, (unit) => {
       const name = _.defaultTo(unit.name, 'Unit');
       names.push(name.match(/\b(\w)/g).join('').toUpperCase());
-      values.push(parseFloat(unit.achieved || 0));
+      values.push(parseFloat(unit.achieved || 0).toFixed(2));
     });
 
     return { names, values };
@@ -98,7 +98,7 @@ export default class HomeUnitPieChart extends React.Component {
         }
       });
 
-      values.push(total / 100);
+      values.push((total / 100).toFixed(2));
     });
 
     return { names, values };

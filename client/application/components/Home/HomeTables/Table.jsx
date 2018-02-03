@@ -61,11 +61,13 @@ export default class Table extends React.Component {
    * @param {string} rowIndex the row key to remove
    */
   removeRowById(rowIndex) {
+    const { yearIndex, tableIndex } = this.props;
+
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
-      this.props.removeUnitRow(rowIndex, this.props.tableIndex);
+      this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
 
       if (!this.props.exampleUser) {
-        this.props.firebase.deleteUnitRowById(rowIndex, this.props.tableIndex);
+        this.props.firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
       }
     }
   }
