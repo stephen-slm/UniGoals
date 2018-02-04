@@ -1,8 +1,6 @@
-// Functions
+// Checks that the current user is actually logged in
 isCurrentUser(uid) { auth != null && auth.uid == uid }
 
-
-// Types
 type NameString extends String {
     validate() { this.length > 3 && this.length <= 50 }
 }
@@ -77,8 +75,6 @@ type Year {
     units: Unit | Null, 
 }
 
-// Paths
-
 path /universities {
     read() { true }
     write() { false }
@@ -86,6 +82,7 @@ path /universities {
 
 path /help/{id} is HelpRequest {
     write() { true }
+    read() { false }
 }
 
 path /users {
@@ -109,7 +106,6 @@ path /users {
             delete() { isCurrentUser(userid) }
         }
 
-        // To be removed after mirgration
         /units is Unit {
             write() { isCurrentUser(userid) }
         }
