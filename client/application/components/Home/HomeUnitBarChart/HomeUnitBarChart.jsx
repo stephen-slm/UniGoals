@@ -38,7 +38,6 @@ export default class HomeUnitBarChart extends React.Component {
     this.uuid = uuid.default();
 
     this.state = {
-      data: this.props.data,
       className: this.props.className,
       color: this.props.color,
       height: this.props.height,
@@ -65,7 +64,7 @@ export default class HomeUnitBarChart extends React.Component {
     const names = [];
     const values = [];
 
-    _.forEach(this.state.data, (unit) => {
+    _.forEach(this.props.data, (unit) => {
       const name = _.defaultTo(unit.name === '' ? null : unit.name, 'Unit');
 
       if (!_.isNil(name.split(' ')[1])) {

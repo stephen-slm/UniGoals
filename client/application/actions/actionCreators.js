@@ -102,6 +102,17 @@ export function removeUnitRow(yearIndex, rowId, tableIndex) {
 }
 
 /**
+ * removing a year by its index
+ * @param {string} yearIndex string index to be removes
+ */
+export function removeYear(yearIndex) {
+  return {
+    type: actionTypes.REMOVE_YEAR,
+    yearIndex,
+  };
+}
+
+/**
  * inserts a row in the tableindex unit at the bottom
  * @param {string} rowKeyId row index
  * @param {string} tableIndex unit index

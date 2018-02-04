@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 import { Button } from '@blueprintjs/core';
 import toaster from '../../../utils/toaster';
+import * as constants from '../../../utils/constants';
 
 import Table from './Table';
 
@@ -18,13 +19,16 @@ export default class Tables extends React.Component {
     this.addAndNavigateToTable = this.addAndNavigateToTable.bind(this);
   }
 
-  /**
-   * Inserts a new unit on firebase and on redux
-   */
+  // Inserts a new unit on firebase and on redux
   addUnitTable() {
-    this.props.firebase.insertUnitById(this.props.yearIndex)
-      .then(ref => this.addAndNavigateToTable(ref))
-      .catch(error => toaster.danger(error.message));
+    if (_.size(this.props.units) >= constants.UNIT.MAX) {
+      toaster.warning(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`)
+    } else {
+      this.props.firebase.insertUnitById(this.props.yearIndex)
+        .then(ref => this.addAndNavigateToTable(ref))
+        .catch(error => toaster.danger(error.message));
+    }
+
   }
 
   /**

@@ -81,6 +81,14 @@ export default class Table extends React.Component {
   insertRowBelow() {
     const { tableIndex, yearIndex } = this.props;
 
+    if (this.props.exampleUser) {
+      return;
+    }
+
+    if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
+      return toaster.warning(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`)
+    }
+
     if (!this.props.exampleUser) {
       this.props.firebase.insertUnitRowById(yearIndex, tableIndex)
         .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
@@ -244,7 +252,7 @@ export default class Table extends React.Component {
           <td>
             <EditableText
               placeholder="Section"
-              maxLength="12"
+              maxLength={`${constants.TABLE.NAME.MAX}`}
               onChange={change => this.updateRowContent(change, index, 'name')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'name')}
               value={_.defaultTo(unitContent.name, '')}
@@ -253,7 +261,7 @@ export default class Table extends React.Component {
           <td>
             <EditableText
               placeholder="% Weighting"
-              maxLength="4"
+              maxLength={`${constants.TABLE.WEIGHT.MAX}`}
               onChange={change => this.updateRowContent(change, index, 'weighting')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'weighting')}
               value={_.defaultTo(unitContent.weighting, '0')}
@@ -262,7 +270,7 @@ export default class Table extends React.Component {
           <td>
             <EditableText
               placeholder="% Achieved"
-              maxLength="4"
+              maxLength={`${constants.TABLE.ACHIEVED.MAX}`}
               onChange={change => this.updateRowContent(change, index, 'achieved')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'achieved')}
               value={_.defaultTo(unitContent.achieved, '0')}
@@ -286,6 +294,9 @@ export default class Table extends React.Component {
     return tables;
   }
 
+  /**
+   * Generates all the table contents for a single unit
+   */
   generateTableTopContent() {
     const deleteUnitConfirmButtonText = (this.state.tableTitle === null) ? '' : `${this.state.tableTitle}`;
     const showDeleteUnitButton = () => { this.showDeleteUnitBox(this.props.unit.title); };
@@ -295,7 +306,7 @@ export default class Table extends React.Component {
       <h3 onMouseEnter={this.moveOverDeleteUnit} onMouseLeave={this.moveOverhideDeleteUnit}>
         <EditableText
           placeholder="Unit title"
-          maxLength="32"
+          maxLength={`${constants.UNIT.TITLE.MAX}`}
           onChange={change => this.updateUnitTitle(change)}
           onConfirm={change => this.updateUnitTitleDatabase(change)}
           value={this.props.unit.title}

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import  { Button, EditableText } from '@blueprintjs/core';
+import  { Button, EditableText, Alert, Intent, Tooltip, Position } from '@blueprintjs/core';
 
 import * as constants from '../../../utils/constants';
 import HomeUnitPieChart from '../HomeUnitBarChart/HomeUnitPieChart';
@@ -11,6 +11,7 @@ import TopFiveSection from '../AverageGrade/TopFiveSection';
 
 
 import style from '../home.less';
+import toaster from '../../../utils/toaster';
 
 export default class HomeSummary extends React.Component {
   /**
@@ -36,6 +37,7 @@ export default class HomeSummary extends React.Component {
     super(props);
 
     this.state = {
+      isDeletingYear: false,
       isSummary: true,
       yearTitle: this.props.yearTitle,
       currentWeek: HomeSummary.getCurrentYearWeek(),
@@ -44,34 +46,86 @@ export default class HomeSummary extends React.Component {
     this.insertNewYear = this.insertNewYear.bind(this);
     this.updateYearTitle = this.updateYearTitle.bind(this);
     this.updateYearTitleDatabase = this.updateYearTitleDatabase.bind(this);
+    this.showDeleteYear = this.showDeleteYear.bind(this);
+    this.deleteSelectedYear = this.deleteSelectedYear.bind(this);
   }
 
   insertNewYear() {
-    if(!this.props.exampleUser) {
+    if (this.props.exampleUser) return;
+
       this.props.firebase.insertNewYear()
-        .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey));
-    }
+        .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
+        .catch(error => toaster.danger(error.message));
   }
 
   updateYearTitleDatabase(title) {
-    if (!this.props.exampleUser) {
-      this.props.firebase.updateYearTitle(this.props.yearIndex, title);
-    }
-  
+    if (this.props.exampleUser) return;
+
+    // If the user exists whiel the text is empty, fill with replacement text
+    if (title === '') title = 'Uni 👨‍🎓 👩‍🎓';
+
+    this.props.firebase.updateYearTitle(this.props.yearIndex, title);
     this.props.updateYearTitle(this.props.yearIndex, title);
+    this.setState({ yearTitle: title });
   }
 
+  /**
+   * updates the title for the selected/active year in the state
+   * @param {string} title the new title for the year in the state
+   */
   updateYearTitle(title) {
     this.setState({
       yearTitle: title,
     });
   }
 
+  // Shows the delete year dialog
+  showDeleteYear() {
+    if (this.props.exampleUser ) return;
+
+    this.setState({ isDeletingYear: !this.state.isDeletingYear });
+  }
+
+  
+  // Deletes the current active year from firebae and redux
+  deleteSelectedYear() {
+    if (this.props.exampleUser) return;
+
+    this.props.firebase.deleteYear(this.props.yearIndex)
+      .then(() => this.props.removeYear(this.props.yearIndex))
+      .catch(error => toaster.danger(error.message));
+
+    this.showDeleteYear();
+  }
+
 
   render() {
     return (
       <div style={{ minWidth: 625 }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
-        <Button onClick={this.insertNewYear} className="pt-button pt-minimal pt-icon-plus" text="Create Year" />
+      <Tooltip content="Create Year" position={Position.RIGHT}>
+        <Button onClick={this.insertNewYear} className="pt-button pt-minimal pt-icon-plus" />
+      </Tooltip>
+      <Tooltip content="Delete Year" position={Position.LEFT} className={style.deleteYearButton}>
+        <Button onClick={this.showDeleteYear} className="pt-button pt-icon-trash pt-minimal" />
+      </Tooltip>
+
+
+        <Alert
+          intent={Intent.DANGER}
+          isOpen={this.state.isDeletingYear}
+          confirmButtonText={`Delete ${this.state.yearTitle}`}
+          cancelButtonText="Cancel"
+          onConfirm={this.deleteSelectedYear}
+          onCancel={this.showDeleteYear}
+        >
+          <p>
+            Are you sure you want to delete year <b>{this.state.yearTitle}</b>?<br/>
+            This will remove <b>all</b> units and their corresponding data.
+          </p>
+        </Alert>
+
+
+
         <div className={style.profileSummaryHeader}>Summary</div>
         <div className={style.profileSummaryHeader}>
           {_.defaultTo(this.props.profile.course_name, 'University Course')} - {this.props.profile.name} - Year: {_.defaultTo(this.props.profile.course_year, '1')}, week: {this.state.currentWeek}
@@ -79,7 +133,7 @@ export default class HomeSummary extends React.Component {
         <div className={style.profileSummaryHeader}>
           <EditableText
             placeholder="Year"
-            maxLength="12"
+            maxLength={`${constants.YEAR.TITLE.MAX}`}
             onChange={change => this.updateYearTitle(change)}
             onConfirm={change => this.updateYearTitleDatabase(change)}
             value={_.defaultTo(this.state.yearTitle, 'Year')}
@@ -118,6 +172,7 @@ HomeSummary.propTypes = {
   yearTitle: PropTypes.string,
   exampleUser: PropTypes.bool,
   insertNewYear: PropTypes.func,
+  removeYear: PropTypes.func,
   firebase: PropTypes.shape({
     insertNewYear: PropTypes.func,
   }).isRequired,

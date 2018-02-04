@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 
 import * as actionTypes from '../actions/actionTypes';
+import * as constants from '../utils/constants';
 
 export default function years(state = {}, action) {
   switch (action.type) {
@@ -67,8 +68,6 @@ export default function years(state = {}, action) {
 
       const insertingUnitRow = Object.assign({}, state);
 
-      debugger;
-
       if (_.isNil(insertingUnitRow[yearIndex].units[insertingTableIndex].content)) {
         insertingUnitRow[yearIndex].units[insertingTableIndex].content = {};
       }
@@ -115,7 +114,7 @@ export default function years(state = {}, action) {
       if (_.isNil(updateTableIndex) || !_.isString(updateTableIndex)) {
         return state;
       } else if (_.isNil(updateUnitTitle) ||
-        !_.isString(updateUnitTitle) || updateUnitTitle.length > 30) {
+        !_.isString(updateUnitTitle) || updateUnitTitle.length > 32) {
         return state;
       }
 
@@ -182,6 +181,18 @@ export default function years(state = {}, action) {
 
       updatedTitleState[updatedYearIndex].title = updatedYearTitle;
       return updatedTitleState;
+    }
+
+    case actionTypes.REMOVE_YEAR: {
+      const { yearIndex } = action;
+
+      if (_.isNil(yearIndex) || !_.isString(yearIndex)) {
+        return state;
+      }
+
+      const removeYearState = Object.assign({}, state);
+      delete removeYearState[yearIndex];
+      return removeYearState;
     }
 
     default: {

@@ -1,5 +1,6 @@
 import * as firebase from 'firebase';
 import * as _ from 'lodash';
+import * as constants from '../utils/constants';
 
 export default class FirebaseWrapper {
   constructor(config) {
@@ -165,8 +166,8 @@ export default class FirebaseWrapper {
   insertUnitById(yearIndex) {
     return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`).once('value')
       .then((currentUnitState) => {
-        if (currentUnitState.numChildren() >= 8) {
-          return Promise.reject(new Error('Only a maximum of 8 units at anyone time.'));
+        if (currentUnitState.numChildren() >= constants.UNIT.MAX) {
+          return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`));
         }
 
         const insertUnitRef = this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`);
@@ -183,8 +184,8 @@ export default class FirebaseWrapper {
   insertUnitRowById(yearKey, unitKey) {
     return this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`).once('value')
       .then((currentRowState) => {
-        if (currentRowState.numChildren() >= 20) {
-          return Promise.reject(new Error('Only a maximum of 20 unit rows at anyone time.'));
+        if (currentRowState.numChildren() >= constants.UNIT.ENTRY_MAX) {
+          return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`));
         }
 
         const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`);
@@ -220,6 +221,28 @@ export default class FirebaseWrapper {
       .catch(error => Promise.reject(error));
   }
 
+  /**
+   * deletes a complete year
+   * @param {string} yearIndex the year index for deleting
+   */
+  deleteYear(yearIndex) {
+    const yearsRef = this.database.ref(`users/${this.getUid()}/years`);
+
+    return yearsRef.once('value')
+      .then(years => {
+        if (_.size(years.val()) == constants.YEAR.MIN) {
+          return Promise.reject(new Error(`You cannot have less than ${constants.YEAR.MIN} years`));
+        }
+
+        debugger;
+
+        if (!_.isNil(yearIndex)) {
+          this.database.ref(`users/${this.getUid()}/years/${yearIndex}`).remove(); 
+          return Promise.resolve();
+        }
+      });
+  }
+
   createNewYear(name) {
     const newYearRef = this.database.ref(`users/${this.getUid()}/years`).push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
     return newYearRef;
@@ -232,6 +255,11 @@ export default class FirebaseWrapper {
     return yearsRef.once('value')
       .then((yearsData) => {
         const years = yearsData.val();
+        
+        if (_.size(years) >= constants.YEAR.MAX) {
+          return Promise.reject(new Error(`Only a maximum of ${constants.YEAR.MAX} years at anyone time.`))
+        }
+
         yearlen = Object.keys(years).length + 1;
         return this.createNewYear(`Year ${yearlen}`);
       }).then((newYearRef) => {

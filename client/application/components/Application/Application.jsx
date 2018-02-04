@@ -45,6 +45,7 @@ export default class Application extends React.Component {
       years,
       updateYears,
       removeUnitRow,
+      removeYear,
       insertUnitRow,
       insertNewYear,
       updateRowContent,
@@ -84,6 +85,7 @@ export default class Application extends React.Component {
                   updateCourseName={updateCourseName}
                   years={years}
                   updateYears={updateYears}
+                  removeYear={removeYear}
                   updateYearTitle={updateYearTitle}
                   removeUnitRow={removeUnitRow}
                   insertNewYear={insertNewYear}
@@ -140,6 +142,7 @@ Application.propTypes = {
   removeNotification: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   removeProfile: PropTypes.func.isRequired,
+  removeYear: PropTypes.func.isRequired,
   updateYears: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
