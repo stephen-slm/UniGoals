@@ -52,7 +52,7 @@ export default class HomeUnitBarChart extends React.Component {
     this.buildCharts();
   }
 
-  componentDidUpdate() { 
+  componentDidUpdate() {
     this.buildCharts();
   }
 

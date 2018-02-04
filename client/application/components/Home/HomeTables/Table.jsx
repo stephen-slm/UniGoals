@@ -86,7 +86,7 @@ export default class Table extends React.Component {
     }
 
     if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
-      return toaster.warning(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`)
+      return toaster.warning(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
     }
 
     if (!this.props.exampleUser) {

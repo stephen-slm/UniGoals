@@ -22,13 +22,12 @@ export default class Tables extends React.Component {
   // Inserts a new unit on firebase and on redux
   addUnitTable() {
     if (_.size(this.props.units) >= constants.UNIT.MAX) {
-      toaster.warning(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`)
+      toaster.warning(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`);
     } else {
       this.props.firebase.insertUnitById(this.props.yearIndex)
         .then(ref => this.addAndNavigateToTable(ref))
         .catch(error => toaster.danger(error.message));
     }
-
   }
 
   /**

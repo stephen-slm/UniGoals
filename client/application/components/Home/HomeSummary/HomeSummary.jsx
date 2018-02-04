@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import  { Button, EditableText, Alert, Intent, Tooltip, Position } from '@blueprintjs/core';
+import { Button, EditableText, Alert, Intent, Tooltip, Position } from '@blueprintjs/core';
 
 import * as constants from '../../../utils/constants';
 import HomeUnitPieChart from '../HomeUnitBarChart/HomeUnitPieChart';
@@ -53,9 +53,9 @@ export default class HomeSummary extends React.Component {
   insertNewYear() {
     if (this.props.exampleUser) return;
 
-      this.props.firebase.insertNewYear()
-        .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
-        .catch(error => toaster.danger(error.message));
+    this.props.firebase.insertNewYear()
+      .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
+      .catch(error => toaster.danger(error.message));
   }
 
   updateYearTitleDatabase(title) {
@@ -81,12 +81,12 @@ export default class HomeSummary extends React.Component {
 
   // Shows the delete year dialog
   showDeleteYear() {
-    if (this.props.exampleUser ) return;
+    if (this.props.exampleUser) return;
 
     this.setState({ isDeletingYear: !this.state.isDeletingYear });
   }
 
-  
+
   // Deletes the current active year from firebae and redux
   deleteSelectedYear() {
     if (this.props.exampleUser) return;
@@ -102,12 +102,12 @@ export default class HomeSummary extends React.Component {
   render() {
     return (
       <div style={{ minWidth: 625 }} className={`pt-card pt-elevation-3 ${style.profileSummaryWrapper}`}>
-      <Tooltip content="Create Year" position={Position.RIGHT}>
-        <Button onClick={this.insertNewYear} className="pt-button pt-minimal pt-icon-plus" />
-      </Tooltip>
-      <Tooltip content="Delete Year" position={Position.LEFT} className={style.deleteYearButton}>
-        <Button onClick={this.showDeleteYear} className="pt-button pt-icon-trash pt-minimal" />
-      </Tooltip>
+        <Tooltip content="Create Year" position={Position.RIGHT}>
+          <Button onClick={this.insertNewYear} className="pt-button pt-minimal pt-icon-plus" />
+        </Tooltip>
+        <Tooltip content="Delete Year" position={Position.LEFT} className={style.deleteYearButton}>
+          <Button onClick={this.showDeleteYear} className="pt-button pt-icon-trash pt-minimal" />
+        </Tooltip>
 
 
         <Alert
@@ -119,11 +119,10 @@ export default class HomeSummary extends React.Component {
           onCancel={this.showDeleteYear}
         >
           <p>
-            Are you sure you want to delete year <b>{this.state.yearTitle}</b>?<br/>
+            Are you sure you want to delete year <b>{this.state.yearTitle}</b>?<br />
             This will remove <b>all</b> units and their corresponding data.
           </p>
         </Alert>
-
 
 
         <div className={style.profileSummaryHeader}>Summary</div>

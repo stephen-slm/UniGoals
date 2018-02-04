@@ -169,7 +169,7 @@ export function updateYearTitle(yearIndex, yearTitle) {
     type: actionTypes.UPDATE_YEAR_TITLE,
     yearIndex,
     yearTitle,
-  }
+  };
 }
 
 /**

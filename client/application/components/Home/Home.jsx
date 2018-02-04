@@ -13,8 +13,8 @@ export default class Home extends React.Component {
     super();
 
     this.state = {
-      selectedId: ''
-    }
+      selectedId: '',
+    };
 
     this.generateTabs = this.generateTabs.bind(this);
     this.getTabContent = this.getTabContent.bind(this);
@@ -58,7 +58,7 @@ export default class Home extends React.Component {
           removeUnitTable={this.props.removeUnitTable}
           firebase={this.props.firebase}
           exampleUser={this.props.exampleUser}
-          
+
           units={year.units}
         />
       </div>
@@ -89,18 +89,17 @@ export default class Home extends React.Component {
         selectedId: Object.keys(props.years)[Object.keys(props.years).length - 1],
       });
     }
-  } 
+  }
 
   render() {
-
     const tabContent = this.generateTabs();
     return (
       <div>
         <Tabs2
-        renderActiveTabPanelOnly={true}
-        selectedTabId={this.state.selectedId}
-        onChange={this.updateId}
-        id="YearTabs"
+          renderActiveTabPanelOnly
+          selectedTabId={this.state.selectedId}
+          onChange={this.updateId}
+          id="YearTabs"
         >
           {tabContent}
         </Tabs2>

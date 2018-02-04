@@ -114,7 +114,7 @@ export default function years(state = {}, action) {
       if (_.isNil(updateTableIndex) || !_.isString(updateTableIndex)) {
         return state;
       } else if (_.isNil(updateUnitTitle) ||
-        !_.isString(updateUnitTitle) || updateUnitTitle.length > 32) {
+        !_.isString(updateUnitTitle) || updateUnitTitle.length > constants.UNIT.TITLE.MAX) {
         return state;
       }
 

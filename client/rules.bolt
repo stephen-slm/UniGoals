@@ -1,0 +1,117 @@
+// Functions
+isCurrentUser(uid) { auth != null && auth.uid == uid }
+
+
+// Types
+type NameString extends String {
+    validate() { this.length > 3 && this.length <= 50 }
+}
+
+type EmailString extends String {
+    validate() { this.length > 10 && this.length <= 50 }
+}
+
+type MessageString extends String {
+    validate() { this.length > 5 && this.length <= 500 }
+}
+
+type YearTitle extends String {
+    validate() { this.length > 3 && this.length <= 12 }
+}
+
+type UnitTitle extends String {
+    validate() { this.length > 3 && this.length <= 32 }
+}
+
+type UnitName extends String {
+    validate() { this.length >3 && this.length <= 12 }
+}
+
+type UnitData extends String {
+    validate() { this.length >= 0 && this.length <= 4 }
+}
+
+type HelpRequest {
+    name: NameString,
+    email: EmailString,
+    message: MessageString,
+    timestamp: Number,
+}
+
+type Notification {
+    message: String,
+    title: String,
+    timestamp: Number,
+}
+
+type LoginCount extends Number {
+    read() { false; }
+}
+
+type Profile {
+    email: EmailString,
+    family_name: NameString,
+    course_name: NameString,
+    course_university: NameString,
+    given_name: NameString,
+    hd: NameString,
+    name: NameString,
+    picture: MessageString,
+    last_login: Number,
+    login_count: LoginCount,
+}
+
+type UnitContent {
+    name: UnitName,
+    achieved: UnitData,
+    weighting: UnitData, 
+}
+
+type Unit {
+    title: UnitTitle | Null,
+    content: UnitContent | Null,
+}
+
+type Year {
+    title: YearTitle | Null,
+    units: Unit | Null, 
+}
+
+// Paths
+
+path /universities {
+    read() { true }
+    write() { false }
+}
+
+path /help/{id} is HelpRequest {
+    write() { true }
+}
+
+path /users {
+    /example {
+        read() { true }
+        write() { false }
+    }
+
+    /{userid} {
+        read() { isCurrentUser(userid) }
+
+        /profile is Profile {
+            update() { isCurrentUser(userid) }
+        }
+
+        /years is Year {
+            write() { isCurrentUser(userid) }
+        }
+
+        /notifications is Notification {
+            delete() { isCurrentUser(userid) }
+        }
+
+        // To be removed after mirgration
+        /units is Unit {
+            write() { isCurrentUser(userid) }
+        }
+    }
+}
