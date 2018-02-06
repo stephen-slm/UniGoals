@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as _ from 'lodash';
-import { Tab2, Tabs2, Button } from '@blueprintjs/core';
+import { Tab2, Tabs2 } from '@blueprintjs/core';
 
 import HomeSummary from './HomeSummary/HomeSummary';
 import HomeNewUser from './HomeNewUser/HomeNewUser';
@@ -21,10 +21,21 @@ export default class Home extends React.Component {
     this.updateId = this.updateId.bind(this);
   }
 
-  getTabContent(index, year) {
-    const { profile } = this.props;
+  componentWillReceiveProps(props) {
+    if (Object.keys(props.years).indexOf(this.state.selectedId) === -1) {
+      this.setState({
+        selectedId: Object.keys(props.years)[Object.keys(props.years).length - 1],
+      });
+    }
+  }
 
-    _.isNil(year.units) ? year.units = {} : null;
+  getTabContent(index, content) {
+    const { profile } = this.props;
+    const year = content;
+
+    if (_.isNil(year.units)) {
+      year.units = {};
+    }
 
     return (
       <div>
@@ -67,7 +78,7 @@ export default class Home extends React.Component {
 
   generateTabs() {
     if (_.size(this.props.years[Object.keys(this.props.years)[0]]) === 0) {
-      return (<div>none</div>);
+      return (<div />);
     }
 
     return _.map(this.props.years, (year, index) => (<Tab2
@@ -78,18 +89,10 @@ export default class Home extends React.Component {
     />));
   }
 
-
-  updateId(newTabId, prevTabId, event) {
+  updateId(newTabId) {
     this.setState({ selectedId: newTabId });
   }
 
-  componentWillReceiveProps(props) {
-    if (Object.keys(props.years).indexOf(this.state.selectedId) == -1) {
-      this.setState({
-        selectedId: Object.keys(props.years)[Object.keys(props.years).length - 1],
-      });
-    }
-  }
 
   render() {
     const tabContent = this.generateTabs();

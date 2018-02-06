@@ -86,10 +86,8 @@ export default class Table extends React.Component {
     }
 
     if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
-      return toaster.warning(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
-    }
-
-    if (!this.props.exampleUser) {
+      toaster.warning(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
+    } else {
       this.props.firebase.insertUnitRowById(yearIndex, tableIndex)
         .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
         .catch(error => toaster.danger(error.message));
@@ -376,7 +374,7 @@ export default class Table extends React.Component {
 
 
 Table.propTypes = {
-  yearIndex: PropTypes.string,
+  yearIndex: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     deleteUnitById: PropTypes.func,
     updateUnitTitle: PropTypes.func,

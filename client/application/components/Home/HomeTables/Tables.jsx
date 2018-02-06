@@ -85,7 +85,7 @@ export default class Tables extends React.Component {
 }
 
 Tables.propTypes = {
-  yearIndex: PropTypes.string,
+  yearIndex: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     insertUnitById: PropTypes.func,
   }).isRequired,

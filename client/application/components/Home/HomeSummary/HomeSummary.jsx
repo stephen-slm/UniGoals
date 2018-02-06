@@ -58,8 +58,9 @@ export default class HomeSummary extends React.Component {
       .catch(error => toaster.danger(error.message));
   }
 
-  updateYearTitleDatabase(title) {
+  updateYearTitleDatabase(newTitle) {
     if (this.props.exampleUser) return;
+    let title = newTitle;
 
     // If the user exists whiel the text is empty, fill with replacement text
     if (title === '') title = 'Uni 👨‍🎓 👩‍🎓';
@@ -169,10 +170,13 @@ export default class HomeSummary extends React.Component {
 HomeSummary.propTypes = {
   yearIndex: PropTypes.string,
   yearTitle: PropTypes.string,
-  exampleUser: PropTypes.bool,
+  exampleUser: PropTypes.bool.isRequired,
   insertNewYear: PropTypes.func,
   removeYear: PropTypes.func,
+  updateYearTitle: PropTypes.func.isRequired,
   firebase: PropTypes.shape({
+    updateYearTitle: PropTypes.func,
+    deleteYear: PropTypes.func,
     insertNewYear: PropTypes.func,
   }).isRequired,
   history: PropTypes.shape({}).isRequired,
@@ -188,4 +192,11 @@ HomeSummary.propTypes = {
     new: PropTypes.bool,
     courseName: PropTypes.string,
   }).isRequired,
+};
+
+HomeSummary.defaultProps = {
+  yearTitle: '',
+  yearIndex: 0,
+  insertNewYear: () => null,
+  removeYear: () => null,
 };

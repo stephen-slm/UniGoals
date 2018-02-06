@@ -29,61 +29,34 @@ type UnitData extends String {
     validate() { this.length >= 0 && this.length <= 4 }
 }
 
+type LastLogin extends Number {
+    read() { false }
+}
+
 type HelpRequest {
     name: NameString,
     email: EmailString,
     message: MessageString,
     timestamp: Number,
-}
-
-type Notification {
-    message: String,
-    title: String,
-    timestamp: Number,
-}
-
-type LoginCount extends Number {
-    read() { false; }
-}
-
-type Profile {
-    email: EmailString,
-    family_name: NameString,
-    course_name: NameString,
-    course_university: NameString,
-    given_name: NameString,
-    hd: NameString,
-    name: NameString,
-    picture: MessageString,
-    last_login: Number,
-    login_count: LoginCount,
-}
-
-type UnitContent {
-    name: UnitName,
-    achieved: UnitData,
-    weighting: UnitData, 
-}
-
-type Unit {
-    title: UnitTitle | Null,
-    content: UnitContent | Null,
-}
-
-type Year {
-    title: YearTitle | Null,
-    units: Unit | Null, 
-}
-
-path /universities {
-    read() { true }
-    write() { false }
-}
-
-path /help/{id} is HelpRequest {
     write() { true }
     read() { false }
 }
+
+type Notification {
+
+}
+
+type LoginCount extends Number {
+}
+
+type Universities {
+    write() { false }
+    read() { true }
+}
+
+path /universities is Universities;
+path /help/{helpid} is HelpRequest;
+
 
 path /users {
     /example {
@@ -93,20 +66,42 @@ path /users {
 
     /{userid} {
         read() { isCurrentUser(userid) }
-
-        /profile is Profile {
-            update() { isCurrentUser(userid) }
-        }
-
-        /years is Year {
+        /years {
+            read() { isCurrentUser(userid) }
             write() { isCurrentUser(userid) }
+            /title is YearTitle;
+            /units {
+                /title is UnitTitle;
+                /content {
+                    /name is UnitName;
+                    /achieved is UnitData;
+                    /weighting is UnitData;
+                }
+            }
         }
 
-        /notifications is Notification {
-            delete() { isCurrentUser(userid) }
+        /profile {
+            read() { isCurrentUser(userid) }
+            write() { isCurrentUser(userid) }
+            /email is EmailString;
+            /family_name is NameString;
+            /course_name is NameString;
+            /course_university is NameString;
+            /given_name is NameString;
+            /hd is NameString;
+            /name is NameString;
+            /picture is MessageString;
+            /last_login is LastLogin;
+            /login_count is Number;
+            /login_count {
+                read() { false }
+            }
         }
-
-        /units is Unit {
+        /notifications {
+            /message is String;
+            /title is String;
+            /timestamp is Number;
+            read() { isCurrentUser(userid) }
             write() { isCurrentUser(userid) }
         }
     }
