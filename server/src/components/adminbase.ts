@@ -8,9 +8,7 @@ import { logger } from './logger';
  * to filter down to our selected user
  */
 
-import * as adminService from './serviceAccount';
-
-const serviceAccount: any = adminService.serviceAccount;
+import { serviceAccount } from './serviceAccount';
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
@@ -91,7 +89,7 @@ export function insertNotification(notification: IUniNotification, userUid: stri
 export function getAllUserKeys(callback: (content: IUniKeyObject[]) => void) {
   const usersRef = database.ref('/users');
 
-  usersRef.once('value', (snapshot) => {
+  usersRef.once('value', (snapshot: any) => {
     const users = snapshot.val();
 
     const keys: IUniKeyObject[] = _.map(users, (user: { profile: IUniProfile }, index: string) => {
@@ -105,13 +103,23 @@ export function getAllUserKeys(callback: (content: IUniKeyObject[]) => void) {
   });
 }
 
+// Ge all users content
+export function getAllUsers(callback: (users: any) => void) {
+  const usersRef = database.ref('/users');
+
+  usersRef.once('value')
+    .then((users: any) => {
+      callback(users.val());
+    });
+}
+
 /**
  * This will get the users key that relates to the users email, allowing to target just that user
  * @param email the users email addresss
  */
 export function getKeyByEmail(email: string, callback: (content: IUniKeyObject | null) => void) {
   getAllUserKeys((users: IUniKeyObject[]) => {
-    _.forEach(users, (user, index) => {
+    _.forEach(users, (user: IUniKeyObject, index: Number) => {
       if (user.profile.email === email) {
         callback(user);
       } else if (index === users.length) {
@@ -127,12 +135,26 @@ export function getKeyByEmail(email: string, callback: (content: IUniKeyObject |
  */
 export function getKeyByFullName(name: string, callback: (content: IUniKeyObject | null) => void) {
   getAllUserKeys((users: IUniKeyObject[]) => {
-    _.forEach(users, (user, index) => {
+    _.forEach(users, (user: IUniKeyObject, index: Number) => {
       if (user.profile.name === name) {
         callback(user);
       } else if (index === users.length) {
         callback(null);
       }
     });
+  });
+}
+
+export function moveRecord(oldRef: any, newRef: any) {
+  oldRef.once('value', (snapshot: FirebaseFirestore.DocumentSnapshot) => {
+    newRef.set(snapshot.val(), (error: Error) => {
+      if (_.isNil(error)) {
+        oldRef.remove();
+      } else {
+        console.log(error.message);
+      }
+
+    });
+
   });
 }
