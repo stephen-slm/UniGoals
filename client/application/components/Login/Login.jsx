@@ -148,7 +148,7 @@ export default class Login extends React.Component {
     return (
       <div className={style.homeWrapper}>
         <header className={style.headerAlt}>
-          <span className={style.homeLogo}><img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.png" alt="Logo" /></span>
+          <span className={style.homeLogo}><img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.svg" alt="Logo" /></span>
           <h1>UniGoals</h1>
           <p>Full Course & Unit tracking<br />
             built by a University <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">Student</a> for University Students.<br />
