@@ -42,10 +42,12 @@ export default class Application extends React.Component {
       removeProfile,
       profile,
       notifications,
-      units,
-      updateUnits,
+      years,
+      updateYears,
       removeUnitRow,
+      removeYear,
       insertUnitRow,
+      insertNewYear,
       updateRowContent,
       updateUnitTitle,
       addUnitTable,
@@ -53,6 +55,7 @@ export default class Application extends React.Component {
       updateNotifications,
       removeNotification,
       updateCourseName,
+      updateYearTitle,
       updateProfile,
       version,
     } = this.props;
@@ -80,9 +83,12 @@ export default class Application extends React.Component {
                   profile={profile}
                   updateProfile={updateProfile}
                   updateCourseName={updateCourseName}
-                  units={units}
-                  updateUnits={updateUnits}
+                  years={years}
+                  updateYears={updateYears}
+                  removeYear={removeYear}
+                  updateYearTitle={updateYearTitle}
                   removeUnitRow={removeUnitRow}
+                  insertNewYear={insertNewYear}
                   insertUnitRow={insertUnitRow}
                   updateRowContent={updateRowContent}
                   updateUnitTitle={updateUnitTitle}
@@ -115,8 +121,9 @@ export default class Application extends React.Component {
             render={() => (<Login
               updateProfile={this.props.updateProfile}
               updateNotifications={this.props.updateNotifications}
+              updateYearTitle={this.props.updateYearTitle}
               firebase={this.firebase}
-              updateUnits={this.props.updateUnits}
+              updateYears={this.props.updateYears}
               history={this.history}
               version={version}
             />)}
@@ -131,21 +138,24 @@ Application.propTypes = {
   version: PropTypes.string.isRequired,
   updateNotifications: PropTypes.func.isRequired,
   updateCourseName: PropTypes.func.isRequired,
+  updateYearTitle: PropTypes.func.isRequired,
   removeNotification: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
   removeProfile: PropTypes.func.isRequired,
-  updateUnits: PropTypes.func.isRequired,
+  removeYear: PropTypes.func.isRequired,
+  updateYears: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
+  insertNewYear: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
   profile: PropTypes.shape().isRequired,
   notifications: PropTypes.shape().isRequired,
-  units: PropTypes.shape({}),
+  years: PropTypes.shape({}),
 };
 
 Application.defaultProps = {
-  units: {},
+  years: {},
 };

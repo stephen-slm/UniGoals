@@ -61,11 +61,13 @@ export default class Table extends React.Component {
    * @param {string} rowIndex the row key to remove
    */
   removeRowById(rowIndex) {
+    const { yearIndex, tableIndex } = this.props;
+
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
-      this.props.removeUnitRow(rowIndex, this.props.tableIndex);
+      this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
 
       if (!this.props.exampleUser) {
-        this.props.firebase.deleteUnitRowById(rowIndex, this.props.tableIndex);
+        this.props.firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
       }
     }
   }
@@ -77,9 +79,17 @@ export default class Table extends React.Component {
    * the firebase or the redux)
    */
   insertRowBelow() {
-    if (!this.props.exampleUser) {
-      this.props.firebase.insertUnitRowById(this.props.tableIndex)
-        .then(key => this.props.insertUnitRow(key, this.props.tableIndex))
+    const { tableIndex, yearIndex } = this.props;
+
+    if (this.props.exampleUser) {
+      return;
+    }
+
+    if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
+      toaster.warning(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
+    } else {
+      this.props.firebase.insertUnitRowById(yearIndex, tableIndex)
+        .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
         .catch(error => toaster.danger(error.message));
     }
   }
@@ -95,10 +105,12 @@ export default class Table extends React.Component {
       toaster.danger('Could not update content, due to rowIndex or columnIndex being undefined!');
     }
 
+    const { yearIndex, tableIndex } = this.props;
+
     // This means that its the same content as was already there, so there is no need to update
     // when it does not change.
     if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
-      this.props.updateRowContent(change, this.props.tableIndex, rowIndex, columnIndex);
+      this.props.updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex);
     }
   }
 
@@ -126,8 +138,14 @@ export default class Table extends React.Component {
     const validUpdate = updatedChange !== this.props.unit.content[rowIndex][columnIndex];
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.exampleUser) {
-      const { tableIndex } = this.props;
-      this.props.firebase.updateUnitRowSection(updatedChange, tableIndex, rowIndex, columnIndex);
+      const { tableIndex, yearIndex } = this.props;
+      this.props.firebase.updateUnitRowSection(
+        updatedChange,
+        yearIndex,
+        tableIndex,
+        rowIndex,
+        columnIndex,
+      );
     }
   }
 
@@ -137,7 +155,7 @@ export default class Table extends React.Component {
    */
   updateUnitTitle(change) {
     if (!_.isNil(change) || change !== this.props.unit.title) {
-      this.props.updateUnitTitle(change, this.props.tableIndex);
+      this.props.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex);
     }
   }
 
@@ -147,7 +165,7 @@ export default class Table extends React.Component {
    */
   updateUnitTitleDatabase(change) {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.exampleUser) {
-      this.props.firebase.updateUnitTitle(change, this.props.tableIndex)
+      this.props.firebase.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
         .catch(error => toaster.danger(error.message));
     }
   }
@@ -159,11 +177,13 @@ export default class Table extends React.Component {
   deleteUnitTable() {
     this.showDeleteUnitBox();
     toaster.success(`Deleted ${(this.state.tableTitle === null) ? 'the' : this.state.tableTitle} unit`);
-    const unitTableIndex = this.props.tableIndex;
-    this.props.removeUnitTable(unitTableIndex);
+
+    const { tableIndex: unitTableIndex, yearIndex } = this.props;
+
+    this.props.removeUnitTable(yearIndex, unitTableIndex);
 
     if (!this.props.exampleUser) {
-      this.props.firebase.deleteUnitById(unitTableIndex);
+      this.props.firebase.deleteUnitById(yearIndex, unitTableIndex);
     }
   }
 
@@ -230,7 +250,7 @@ export default class Table extends React.Component {
           <td>
             <EditableText
               placeholder="Section"
-              maxLength="12"
+              maxLength={`${constants.TABLE.NAME.MAX}`}
               onChange={change => this.updateRowContent(change, index, 'name')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'name')}
               value={_.defaultTo(unitContent.name, '')}
@@ -239,7 +259,7 @@ export default class Table extends React.Component {
           <td>
             <EditableText
               placeholder="% Weighting"
-              maxLength="4"
+              maxLength={`${constants.TABLE.WEIGHT.MAX}`}
               onChange={change => this.updateRowContent(change, index, 'weighting')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'weighting')}
               value={_.defaultTo(unitContent.weighting, '0')}
@@ -248,7 +268,7 @@ export default class Table extends React.Component {
           <td>
             <EditableText
               placeholder="% Achieved"
-              maxLength="4"
+              maxLength={`${constants.TABLE.ACHIEVED.MAX}`}
               onChange={change => this.updateRowContent(change, index, 'achieved')}
               onConfirm={change => this.updateRowCententDatabase(change, index, 'achieved')}
               value={_.defaultTo(unitContent.achieved, '0')}
@@ -272,6 +292,9 @@ export default class Table extends React.Component {
     return tables;
   }
 
+  /**
+   * Generates all the table contents for a single unit
+   */
   generateTableTopContent() {
     const deleteUnitConfirmButtonText = (this.state.tableTitle === null) ? '' : `${this.state.tableTitle}`;
     const showDeleteUnitButton = () => { this.showDeleteUnitBox(this.props.unit.title); };
@@ -281,7 +304,7 @@ export default class Table extends React.Component {
       <h3 onMouseEnter={this.moveOverDeleteUnit} onMouseLeave={this.moveOverhideDeleteUnit}>
         <EditableText
           placeholder="Unit title"
-          maxLength="32"
+          maxLength={`${constants.UNIT.TITLE.MAX}`}
           onChange={change => this.updateUnitTitle(change)}
           onConfirm={change => this.updateUnitTitleDatabase(change)}
           value={this.props.unit.title}
@@ -351,6 +374,7 @@ export default class Table extends React.Component {
 
 
 Table.propTypes = {
+  yearIndex: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     deleteUnitById: PropTypes.func,
     updateUnitTitle: PropTypes.func,

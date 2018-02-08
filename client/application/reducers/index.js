@@ -4,14 +4,14 @@ import { routerReducer } from 'react-router-redux';
 import version from './version';
 import notifications from './notifications';
 import profile from './profile';
-import units from './units';
+import years from './years';
 
 // setup the master reducer
 const rootReducer = combineReducers({
   version,
   notifications,
   profile,
-  units,
+  years,
   routing: routerReducer,
 });
 

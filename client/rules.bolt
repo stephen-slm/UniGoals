@@ -1,0 +1,108 @@
+// Checks that the current user is actually logged in
+isCurrentUser(uid) { auth != null && auth.uid == uid }
+
+type NameString extends String {
+    validate() { this.length > 3 && this.length <= 50 }
+}
+
+type EmailString extends String {
+    validate() { this.length > 10 && this.length <= 50 }
+}
+
+type MessageString extends String {
+    validate() { this.length > 5 && this.length <= 500 }
+}
+
+type YearTitle extends String {
+    validate() { this.length > 3 && this.length <= 12 }
+}
+
+type UnitTitle extends String {
+    validate() { this.length > 3 && this.length <= 32 }
+}
+
+type UnitName extends String {
+    validate() { this.length >3 && this.length <= 12 }
+}
+
+type UnitData extends String {
+    validate() { this.length >= 0 && this.length <= 4 }
+}
+
+type LastLogin extends Number {
+    read() { false }
+}
+
+type HelpRequest {
+    name: NameString,
+    email: EmailString,
+    message: MessageString,
+    timestamp: Number,
+    write() { true }
+    read() { false }
+}
+
+type Notification {
+
+}
+
+type LoginCount extends Number {
+}
+
+type Universities {
+    write() { false }
+    read() { true }
+}
+
+path /universities is Universities;
+path /help/{helpid} is HelpRequest;
+
+
+path /users {
+    /example {
+        read() { true }
+        write() { false }
+    }
+
+    /{userid} {
+        read() { isCurrentUser(userid) }
+        /years {
+            read() { isCurrentUser(userid) }
+            write() { isCurrentUser(userid) }
+            /title is YearTitle;
+            /units {
+                /title is UnitTitle;
+                /content {
+                    /name is UnitName;
+                    /achieved is UnitData;
+                    /weighting is UnitData;
+                }
+            }
+        }
+
+        /profile {
+            read() { isCurrentUser(userid) }
+            write() { isCurrentUser(userid) }
+            /email is EmailString;
+            /family_name is NameString;
+            /course_name is NameString;
+            /course_university is NameString;
+            /given_name is NameString;
+            /hd is NameString;
+            /name is NameString;
+            /picture is MessageString;
+            /last_login is LastLogin;
+            /login_count is Number;
+            /login_count {
+                read() { false }
+            }
+        }
+        /notifications {
+            /message is String;
+            /title is String;
+            /timestamp is Number;
+            read() { isCurrentUser(userid) }
+            write() { isCurrentUser(userid) }
+        }
+    }
+}

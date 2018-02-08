@@ -36,9 +36,6 @@ bundle.js
 
 # firebase
 .vscode
-.firebaserc
-.database.rules.json
-firebase.json
 
 # admin panel
 serviceAccount.ts
