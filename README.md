@@ -11,7 +11,7 @@
 [UniGoals](https://unigoals.co.uk/) is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.
 
 <p align="center">
-  <img alt="VS Code in action" src="https://i.imgur.com/aqDvnTm.png">
+  <img alt="VS Code in action" src="https://i.imgur.com/ROKL25p.png">
 </p>
 
 ## Contributing
