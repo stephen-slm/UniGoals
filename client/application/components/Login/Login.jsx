@@ -13,7 +13,6 @@ import * as constants from '../../utils/constants';
 
 import style from './login.less';
 
-
 export default class Login extends React.Component {
   /**
    * takes the google login and generates a users profile from the data
@@ -30,89 +29,55 @@ export default class Login extends React.Component {
     });
   }
 
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
-    this.loadingBox = this.loadingBox.bind(this);
-    this.processGoogleLogin = this.processGoogleLogin.bind(this);
-    this.authenticateExamplesUser = this.authenticateExamplesUser.bind(this);
-    this.authenticateUserWithGoogle = this.authenticateUserWithGoogle.bind(this);
-    this.updateProfile = this.updateProfile.bind(this);
-    /**
-     * Knowing the device is mobile is important to use a different authentication method, by
-     * this we fix a problem related to mobile authetnication (slightly slower) but we also
-     * then allow the faster one for pc always.
-     */
     this.state = {
       loading: isMobileDevice() === true,
       isMobile: isMobileDevice(),
     };
 
+    this.authenticate = this.authenticate.bind(this);
+    this.updateContentForUser = this.updateContentForUser.bind(this);
+    this.handleAuthenticationError = this.handleAuthenticationError.bind(this);
+    this.loginWithGoogle = this.loginWithGoogle.bind(this);
+    this.loginWithExample = this.loginWithExample.bind(this);
+  }
 
-    /**
-     * if the user is on a mobile device (or we think they are) we have to listen for
-     * redirction results to authenticate them into the system otherwise they won't
-     * be able to use the database references
-     */
+  // Checks to see if its a redirect with content
+  componentDidMount() {
     if (this.state.isMobile) {
+      let loginContent = null;
+
       this.props.firebase.authentication.getRedirectResult()
-        .then((loginResult) => {
-          if (loginResult.credential) {
-            this.props.firebase.authentication.signInWithCredential(loginResult.credential)
-              .then(() => this.processGoogleLogin(loginResult))
-              .then(() => this.getNotifications())
-              .then(() => this.getYears())
-              .catch((error) => {
-                toaster.danger(error.message);
-                this.setState({ loading: false });
-              });
-          } else {
-            this.setState({ loading: false });
-          }
-        });
+        .then((login) => {
+          loginContent = login;
+          return this.props.firebase.authentication.signInWithCredential(loginContent.credential);
+        })
+        .then(() => this.authenticate(loginContent))
+        .then(() => this.setState({ loading: false }))
+        .catch(error => this.handleAuthenticationError(error));
     }
   }
 
+  // proceeds to process the login details, creating accounts if needed and handling content
+  authenticate(login) {
+    if (!login.credential) return Promise.resolve();
 
-  /**
-   * Gets the units for the logged in user
-   */
-  getYears() {
-    this.props.firebase.getAllYearUnits()
-      .then(years => this.props.updateYears(years.val()))
-      .catch(error => Promise.reject(error));
-  }
-
-  /**
-   * gets the logging in users notifications
-   */
-  getNotifications() {
-    this.props.firebase.getUserNotifications()
-      .then((notifications) => {
-        this.props.updateNotifications(notifications.val());
-        return Promise.resolve();
-      })
-      .catch(error => Promise.reject(error));
-  }
-
-  /**
-   * Takes in the loginResult from a google login, taking the important information and creating
-   * the user if the user does not already exist.
-   * @param {object} loginResult login result from google
-   */
-  processGoogleLogin(loginResult) {
     return new Promise((resolve, reject) => {
-      const profile = Login.generateProfile(loginResult);
+      const profile = Login.generateProfile(login);
+
 
       if (profile.new) {
         this.props.firebase.createNewUser(profile)
-          .then(() => this.updateProfile(profile))
+          .then(() => this.props.firebase.getUserContent())
+          .then(content => this.updateContentForUser(content))
           .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => resolve())
           .catch(error => reject(error));
       } else {
-        this.props.firebase.getProfileById()
-          .then(gotProfile => this.updateProfile(gotProfile.val()))
+        this.props.firebase.getUserContent()
+          .then(content => this.updateContentForUser(content))
           .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => resolve())
           .catch(error => reject(error));
@@ -120,44 +85,15 @@ export default class Login extends React.Component {
     });
   }
 
-  /**
-   * updates the users profile in redux
-   * @param {object} profile the users profile information
-   */
-  updateProfile(profile) {
-    this.props.updateProfile(profile);
-    return Promise.resolve();
-  }
-
-  /**
-   * logs in with the example user accouont
-   */
-  authenticateExamplesUser() {
+  loginWithExample() {
     this.setState({ loading: true });
-
     this.props.firebase.getExampleUser()
-      .then((snapshot) => {
-        const exampleUser = snapshot.val();
-        const { years } = exampleUser;
-
-        const { profile, notifications } = exampleUser;
-        profile.exampleUser = true;
-
-        delete profile.units;
-
-        this.props.updateNotifications(notifications);
-        this.props.updateProfile(profile);
-        this.props.updateYears(years);
-      })
-      .catch(error => toaster.danger(error.message));
+      .then(content => this.updateContentForUser(content, true))
+      .catch(error => this.handleAuthenticationError(error));
   }
 
-  /**
-   * Triggers the authentication steps when the user presses the login button
-   */
-  authenticateUserWithGoogle() {
-    const auth = this.props.firebase.authentication;
-    const { provider } = this.props.firebase;
+  loginWithGoogle() {
+    const { provider, authentication: auth } = this.props.firebase;
 
     this.setState({ loading: true });
 
@@ -165,14 +101,30 @@ export default class Login extends React.Component {
       auth.signInWithRedirect(provider);
     } else {
       auth.signInWithPopup(provider)
-        .then(result => this.processGoogleLogin(result))
-        .then(() => this.getNotifications())
-        .then(() => this.getYears())
-        .catch((error) => {
-          toaster.danger(error.message);
-          this.setState({ loading: false });
-        });
+        .then(login => this.authenticate(login))
+        .catch(error => this.handleAuthenticationError(error));
     }
+  }
+
+  /**
+   * Updates the users content in redux
+   * @param {object} user firebase user content
+   * @param {boolean} example if is a exmaple user
+   */
+  updateContentForUser(user, example = false) {
+    const content = user;
+    content.profile.exampleUser = example;
+
+    this.props.updateProfile(content.profile);
+    this.props.updateYears(content.years);
+    this.props.updateNotifications(content.notifications);
+    return Promise.resolve();
+  }
+
+  // Handles all errors through a single promise
+  handleAuthenticationError(error) {
+    toaster.danger(error.message);
+    this.setState({ loading: false });
   }
 
   /**
@@ -204,10 +156,10 @@ export default class Login extends React.Component {
           </p>
         </header>
         <div className={style.googleLoginButtonWrapper}>
-          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateUserWithGoogle}>
+          <div tabIndex={0} role="button" onKeyDown={this.loginWithGoogle} onClick={this.loginWithGoogle}>
             <img className={style.googleButton} src="components/resources/images/googleButton.png" alt="Sign in Google" />
           </div>
-          <div tabIndex={0} role="button" onKeyDown={this.clickGoogleButton} onClick={this.authenticateExamplesUser}>
+          <div tabIndex={0} role="button" onKeyDown={this.loginWithExample} onClick={this.loginWithExample}>
             <img className={style.googleButton} src="components/resources/images/exampleUser.png" alt="Example User" />
           </div>
         </div>
@@ -262,6 +214,7 @@ Login.propTypes = {
   updateYears: PropTypes.func.isRequired,
   version: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
+    getUserContent: PropTypes.func.isRequired,
     getAllYearUnits: PropTypes.func,
     updateLoginCountAndDate: PropTypes.func,
     getExampleUser: PropTypes.func,

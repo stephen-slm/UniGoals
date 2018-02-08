@@ -28,7 +28,9 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   getExampleUser() {
-    return this.database.ref('users/example').once('value');
+    return this.database.ref('users/example').once('value')
+      .then(user => Promise.resolve(user.val()))
+      .catch(error => Promise.reject(error));
   }
 
   /**
@@ -68,6 +70,13 @@ export default class FirebaseWrapper {
     this.database.ref(`users/${this.getUid()}/profile/course_year`).set(courseYear);
     this.database.ref(`users/${this.getUid()}/profile/course_university`).set(courseUniversity);
     return Promise.resolve();
+  }
+
+  // returns all the users content
+  getUserContent() {
+    return this.database.ref(`users/${this.getUid()}`).once('value')
+      .then(user => Promise.resolve(user.val()))
+      .catch(error => Promise.reject(error));
   }
 
   /**
