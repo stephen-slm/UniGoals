@@ -7,6 +7,8 @@ import HomeSummary from './HomeSummary/HomeSummary';
 import HomeNewUser from './HomeNewUser/HomeNewUser';
 import Tables from './HomeTables/Tables';
 
+import * as style from './home.less';
+
 
 export default class Home extends React.Component {
   constructor() {
@@ -103,6 +105,7 @@ export default class Home extends React.Component {
           selectedTabId={this.state.selectedId}
           onChange={this.updateId}
           id="YearTabs"
+          className={style.yearTabs}
         >
           {tabContent}
         </Tabs2>
