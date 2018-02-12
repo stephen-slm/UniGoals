@@ -52,6 +52,7 @@ export default class Login extends React.Component {
       this.props.firebase.authentication.getRedirectResult()
         .then((login) => {
           loginContent = login;
+          if (_.isNil(login.credential)) return Promise.resolve();
           return this.props.firebase.authentication.signInWithCredential(loginContent.credential);
         })
         .then(() => this.authenticate(loginContent))
@@ -62,7 +63,7 @@ export default class Login extends React.Component {
 
   // proceeds to process the login details, creating accounts if needed and handling content
   authenticate(login) {
-    if (!login.credential) return Promise.resolve();
+    if (_.isNil(login.credential)) return Promise.resolve();
 
     return new Promise((resolve, reject) => {
       const profile = Login.generateProfile(login);
