@@ -7,10 +7,11 @@ export default class Notification extends React.Component {
     super(props);
 
     this.dismissNotification = this.dismissNotification.bind(this);
+    this.parseNotification = this.parseNotification.bind(this);
 
     this.state = {
       title: this.props.title,
-      message: this.props.message,
+      message: this.parseNotification(),
       keyIndex: this.props.keyIndex,
       className: this.props.className,
     };
@@ -24,6 +25,10 @@ export default class Notification extends React.Component {
       this.props.firebase.dismissNotification(this.state.keyIndex);
     }
     this.props.removeNotification(this.state.keyIndex);
+  }
+
+  parseNotification() {
+    return (this.props.message);
   }
 
   render() {
