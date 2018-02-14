@@ -50,7 +50,7 @@ export const database = admin.database();
  */
 export function deployNotification(notification: IUniNotification, debug: boolean = false): void {
   if (debug) {
-    insertNotification(notification, 'ymzDhOAX50e5jRAMiWDApNkgNHd2');
+    insertNotification(notification, 'jHLVWecyCHfsEZmOwhS9oNXPGhJ3');
   } else {
     getAllUserKeys((keys: IUniKeyObject[]) => {
       logger.info(`\nInserting new notification\n\ntitle: ${notification.title}` +
