@@ -7,11 +7,10 @@ export default class Notification extends React.Component {
     super(props);
 
     this.dismissNotification = this.dismissNotification.bind(this);
-    this.parseNotification = this.parseNotification.bind(this);
 
     this.state = {
       title: this.props.title,
-      message: this.parseNotification(),
+      message: this.props.message,
       keyIndex: this.props.keyIndex,
       className: this.props.className,
     };
@@ -27,10 +26,6 @@ export default class Notification extends React.Component {
     this.props.removeNotification(this.state.keyIndex);
   }
 
-  parseNotification() {
-    return (this.props.message);
-  }
-
   render() {
     return (
       <pre className={this.state.className}>
@@ -38,7 +33,7 @@ export default class Notification extends React.Component {
           {this.state.title}
           <Button style={{ float: 'right' }} onClick={this.dismissNotification} className="pt-button pt-minimal pt-icon-small-cross" />
         </h5>
-        <p>{this.state.message}</p>
+        <p dangerouslySetInnerHTML={{ __html: this.state.message }} />
       </pre>
     );
   }

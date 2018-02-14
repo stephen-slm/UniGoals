@@ -66,21 +66,20 @@ export default class AverageGrade extends React.Component {
       let tableTotal = 0;
       let tableMax = 0;
 
-      _.forEach(unit.content, (content) => {
-        if (parseFloat(content.achieved) > 0) {
-          tableTotal += parseFloat(content.achieved);
-          tableMax += parseFloat(content.achieved);
-        } else {
-          tableMax += 100;
-        }
-      });
+      if (_.size(unit.content) > 0) {
+        _.forEach(unit.content, (content) => {
+          if (parseFloat(content.achieved) > 0) {
+            tableTotal += parseFloat(content.achieved);
+            tableMax += parseFloat(content.achieved);
+          } else {
+            tableMax += 100;
+          }
+        });
 
-      if (!_.isNil(unit.content)) {
         total += tableTotal / _.size(unit.content);
         maxTotalPossible += tableMax / _.size(unit.content);
       }
     });
-
 
     const average = parseFloat(total / _.size(data)).toFixed(2);
     const max = parseFloat(maxTotalPossible / _.size(data)).toFixed(2);
@@ -100,8 +99,8 @@ export default class AverageGrade extends React.Component {
   }
 
   render() {
-    let averageGrade;
-    let maxTotalPossible;
+    let averageGrade = 0;
+    let maxTotalPossible = 100;
 
     if (this.state.isSummary) {
       ({ averageGrade, maxTotalPossible } =
