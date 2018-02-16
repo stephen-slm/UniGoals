@@ -8,6 +8,7 @@ import HomeUnitPieChart from '../HomeUnitBarChart/HomeUnitPieChart';
 import AverageGrade from '../AverageGrade/AverageGrade';
 import TotalGrade from '../AverageGrade/TotalGrade';
 import TopFiveSection from '../AverageGrade/TopFiveSection';
+import YearOverlay from '../YearOverlay/YearOverlay';
 
 
 import style from '../home.less';
@@ -109,6 +110,10 @@ export default class HomeSummary extends React.Component {
         <Tooltip content="Delete Year" position={Position.LEFT} className={style.deleteYearButton}>
           <Button onClick={this.showDeleteYear} className="pt-button pt-icon-trash pt-minimal" />
         </Tooltip>
+        <YearOverlay
+          title={this.props.yearTitle}
+          index={this.props.yearIndex}
+        />
 
 
         <Alert

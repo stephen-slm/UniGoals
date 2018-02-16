@@ -18,6 +18,9 @@ const config = {
         test: /\.jsx?$/,
         include: APP_DIR,
         loader: 'babel-loader',
+        query: {
+          presets: ['env', 'react'],
+        },
       },
       {
         test: /\.less$/,
