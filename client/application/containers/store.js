@@ -1,9 +1,10 @@
 import { createStore } from 'redux';
 
 import rootReducer from '../reducers/index';
+import { version } from '../../package.json';
 
 const defaultState = {
-  version: '0.1.8',
+  version,
 };
 
 const store = createStore(rootReducer, defaultState);
