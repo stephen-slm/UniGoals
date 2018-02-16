@@ -15,11 +15,10 @@ const style = require('./application.less');
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#00A0FF', }, // Purple and green play nicely together.
-    secondary: { main: '#621360' }, // This is just green.A700 as hex.
+    primary: { main: '#EB3623' }, // This is just green.A700 as hex.
+    secondary: { main: '#00A0FF' }, // Purple and green play nicely together.
   },
 });
-
 
 export default class Application extends React.Component {
   constructor(props) {
@@ -73,11 +72,13 @@ export default class Application extends React.Component {
           <div className={style.applicationStyle}>
             <Route
               path={this.routePaths.signOut}
-              render={() => (<SignOut
-                removeProfile={removeProfile}
-                history={this.history}
-                firebase={this.firebase}
-              />)}
+              render={() => (
+                <SignOut
+                  removeProfile={removeProfile}
+                  history={this.history}
+                  firebase={this.firebase}
+                />
+              )}
             />
           </div>
         </Router>
@@ -91,15 +92,17 @@ export default class Application extends React.Component {
             <Route
               exact
               path="*"
-              render={() => (<Login
-                updateProfile={this.props.updateProfile}
-                updateNotifications={this.props.updateNotifications}
-                updateYearTitle={this.props.updateYearTitle}
-                firebase={this.firebase}
-                updateYears={this.props.updateYears}
-                history={this.history}
-                version={version}
-              />)}
+              render={() => (
+                <Login
+                  updateProfile={this.props.updateProfile}
+                  updateNotifications={this.props.updateNotifications}
+                  updateYearTitle={this.props.updateYearTitle}
+                  firebase={this.firebase}
+                  updateYears={this.props.updateYears}
+                  history={this.history}
+                  version={version}
+                />
+              )}
             />
           </div>
         </MuiThemeProvider>

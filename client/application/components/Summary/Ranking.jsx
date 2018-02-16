@@ -1,10 +1,34 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as _ from 'lodash';
+import Typography from 'material-ui/Typography';
+import Paper from 'material-ui/Paper';
+import { withStyles } from 'material-ui/styles';
 
-import { HashLink as Link } from 'react-router-hash-link';
+import _ from 'lodash';
 
-export default class TopFiveSection extends React.Component {
+const styles = (theme) => ({
+  root: {
+    marginTop: theme.spacing.unit,
+    paddingLeft: theme.spacing.unit,
+    paddingBottom: theme.spacing.unit,
+    paddingRight: theme.spacing.unit * 5,
+  },
+  title: {
+    textAlign: 'center',
+    paddingTop: theme.spacing.unit,
+  },
+  entry: {
+    marginTop: theme.spacing.unit,
+  },
+  link: {
+    textDecoration: 'none',
+  },
+  wrapper: {
+    textAlign: 'left',
+  },
+});
+
+class Ranking extends React.Component {
   /**
    * Applying the weighiting to all the units, getting the overal unit total and ordering
    * the content based on this information with title, total and a link based on the
@@ -47,38 +71,39 @@ export default class TopFiveSection extends React.Component {
     return _.reverse(_.sortBy(listOfTotalGrades, (o) => o.total));
   }
 
+  constructor() {
+    super();
+
+    this.state = {};
+  }
+
   render() {
-    const totalGrade = TopFiveSection.calulateTopFive(this.props.data, this.props.history);
+    const { classes } = this.props;
+    const ranking = Ranking.calulateTopFive(this.props.units, this.props.history);
 
     return (
-      <div
-        className={`pt-card pt-elevaton-1 ${this.props.className}`}
-        style={{ width: 280, height: this.props.height }}
-      >
-        <div style={{ textAlign: 'center' }}>Unit Ranking</div>
-        <div>
-          {_.map(totalGrade, (data, index) => (
-            <div key={index}>
-              <Link href={`${data.link}`} to={`${data.link}`}>
-                {index + 1}. {data.title}
-              </Link>
-            </div>
+      <Paper className={classes.root}>
+        <Typography className={classes.title} component="p">
+          Unit Ranking
+        </Typography>
+        <Typography className={classes.wrapper} component="div">
+          {ranking.map((rank, index) => (
+            <Typography key={rank.title} className={classes.entry} component="span">
+              <Typography className={classes.link} href={String(rank.link)} component="a">
+                {index + 1}. {rank.title}
+              </Typography>
+            </Typography>
           ))}
-        </div>
-      </div>
+        </Typography>
+      </Paper>
     );
   }
 }
 
-TopFiveSection.propTypes = {
-  data: PropTypes.shape({}),
+Ranking.propTypes = {
+  classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
-  className: PropTypes.string,
-  height: PropTypes.number,
+  units: PropTypes.shape({}).isRequired,
 };
 
-TopFiveSection.defaultProps = {
-  data: null,
-  height: null,
-  className: '',
-};
+export default withStyles(styles)(Ranking);
