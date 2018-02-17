@@ -9,7 +9,7 @@ import * as homePageData from './homePageData';
 import * as constants from '../../utils/constants';
 
 import Summary from '../Summary/Summary';
-import Table from '../Table/Table';
+import UnitTable from '../Table/Table';
 
 const styles = (theme) => ({
   root: {
@@ -18,9 +18,9 @@ const styles = (theme) => ({
   },
   card: {
     marginTop: theme.spacing.unit * 2,
-    minWidth: 275,
-    maxWidth: '55%',
-    margin: '0 auto 50px',
+    minWidth: 300,
+    maxWidth: '75%',
+    margin: '0 auto',
   },
   text: {
     textAlign: 'justify',
@@ -41,11 +41,7 @@ class Login extends React.Component {
 
     return (
       <div className={classes.root}>
-        <img
-          style={{ height: 150, margin: '0 15px' }}
-          src="components/resources/images/logo.svg"
-          alt="Logo"
-        />
+        <img style={{ height: 150 }} src="components/resources/images/logo.svg" alt="Logo" />
         <Typography variant="display1" gutterBottom>
           UniGoals
         </Typography>
@@ -80,7 +76,7 @@ class Login extends React.Component {
               units={homePageData.units}
               profile={homePageData.profile}
               history={this.props.history}
-              exampleUser={this.state.isExample}
+              isExample={this.state.isExample}
               yearIndex="Year 1"
               yearTitle="Example Year"
             />
@@ -95,7 +91,11 @@ class Login extends React.Component {
               the site. The chart and percentages will also update in real time as you update the
               rows.
             </Typography>
-            <Table />
+            <UnitTable
+              index={1}
+              unit={homePageData.units[Object.keys(homePageData.units)[2]]}
+              isExample={this.state.isExample}
+            />
           </CardContent>
         </Card>
       </div>
