@@ -53,7 +53,7 @@ class Summary extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Paper className={classes.root} elevation={1}>
+      <Paper className={classes.root} elevation={3}>
         <Icon
           style={{ display: this.props.isExample ? 'none' : undefined }}
           onClick={() => console.log('clicked add')}

@@ -19,7 +19,7 @@ const styles = (theme) => ({
   card: {
     marginTop: theme.spacing.unit * 2,
     minWidth: 300,
-    maxWidth: '75%',
+    maxWidth: '60%',
     margin: '0 auto',
   },
   text: {

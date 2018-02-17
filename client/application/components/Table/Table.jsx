@@ -60,7 +60,7 @@ class UnitTable extends React.Component {
     const totals = this.calculateTotal();
 
     return (
-      <Paper className={classes.root} elevation={1}>
+      <Paper className={classes.root} elevation={3}>
         <Typography className={classes.title} variant="headline" component="h5">
           {this.props.unit.title}
         </Typography>
