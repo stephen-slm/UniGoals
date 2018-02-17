@@ -24,7 +24,7 @@ export default class Login extends React.Component {
 
     return Object.assign(profile, {
       token: loginResult.credential.accessToken,
-      hd: (_.isNil(profile.hd)) ? profile.email.split('@')[1] : profile.hd,
+      hd: _.isNil(profile.hd) ? profile.email.split('@')[1] : profile.hd,
       new: loginResult.additionalUserInfo.isNewUser,
     });
   }
@@ -49,7 +49,8 @@ export default class Login extends React.Component {
     if (this.state.isMobile) {
       let loginContent = null;
 
-      this.props.firebase.authentication.getRedirectResult()
+      this.props.firebase.authentication
+        .getRedirectResult()
         .then((login) => {
           loginContent = login;
           if (_.isNil(login.credential)) return Promise.resolve();
@@ -57,7 +58,7 @@ export default class Login extends React.Component {
         })
         .then(() => this.authenticate(loginContent))
         .then(() => this.setState({ loading: false }))
-        .catch(error => this.handleAuthenticationError(error));
+        .catch((error) => this.handleAuthenticationError(error));
     }
   }
 
@@ -68,29 +69,31 @@ export default class Login extends React.Component {
     return new Promise((resolve, reject) => {
       const profile = Login.generateProfile(login);
 
-
       if (profile.new) {
-        this.props.firebase.createNewUser(profile)
+        this.props.firebase
+          .createNewUser(profile)
           .then(() => this.props.firebase.getUserContent())
-          .then(content => this.updateContentForUser(content))
+          .then((content) => this.updateContentForUser(content))
           .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => resolve())
-          .catch(error => reject(error));
+          .catch((error) => reject(error));
       } else {
-        this.props.firebase.getUserContent()
-          .then(content => this.updateContentForUser(content))
+        this.props.firebase
+          .getUserContent()
+          .then((content) => this.updateContentForUser(content))
           .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => resolve())
-          .catch(error => reject(error));
+          .catch((error) => reject(error));
       }
     });
   }
 
   loginWithExample() {
     this.setState({ loading: true });
-    this.props.firebase.getExampleUser()
-      .then(content => this.updateContentForUser(content, true))
-      .catch(error => this.handleAuthenticationError(error));
+    this.props.firebase
+      .getExampleUser()
+      .then((content) => this.updateContentForUser(content, true))
+      .catch((error) => this.handleAuthenticationError(error));
   }
 
   loginWithGoogle() {
@@ -101,9 +104,10 @@ export default class Login extends React.Component {
     if (this.state.isMobile) {
       auth.signInWithRedirect(provider);
     } else {
-      auth.signInWithPopup(provider)
-        .then(login => this.authenticate(login))
-        .catch(error => this.handleAuthenticationError(error));
+      auth
+        .signInWithPopup(provider)
+        .then((login) => this.authenticate(login))
+        .catch((error) => this.handleAuthenticationError(error));
     }
   }
 
@@ -140,7 +144,7 @@ export default class Login extends React.Component {
         </div>
       );
     }
-    return (<div />);
+    return <div />;
   }
 
   loginBox() {
@@ -149,27 +153,60 @@ export default class Login extends React.Component {
     return (
       <div className={style.homeWrapper}>
         <header className={style.headerAlt}>
-          <span className={style.homeLogo}><img style={{ height: 250, margin: '0 15px' }} src="components/resources/images/logo.svg" alt="Logo" /></span>
+          <span className={style.homeLogo}>
+            <img
+              style={{ height: 250, margin: '0 15px' }}
+              src="components/resources/images/logo.svg"
+              alt="Logo"
+            />
+          </span>
           <h1>UniGoals</h1>
-          <p>Full Course & Unit tracking<br />
-            built by a University <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">Student</a> for University Students.<br />
+          <p>
+            Full Course & Unit tracking<br />
+            built by a University{' '}
+            <a
+              href="https://www.linkedin.com/in/stephen-lineker-miller/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Student
+            </a>{' '}
+            for University Students.<br />
             Version: {this.props.version}
           </p>
         </header>
         <div className={style.googleLoginButtonWrapper}>
-          <div tabIndex={0} role="button" onKeyDown={this.loginWithGoogle} onClick={this.loginWithGoogle}>
-            <img className={style.googleButton} src="components/resources/images/googleButton.png" alt="Sign in Google" />
+          <div
+            tabIndex={0}
+            role="button"
+            onKeyDown={this.loginWithGoogle}
+            onClick={this.loginWithGoogle}
+          >
+            <img
+              className={style.googleButton}
+              src="components/resources/images/googleButton.png"
+              alt="Sign in Google"
+            />
           </div>
-          <div tabIndex={0} role="button" onKeyDown={this.loginWithExample} onClick={this.loginWithExample}>
-            <img className={style.googleButton} src="components/resources/images/exampleUser.png" alt="Example User" />
+          <div
+            tabIndex={0}
+            role="button"
+            onKeyDown={this.loginWithExample}
+            onClick={this.loginWithExample}
+          >
+            <img
+              className={style.googleButton}
+              src="components/resources/images/exampleUser.png"
+              alt="Example User"
+            />
           </div>
         </div>
         <div className={`pt-card ${style.homeContainer}`}>
-          UniGoals is a modern University unit tracking tool designed to let you know where
-          you currently stand on your course. Using quick and simple percentages and charts
-          to provide fast and accurate content about your course. Simply add your units with
-          there weighting (e.g.coursework, exam, presentations, etc) and quickly see your
-          current percent, average and total maximum grade! Real-time instant results.
+          UniGoals is a modern University unit tracking tool designed to let you know where you
+          currently stand on your course. Using quick and simple percentages and charts to provide
+          fast and accurate content about your course. Simply add your units with there weighting
+          (e.g.coursework, exam, presentations, etc) and quickly see your current percent, average
+          and total maximum grade! Real-time instant results.
           <div className={style.homeSummaryContainer}>
             <HomeSummary
               firebase={this.props.firebase}
@@ -184,15 +221,15 @@ export default class Login extends React.Component {
           Your own unqiue summary page that displays everything you need to quickly know about your
           units! Including your <strong>unit ranks</strong>, how they are compared to other units,
           <strong> Average</strong>, <strong>Max</strong> and <strong>Total Grade</strong>. Try
-          hovering over the chart and percentages. Each unit looks like the one below, providing
-          a <strong>Title</strong>, <strong>Name</strong>, <strong> Weighting</strong>, and
-          <strong> Achieved</strong> column. Filling these will allow you to make the most of
-          the site. The chart and percentages will also update in real time as you update the rows.
+          hovering over the chart and percentages. Each unit looks like the one below, providing a{' '}
+          <strong>Title</strong>, <strong>Name</strong>, <strong> Weighting</strong>, and
+          <strong> Achieved</strong> column. Filling these will allow you to make the most of the
+          site. The chart and percentages will also update in real time as you update the rows.
           <div className={`pt-card pt-elevation-3 ${style.homeTablesContainer}`}>
             <SampleTable
               tableNum={1}
               unit={homePageData.units[Object.keys(homePageData.units)[2]]}
-              exampleUser={exampleUser}
+              isSummary={exampleUser}
             />
           </div>
         </div>
@@ -202,7 +239,7 @@ export default class Login extends React.Component {
 
   render() {
     if (this.state.loading) {
-      return (this.loadingBox());
+      return this.loadingBox();
     }
     return this.loginBox();
   }
@@ -228,7 +265,6 @@ Login.propTypes = {
       getRedirectResult: PropTypes.func,
       signInWithCredential: PropTypes.func,
     }),
-
   }).isRequired,
   history: PropTypes.shape({}).isRequired,
 };

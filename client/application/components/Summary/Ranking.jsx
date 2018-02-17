@@ -11,7 +11,6 @@ const styles = (theme) => ({
     marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
-    paddingRight: theme.spacing.unit * 5,
   },
   title: {
     textAlign: 'center',
@@ -24,6 +23,7 @@ const styles = (theme) => ({
     textDecoration: 'none',
   },
   wrapper: {
+    paddingRight: theme.spacing.unit * 5,
     textAlign: 'left',
   },
 });
@@ -82,7 +82,7 @@ class Ranking extends React.Component {
     const ranking = Ranking.calulateTopFive(this.props.units, this.props.history);
 
     return (
-      <Paper className={classes.root}>
+      <Paper style={{ height: this.props.height * 40 }} className={classes.root} elevation={1}>
         <Typography className={classes.title} component="p">
           Unit Ranking
         </Typography>
@@ -104,6 +104,7 @@ Ranking.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
   units: PropTypes.shape({}).isRequired,
+  height: PropTypes.number.isRequired,
 };
 
 export default withStyles(styles)(Ranking);
