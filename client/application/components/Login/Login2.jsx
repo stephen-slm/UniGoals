@@ -92,7 +92,9 @@ class Login extends React.Component {
               rows.
             </Typography>
             <UnitTable
-              index={1}
+              yearIndex="example"
+              tableIndex="example"
+              firebase={this.props.firebase}
               unit={homePageData.units[Object.keys(homePageData.units)[2]]}
               isExample={this.state.isExample}
             />
@@ -104,6 +106,7 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
+  firebase: PropTypes.shape({}).isRequired,
   classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
   version: PropTypes.string.isRequired,

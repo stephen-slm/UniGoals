@@ -1,11 +1,13 @@
+import _ from 'lodash';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
+import TextField from 'material-ui/TextField';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 
-import _ from 'lodash';
+import * as constants from '../../utils/constants';
 import Percentages from '../Summary/Percentages';
 
 const styles = (theme) => ({
@@ -39,6 +41,7 @@ class UnitTable extends React.Component {
     this.state = {};
   }
 
+  // Returns the current total to be displayed at the bottom of the table
   calculateTotal() {
     let weighting = 0;
     let achieved = 0;
@@ -77,7 +80,9 @@ class UnitTable extends React.Component {
             <TableBody>
               {_.map(this.props.unit.content, (row, index) => (
                 <TableRow key={index}>
-                  <TableCell>{row.name}</TableCell>
+                  <TableCell>
+                    <TextField type="text" defaultValue={row.name} />
+                  </TableCell>
                   <TableCell>{row.weighting}</TableCell>
                   <TableCell>{row.achieved}</TableCell>
                 </TableRow>
@@ -96,12 +101,16 @@ class UnitTable extends React.Component {
 }
 
 UnitTable.propTypes = {
+  firebase: PropTypes.shape({
+    updateUnitRowSection: PropTypes.func,
+  }).isRequired,
+  yearIndex: PropTypes.string.isRequired,
+  tableIndex: PropTypes.string.isRequired,
   classes: PropTypes.shape({}).isRequired,
   unit: PropTypes.shape({
     content: PropTypes.shape({}),
     title: PropTypes.string,
   }).isRequired,
-  index: PropTypes.number.isRequired,
   isExample: PropTypes.bool,
 };
 
