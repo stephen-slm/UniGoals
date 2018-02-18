@@ -10,9 +10,27 @@ export default class FirebaseWrapper {
 
     this.database = firebase.database();
     this.authentication = firebase.auth();
-    this.authentication.signOut();
 
     this.provider = new firebase.auth.GoogleAuthProvider();
+  }
+
+  /**
+   * authenticates the user based on mobile or standard
+   * @param {string} type authentication type
+   */
+  authenticate(type) {
+    switch (type) {
+      case 'mobile':
+        return this.authentication
+          .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+          .then(() => this.authentication.signInWithRedirect(this.provider))
+          .catch((error) => Promise.reject(error));
+      default:
+        return this.authentication
+          .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+          .then(() => this.authentication.signInWithPopup(this.provider))
+          .catch((error) => Promise.reject(error));
+    }
   }
 
   /**
@@ -28,9 +46,11 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   getExampleUser() {
-    return this.database.ref('users/example').once('value')
-      .then(user => Promise.resolve(user.val()))
-      .catch(error => Promise.reject(error));
+    return this.database
+      .ref('users/example')
+      .once('value')
+      .then((user) => Promise.resolve(user.val()))
+      .catch((error) => Promise.reject(error));
   }
 
   /**
@@ -74,9 +94,11 @@ export default class FirebaseWrapper {
 
   // returns all the users content
   getUserContent() {
-    return this.database.ref(`users/${this.getUid()}`).once('value')
-      .then(user => Promise.resolve(user.val()))
-      .catch(error => Promise.reject(error));
+    return this.database
+      .ref(`users/${this.getUid()}`)
+      .once('value')
+      .then((user) => Promise.resolve(user.val()))
+      .catch((error) => Promise.reject(error));
   }
 
   /**
@@ -108,10 +130,12 @@ export default class FirebaseWrapper {
   updateLoginCountAndDate() {
     this.database.ref(`users/${this.getUid()}/profile/last_login`).set(Date.now());
 
-    return this.database.ref(`users/${this.getUid()}/profile/login_count`).once('value')
+    return this.database
+      .ref(`users/${this.getUid()}/profile/login_count`)
+      .once('value')
       .then((snapshot) => {
         const count = snapshot.val();
-        const newLoginCount = (count === null || count === undefined) ? 0 : count + 1;
+        const newLoginCount = count === null || count === undefined ? 0 : count + 1;
         return this.database.ref(`users/${this.getUid()}/profile/login_count`).set(newLoginCount);
       });
   }
@@ -133,7 +157,9 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   updateUnitTitle(change, yearKey, unitKey) {
-    return this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/title`).set(change);
+    return this.database
+      .ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/title`)
+      .set(change);
   }
 
   /**
@@ -155,7 +181,11 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   updateUnitRowSection(change, yearIndex, tableIndex, rowIndex, columnIndex) {
-    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/content/${rowIndex}/${columnIndex}`).set(change);
+    return this.database
+      .ref(
+        `users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/content/${rowIndex}/${columnIndex}`
+      )
+      .set(change);
   }
 
   /**
@@ -165,7 +195,9 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   deleteUnitRowById(yearIndex, unitRowKey, tableUnitKey) {
-    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableUnitKey}/content/${unitRowKey}`).remove();
+    return this.database
+      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableUnitKey}/content/${unitRowKey}`)
+      .remove();
   }
 
   /**
@@ -173,10 +205,14 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   insertUnitById(yearIndex) {
-    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`).once('value')
+    return this.database
+      .ref(`users/${this.getUid()}/years/${yearIndex}/units`)
+      .once('value')
       .then((currentUnitState) => {
         if (currentUnitState.numChildren() >= constants.UNIT.MAX) {
-          return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`));
+          return Promise.reject(
+            new Error(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`)
+          );
         }
 
         const insertUnitRef = this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`);
@@ -191,14 +227,24 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   insertUnitRowById(yearKey, unitKey) {
-    return this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`).once('value')
+    return this.database
+      .ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`)
+      .once('value')
       .then((currentRowState) => {
         if (currentRowState.numChildren() >= constants.UNIT.ENTRY_MAX) {
-          return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`));
+          return Promise.reject(
+            new Error(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`)
+          );
         }
 
-        const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`);
-        const insertingUnitRowKey = insertingUnitRowRef.push({ name: 'Section', weighting: '0', achieved: '0' });
+        const insertingUnitRowRef = this.database.ref(
+          `users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`
+        );
+        const insertingUnitRowKey = insertingUnitRowRef.push({
+          name: 'Section',
+          weighting: '0',
+          achieved: '0',
+        });
         return Promise.resolve(insertingUnitRowKey.key);
       });
   }
@@ -209,7 +255,9 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   deleteUnitById(yearIndex, unitIndex) {
-    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${unitIndex}`).remove();
+    return this.database
+      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${unitIndex}`)
+      .remove();
   }
 
   /**
@@ -220,14 +268,16 @@ export default class FirebaseWrapper {
    * @returns {Promise.<boolean>}
    */
   sendHelpMessage(message, name, email) {
-    return this.database.ref('help').push({
-      message,
-      name,
-      email,
-      timestamp: Date.now(),
-    })
+    return this.database
+      .ref('help')
+      .push({
+        message,
+        name,
+        email,
+        timestamp: Date.now(),
+      })
       .then(() => Promise.resolve(true))
-      .catch(error => Promise.reject(error));
+      .catch((error) => Promise.reject(error));
   }
 
   /**
@@ -237,23 +287,24 @@ export default class FirebaseWrapper {
   deleteYear(yearIndex) {
     const yearsRef = this.database.ref(`users/${this.getUid()}/years`);
 
-    return yearsRef.once('value')
-      .then((years) => {
-        if (_.size(years.val()) === constants.YEAR.MIN) {
-          return Promise.reject(new Error(`You cannot have less than ${constants.YEAR.MIN} years`));
-        }
+    return yearsRef.once('value').then((years) => {
+      if (_.size(years.val()) === constants.YEAR.MIN) {
+        return Promise.reject(new Error(`You cannot have less than ${constants.YEAR.MIN} years`));
+      }
 
-        if (!_.isNil(yearIndex)) {
-          this.database.ref(`users/${this.getUid()}/years/${yearIndex}`).remove();
-          return Promise.resolve();
-        }
+      if (!_.isNil(yearIndex)) {
+        this.database.ref(`users/${this.getUid()}/years/${yearIndex}`).remove();
+        return Promise.resolve();
+      }
 
-        return Promise.reject(new Error('Selected year cannot be removed'));
-      });
+      return Promise.reject(new Error('Selected year cannot be removed'));
+    });
   }
 
   createNewYear(name) {
-    const newYearRef = this.database.ref(`users/${this.getUid()}/years`).push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
+    const newYearRef = this.database
+      .ref(`users/${this.getUid()}/years`)
+      .push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
     return newYearRef;
   }
 
@@ -261,18 +312,24 @@ export default class FirebaseWrapper {
     const yearsRef = this.database.ref(`users/${this.getUid()}/years`);
     let yearlen = 0;
 
-    return yearsRef.once('value')
+    return yearsRef
+      .once('value')
       .then((yearsData) => {
         const years = yearsData.val();
 
         if (_.size(years) >= constants.YEAR.MAX) {
-          return Promise.reject(new Error(`Only a maximum of ${constants.YEAR.MAX} years at anyone time.`));
+          return Promise.reject(
+            new Error(`Only a maximum of ${constants.YEAR.MAX} years at anyone time.`)
+          );
         }
 
         yearlen = Object.keys(years).length + 1;
         return this.createNewYear(`Year ${yearlen}`);
-      }).then((newYearRef) => {
-        const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${newYearRef.key}/units`);
+      })
+      .then((newYearRef) => {
+        const sampleOneRef = this.database.ref(
+          `users/${this.getUid()}/years/${newYearRef.key}/units`
+        );
         const sampleKey = sampleOneRef.push({ title: 'Unit', content: {} });
         return { yearKey: newYearRef.key, title: `Year ${yearlen}`, unitKey: sampleKey.key };
       });
@@ -285,23 +342,20 @@ export default class FirebaseWrapper {
   createSampleUnitsForNewUser() {
     const firstYear = this.createNewYear();
 
-
     const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${firstYear.key}/units`);
     const sampleOneKey = sampleOneRef.push({ title: 'Example Unit', content: {} });
 
-    this.insertUnitRowById(firstYear.key, sampleOneKey.key)
-      .then((unitRow) => {
-        this.updateUnitRowSection('Coursework', firstYear.key, sampleOneKey.key, unitRow, 'name');
-        this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
-        this.updateUnitRowSection('71', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
-      });
+    this.insertUnitRowById(firstYear.key, sampleOneKey.key).then((unitRow) => {
+      this.updateUnitRowSection('Coursework', firstYear.key, sampleOneKey.key, unitRow, 'name');
+      this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
+      this.updateUnitRowSection('71', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
+    });
 
-    this.insertUnitRowById(firstYear.key, sampleOneKey.key)
-      .then((unitRow) => {
-        this.updateUnitRowSection('Exam', firstYear.key, sampleOneKey.key, unitRow, 'name');
-        this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
-        this.updateUnitRowSection('31', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
-      });
+    this.insertUnitRowById(firstYear.key, sampleOneKey.key).then((unitRow) => {
+      this.updateUnitRowSection('Exam', firstYear.key, sampleOneKey.key, unitRow, 'name');
+      this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
+      this.updateUnitRowSection('31', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
+    });
 
     Promise.resolve();
   }
@@ -310,24 +364,30 @@ export default class FirebaseWrapper {
    * Gets the University Courses for the user
    */
   getUniversityCourses() {
-    return this.database.ref('/universities/courses').once('value')
-      .then(courses => Promise.resolve(courses.val()));
+    return this.database
+      .ref('/universities/courses')
+      .once('value')
+      .then((courses) => Promise.resolve(courses.val()));
   }
 
   /**
    * Gets the current active University listings (all of the list in a array format)
    */
   getUniversityList() {
-    return this.database.ref('/universities/uk').once('value')
-      .then(list => Promise.resolve(list.val()));
+    return this.database
+      .ref('/universities/uk')
+      .once('value')
+      .then((list) => Promise.resolve(list.val()));
   }
 
   /**
    * Returns all the University content stored in the database
    */
   getUniversityContents() {
-    return this.database.ref('/universities').once('value')
-      .then(content => Promise.resolve(content.val()));
+    return this.database
+      .ref('/universities')
+      .once('value')
+      .then((content) => Promise.resolve(content.val()));
   }
 
   // Gets a built ref for the live listeners for updated notifications
@@ -341,24 +401,19 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   createNewUser(profile) {
-    const {
-      email,
-      family_name: familyName,
-      given_name: givenName,
-      hd,
-      name,
-      picture,
-    } = profile;
+    const { email, family_name: familyName, given_name: givenName, hd, name, picture } = profile;
 
-    return this.database.ref(`users/${this.getUid()}/profile`).set({
-      given_name: familyName,
-      family_name: givenName,
-      email,
-      picture,
-      name,
-      hd,
-      last_login: Date.now(),
-    })
+    return this.database
+      .ref(`users/${this.getUid()}/profile`)
+      .set({
+        given_name: familyName,
+        family_name: givenName,
+        email,
+        picture,
+        name,
+        hd,
+        last_login: Date.now(),
+      })
       .then(() => this.createSampleUnitsForNewUser())
       .then(() => this.insertWelcomeNotification())
       .then(() => Promise.resolve(profile));

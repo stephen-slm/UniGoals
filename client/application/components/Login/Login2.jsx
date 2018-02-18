@@ -12,7 +12,7 @@ import { isMobileDevice } from '../../utils/utils';
 import * as constants from '../../utils/constants';
 
 import Summary from '../Summary/Summary';
-import UnitTable from '../Table/Table';
+import UnitTable from '../Table/UnitTable';
 
 const styles = (theme) => ({
   root: {

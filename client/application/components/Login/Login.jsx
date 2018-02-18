@@ -252,6 +252,7 @@ Login.propTypes = {
   updateYears: PropTypes.func.isRequired,
   version: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
+    authenticate: PropTypes.func.isRequired,
     getUserContent: PropTypes.func.isRequired,
     getAllYearUnits: PropTypes.func,
     updateLoginCountAndDate: PropTypes.func,
