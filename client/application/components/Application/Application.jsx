@@ -8,6 +8,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import * as routePaths from './routePaths';
 
+import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login2';
 import SignOut from '../Login/SignOut';
 
@@ -47,40 +48,54 @@ export default class Application extends React.Component {
     const {
       removeProfile,
       profile,
-      // notifications,
-      // years,
-      // updateYears,
-      // removeUnitRow,
-      // removeYear,
-      // insertUnitRow,
-      // insertNewYear,
-      // updateRowContent,
-      // updateUnitTitle,
-      // addUnitTable,
-      // removeUnitTable,
-      // updateNotifications,
-      // removeNotification,
-      // updateCourseName,
-      // updateYearTitle,
-      // updateProfile,
+      notifications,
+      years,
+      updateYears,
+      removeUnitRow,
+      removeYear,
+      insertUnitRow,
+      insertNewYear,
+      updateRowContent,
+      updateUnitTitle,
+      addUnitTable,
+      removeUnitTable,
+      updateNotifications,
+      removeNotification,
+      updateCourseName,
+      updateYearTitle,
+      updateProfile,
       version,
     } = this.props;
 
     if (!_.isNil(profile.name)) {
       return (
         <Router>
-          <div className={style.applicationStyle}>
-            <Route
-              path={this.routePaths.signOut}
-              render={() => (
-                <SignOut
-                  removeProfile={removeProfile}
-                  history={this.history}
-                  firebase={this.firebase}
+          <MuiThemeProvider theme={theme}>
+            <div className={style.applicationStyle}>
+              <Navigation
+                history={this.history}
+                routePaths={this.routePaths}
+                profile={profile}
+                notifications={notifications}
+                updateNotifications={updateNotifications}
+                removeNotification={removeNotification}
+                exampleUser={profile.exampleUser}
+                firebase={this.firebase}
+                version={version}
+              >
+                <Route
+                  path={this.routePaths.signOut}
+                  render={() => (
+                    <SignOut
+                      removeProfile={removeProfile}
+                      history={this.history}
+                      firebase={this.firebase}
+                    />
+                  )}
                 />
-              )}
-            />
-          </div>
+              </Navigation>
+            </div>
+          </MuiThemeProvider>
         </Router>
       );
     }

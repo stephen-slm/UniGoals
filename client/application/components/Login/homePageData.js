@@ -72,7 +72,7 @@ const units = {
       },
       '-KzGZjILX5yqnYlyMcPn3': {
         achieved: '0',
-        name: 'Maths Final',
+        name: 'Python Exam',
         weighting: '20',
       },
       '-KzGZjILX5yqnYlyMcPn4': {
@@ -85,7 +85,4 @@ const units = {
   },
 };
 
-export {
-  profile,
-  units,
-};
+export { profile, units };
