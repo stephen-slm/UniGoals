@@ -1,19 +1,42 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { Spinner, Intent, Classes } from '@blueprintjs/core';
-import * as _ from 'lodash';
+import Button from 'material-ui/Button';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
+import Card, { CardContent } from 'material-ui/Card';
+import { CircularProgress } from 'material-ui/Progress';
 
-import HomeSummary from '../Home/HomeSummary/HomeSummary';
-import SampleTable from '../Home/HomeTables/SampleTable';
-
-import toaster from '../../utils/toaster';
-import { isMobileDevice } from '../../utils/utils';
 import * as homePageData from './homePageData';
+import { isMobileDevice } from '../../utils/utils';
 import * as constants from '../../utils/constants';
 
-import style from './login.less';
+import Summary from '../Summary/Summary';
+import UnitTable from '../Table/UnitTable';
 
-export default class Login extends React.Component {
+const styles = (theme) => ({
+  root: {
+    textAlign: 'center',
+    paddingTop: theme.spacing.unit * 2,
+  },
+  card: {
+    marginTop: theme.spacing.unit * 2,
+    minWidth: 300,
+    maxWidth: '60%',
+    margin: '0 auto',
+  },
+  text: {
+    textAlign: 'justify',
+  },
+  loading: {
+    marginTop: '50vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+class Login extends React.Component {
   /**
    * takes the google login and generates a users profile from the data
    * @param {object} loginResult Google login result
@@ -32,16 +55,16 @@ export default class Login extends React.Component {
   constructor() {
     super();
 
-    this.state = {
-      loading: isMobileDevice() === true,
-      isMobile: isMobileDevice(),
-    };
-
     this.authenticate = this.authenticate.bind(this);
     this.updateContentForUser = this.updateContentForUser.bind(this);
     this.handleAuthenticationError = this.handleAuthenticationError.bind(this);
     this.loginWithGoogle = this.loginWithGoogle.bind(this);
-    this.loginWithExample = this.loginWithExample.bind(this);
+
+    this.state = {
+      loading: isMobileDevice() === true,
+      isMobile: isMobileDevice(),
+      isExample: true,
+    };
   }
 
   // Checks to see if its a redirect with content
@@ -60,6 +83,27 @@ export default class Login extends React.Component {
         .then(() => this.setState({ loading: false }))
         .catch((error) => this.handleAuthenticationError(error));
     }
+  }
+
+  /**
+   * Updates the users content in redux
+   * @param {object} user firebase user content
+   * @param {boolean} example if is a exmaple user
+   */
+  updateContentForUser(user, example = false) {
+    const content = user;
+    content.profile.exampleUser = example;
+
+    this.props.updateProfile(content.profile);
+    this.props.updateYears(content.years);
+    this.props.updateNotifications(content.notifications);
+    return Promise.resolve();
+  }
+
+  // Handles all errors through a single promise
+  handleAuthenticationError(error) {
+    console.log(error.message);
+    this.setState({ loading: false });
   }
 
   // proceeds to process the login details, creating accounts if needed and handling content
@@ -88,14 +132,6 @@ export default class Login extends React.Component {
     });
   }
 
-  loginWithExample() {
-    this.setState({ loading: true });
-    this.props.firebase
-      .getExampleUser()
-      .then((content) => this.updateContentForUser(content, true))
-      .catch((error) => this.handleAuthenticationError(error));
-  }
-
   loginWithGoogle() {
     const { provider, authentication: auth } = this.props.firebase;
 
@@ -111,59 +147,26 @@ export default class Login extends React.Component {
     }
   }
 
-  /**
-   * Updates the users content in redux
-   * @param {object} user firebase user content
-   * @param {boolean} example if is a exmaple user
-   */
-  updateContentForUser(user, example = false) {
-    const content = user;
-    content.profile.exampleUser = example;
+  render() {
+    const { classes } = this.props;
 
-    this.props.updateProfile(content.profile);
-    this.props.updateYears(content.years);
-    this.props.updateNotifications(content.notifications);
-    return Promise.resolve();
-  }
-
-  // Handles all errors through a single promise
-  handleAuthenticationError(error) {
-    toaster.danger(error.message);
-    this.setState({ loading: false });
-  }
-
-  /**
-   * Simple loading box if there is data processing happening, allows the user to know something
-   * is happening int the background instead of it just sitting on the login screen.
-   */
-  loadingBox() {
     if (this.state.loading) {
       return (
-        <div className={style.loadingIcon}>
-          <Spinner className={Classes.LARGE} intent={Intent.PRIMARY} />
+        <div className={classes.loading}>
+          <CircularProgress className={classes.progress} color="primary" size={80} />
         </div>
       );
     }
-    return <div />;
-  }
-
-  loginBox() {
-    const exampleUser = true;
 
     return (
-      <div className={style.homeWrapper}>
-        <header className={style.headerAlt}>
-          <span className={style.homeLogo}>
-            <img
-              style={{ height: 250, margin: '0 15px' }}
-              src="components/resources/images/logo.svg"
-              alt="Logo"
-            />
-          </span>
-          <h1>UniGoals</h1>
-          <p>
-            Full Course & Unit tracking<br />
-            built by a University{' '}
+      <div className={classes.root}>
+        <img style={{ height: 150 }} src="components/resources/images/logo.svg" alt="Logo" />
+        <Typography variant="display1" gutterBottom>
+          UniGoals
+        </Typography>
+        <Typography variant="subheading" gutterBottom>
+          <Typography component="p">
+            Full Course &amp; Unit tracking<br />built by a University{' '}
             <a
               href="https://www.linkedin.com/in/stephen-lineker-miller/"
               target="_blank"
@@ -171,101 +174,75 @@ export default class Login extends React.Component {
             >
               Student
             </a>{' '}
-            for University Students.<br />
+            for University Students
+            <br />
             Version: {this.props.version}
-          </p>
-        </header>
-        <div className={style.googleLoginButtonWrapper}>
-          <div
-            tabIndex={0}
-            role="button"
-            onKeyDown={this.loginWithGoogle}
-            onClick={this.loginWithGoogle}
-          >
-            <img
-              className={style.googleButton}
-              src="components/resources/images/googleButton.png"
-              alt="Sign in Google"
-            />
-          </div>
-          <div
-            tabIndex={0}
-            role="button"
-            onKeyDown={this.loginWithExample}
-            onClick={this.loginWithExample}
-          >
-            <img
-              className={style.googleButton}
-              src="components/resources/images/exampleUser.png"
-              alt="Example User"
-            />
-          </div>
-        </div>
-        <div className={`pt-card ${style.homeContainer}`}>
-          UniGoals is a modern University unit tracking tool designed to let you know where you
-          currently stand on your course. Using quick and simple percentages and charts to provide
-          fast and accurate content about your course. Simply add your units with there weighting
-          (e.g.coursework, exam, presentations, etc) and quickly see your current percent, average
-          and total maximum grade! Real-time instant results.
-          <div className={style.homeSummaryContainer}>
-            <HomeSummary
-              firebase={this.props.firebase}
+          </Typography>
+        </Typography>
+        <Button variant="raised" color="primary" onClick={this.loginWithGoogle}>
+          Login | Register
+        </Button>
+        <Card className={classes.card}>
+          <CardContent>
+            <Typography className={classes.text} compnent="p">
+              UniGoals is a modern University unit tracking tool designed to let you know where you
+              currently stand on your course. Using quick and simple percentages charts to provide
+              fast and accurate content about your course. Simply add your units with there
+              weighting (e.g.coursework, exam, presentations, etc) and quickly see your current
+              percent, average and total maximum grade! Real-time instant results.
+            </Typography>
+            <Summary
               units={homePageData.units}
               profile={homePageData.profile}
               history={this.props.history}
-              exampleUser={exampleUser}
-              updateYearTitle={this.props.updateYearTitle}
+              isExample={this.state.isExample}
               yearIndex="Year 1"
+              yearTitle="Example Year"
             />
-          </div>
-          Your own unqiue summary page that displays everything you need to quickly know about your
-          units! Including your <strong>unit ranks</strong>, how they are compared to other units,
-          <strong> Average</strong>, <strong>Max</strong> and <strong>Total Grade</strong>. Try
-          hovering over the chart and percentages. Each unit looks like the one below, providing a{' '}
-          <strong>Title</strong>, <strong>Name</strong>, <strong> Weighting</strong>, and
-          <strong> Achieved</strong> column. Filling these will allow you to make the most of the
-          site. The chart and percentages will also update in real time as you update the rows.
-          <div className={`pt-card pt-elevation-3 ${style.homeTablesContainer}`}>
-            <SampleTable
-              tableNum={1}
+            <Typography className={classes.text} compnent="p">
+              Your own unqiue summary page that displays everything you need to quickly know about
+              your units! Including your <strong>unit ranks</strong>, how they are compared to other
+              units, <strong> Average</strong>, <strong>Max</strong> and
+              <strong>Total Grade</strong>. Try hovering over the chart and percentages. Each unit
+              looks like the one below, providing a <strong>Title</strong>,
+              <strong>Name</strong>, <strong>Weighting</strong>, and
+              <strong> Achieved</strong> column. Filling these will allow you to make the most of
+              the site. The chart and percentages will also update in real time as you update the
+              rows.
+            </Typography>
+            <UnitTable
+              yearIndex="example"
+              tableIndex="example"
+              firebase={this.props.firebase}
               unit={homePageData.units[Object.keys(homePageData.units)[2]]}
-              isSummary={exampleUser}
+              isExample={this.state.isExample}
             />
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     );
-  }
-
-  render() {
-    if (this.state.loading) {
-      return this.loadingBox();
-    }
-    return this.loginBox();
   }
 }
 
 Login.propTypes = {
-  updateYearTitle: PropTypes.func.isRequired,
-  updateNotifications: PropTypes.func.isRequired,
-  updateProfile: PropTypes.func.isRequired,
-  updateYears: PropTypes.func.isRequired,
-  version: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
-    authenticate: PropTypes.func.isRequired,
-    getUserContent: PropTypes.func.isRequired,
-    getAllYearUnits: PropTypes.func,
-    updateLoginCountAndDate: PropTypes.func,
-    getExampleUser: PropTypes.func,
-    createNewUser: PropTypes.func,
-    getProfileById: PropTypes.func,
-    getUnitsById: PropTypes.func,
-    getUserNotifications: PropTypes.func,
     provider: PropTypes.shape({}),
     authentication: PropTypes.shape({
       getRedirectResult: PropTypes.func,
       signInWithCredential: PropTypes.func,
     }),
+    createNewUser: PropTypes.func,
+    getUserContent: PropTypes.func,
+    updateLoginCountAndDate: PropTypes.func,
   }).isRequired,
+  classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
+  version: PropTypes.string.isRequired,
+  updateProfile: PropTypes.func.isRequired,
+  updateYears: PropTypes.func.isRequired,
+  updateNotifications: PropTypes.func.isRequired,
 };
+
+Login.defaultProps = {};
+
+export default withStyles(styles)(Login);

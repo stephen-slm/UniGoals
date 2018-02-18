@@ -9,7 +9,7 @@ import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import * as routePaths from './routePaths';
 
 import Navigation from '../Navigation/Navigation';
-import Login from '../Login/Login2';
+import Login from '../Login/Login';
 import SignOut from '../Login/SignOut';
 
 const style = require('./application.less');
