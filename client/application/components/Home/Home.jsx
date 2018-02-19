@@ -37,6 +37,8 @@ class Home extends React.Component {
   generateTab(year, index) {
     return (
       <Summary
+        updateYearTitle={this.props.updateYearTitle}
+        firebase={this.props.firebase}
         units={year.units}
         profile={this.props.profile}
         history={this.props.history}
@@ -73,7 +75,8 @@ Home.propTypes = {
     title: PropTypes.string,
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
-  //   firebase: PropTypes.shape().isRequired,
+  updateYearTitle: PropTypes.func.isRequired,
+  firebase: PropTypes.shape({}).isRequired,
   //   updateYears: PropTypes.func.isRequired,
   //   insertNewYear: PropTypes.func.isRequired,
   //   removeYear: PropTypes.func.isRequired,

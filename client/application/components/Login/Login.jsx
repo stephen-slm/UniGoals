@@ -192,6 +192,8 @@ class Login extends React.Component {
               percent, average and total maximum grade! Real-time instant results.
             </Typography>
             <Summary
+              updateYearTitle={this.props.updateYearTitle}
+              firebase={this.props.firebase}
               units={homePageData.units}
               profile={homePageData.profile}
               history={this.props.history}
@@ -239,6 +241,7 @@ Login.propTypes = {
   history: PropTypes.shape({}).isRequired,
   version: PropTypes.string.isRequired,
   updateProfile: PropTypes.func.isRequired,
+  updateYearTitle: PropTypes.func.isRequired,
   updateYears: PropTypes.func.isRequired,
   updateNotifications: PropTypes.func.isRequired,
 };

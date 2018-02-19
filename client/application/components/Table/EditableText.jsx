@@ -105,13 +105,12 @@ class EditableText extends React.Component {
   }
 
   handleKeyEvent(event) {
-    const { altKey, ctrlKey, metaKey, shiftKey, which } = event;
+    const { altKey, shiftKey, which } = event;
     if (which === 27) {
       this.cancelEditing();
       return;
     }
 
-    const hasModifierKey = altKey || ctrlKey || metaKey || shiftKey;
     if (which === 13) {
       // prevent IE11 from full screening with alt + enter
       // shift + enter adds a newline by default
@@ -119,9 +118,7 @@ class EditableText extends React.Component {
         event.preventDefault();
       }
 
-      if (hasModifierKey) {
-        this.toggleEditing();
-      }
+      this.toggleEditing();
     }
   }
 
@@ -203,11 +200,11 @@ EditableText.propTypes = {
 };
 
 EditableText.defaultProps = {
-  onChange: () => {},
-  onConfirm: () => {},
-  onEdit: () => {},
-  onCancel: () => {},
-  isEditing: false,
+  onChange: () => null,
+  onConfirm: () => null,
+  onEdit: () => null,
+  onCancel: () => null,
+  isEditing: null,
   confirmOnEnterKey: false,
   selectAllOnFocus: false,
   value: null,

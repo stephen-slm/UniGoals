@@ -9,6 +9,9 @@ import { withStyles } from 'material-ui/styles';
 import _ from 'lodash';
 import Ranking from './Ranking';
 import Percentages from './Percentages';
+import EditableText from '../Table/EditableText';
+
+import * as constants from '../../utils/constants';
 
 const styles = (theme) => ({
   root: {
@@ -40,13 +43,94 @@ const styles = (theme) => ({
 });
 
 class Summary extends React.Component {
-  constructor() {
+  /**
+   * Gets the current year week for University, based on the starting week of week 38 of
+   * the university.
+   */
+  static getCurrentYearWeek() {
+    const uniStartWeek = 38;
+    let date = new Date();
+
+    date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+
+    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil(((date - yearStart) / 86400000 + 1) / 7);
+    const uniWeek = weekNo - uniStartWeek;
+
+    return Math.abs(uniWeek);
+  }
+
+  constructor(props) {
     super();
 
+    this.updateYearTitle = this.updateYearTitle.bind(this);
+    this.updateYearTitleDatabase = this.updateYearTitleDatabase.bind(this);
+    this.showDeleteYear = this.showDeleteYear.bind(this);
+    this.deleteSelectedYear = this.deleteSelectedYear.bind(this);
+    this.insertNewYear = this.insertNewYear.bind(this);
+
     this.state = {
-      currentWeek: 0,
+      currentWeek: Summary.getCurrentYearWeek(),
       isSummary: true,
+      yearTitle: props.yearTitle,
     };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.yearTitle !== nextProps.yearTitle) {
+      this.setState({ yearTitle: nextProps.yearTitle });
+    }
+  }
+
+  updateYearTitleDatabase(newTitle) {
+    if (this.props.isExample) return;
+    let title = newTitle;
+
+    // If the user exists whiel the text is empty, fill with replacement text
+    if (title === '') title = 'Uni 👨‍🎓 👩‍🎓';
+
+    this.props.firebase.updateYearTitle(this.props.yearIndex, title);
+    this.props.updateYearTitle(this.props.yearIndex, title);
+    this.setState({ yearTitle: title });
+  }
+
+  /**
+   * updates the title for the selected/active year in the state
+   * @param {string} title the new title for the year in the state
+   */
+  updateYearTitle(title) {
+    this.setState({
+      yearTitle: title,
+    });
+  }
+
+  // Shows the delete year dialog
+  showDeleteYear() {
+    if (this.props.isExample) return;
+
+    this.setState({ isDeletingYear: !this.state.isDeletingYear });
+  }
+
+  insertNewYear() {
+    if (this.props.exampleUser) return;
+
+    this.props.firebase
+      .insertNewYear()
+      .then((year) => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
+      .catch((error) => toaster.danger(error.message));
+  }
+
+  // Deletes the current active year from firebae and redux
+  deleteSelectedYear() {
+    if (this.props.isExample) return;
+
+    this.props.firebase
+      .deleteYear(this.props.yearIndex)
+      .then(() => this.props.removeYear(this.props.yearIndex))
+      .catch((error) => toaster.danger(error.message));
+
+    this.showDeleteYear();
   }
 
   render() {
@@ -77,8 +161,13 @@ class Summary extends React.Component {
           {this.props.profile.course_name} - {this.props.profile.name} - Year:{' '}
           {this.props.profile.course_year}, week: {this.state.currentWeek}
         </Typography>
-        <Typography component="p">{this.props.yearTitle}</Typography>
-
+        <EditableText
+          placeholder="Year"
+          maxLength={constants.YEAR.TITLE.MAX}
+          onChange={this.updateYearTitle}
+          onConfirm={this.updateYearTitleDatabase}
+          value={this.state.yearTitle}
+        />
         {/* The heights here need to be calculated based on the num of units up to 5 */}
         <Grid container className={classes.grid}>
           <Grid item xs={12}>
@@ -106,10 +195,15 @@ class Summary extends React.Component {
 }
 
 Summary.propTypes = {
+  yearIndex: PropTypes.string,
+  updateYearTitle: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
   units: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
-  yearTitle: PropTypes.string.isRequired,
+  yearTitle: PropTypes.string,
+  firebase: PropTypes.shape({
+    updateYearTitle: PropTypes.func,
+  }).isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     course_year: PropTypes.string,
@@ -119,7 +213,9 @@ Summary.propTypes = {
 };
 
 Summary.defaultProps = {
+  yearIndex: 0,
   isExample: false,
+  yearTitle: 'Year',
 };
 
 export default withStyles(styles)(Summary);
