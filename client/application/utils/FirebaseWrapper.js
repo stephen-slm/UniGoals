@@ -11,6 +11,9 @@ export default class FirebaseWrapper {
     this.database = firebase.database();
     this.authentication = firebase.auth();
 
+    // This is temporary before adjusting to sessions
+    this.authentication.signOut();
+
     this.provider = new firebase.auth.GoogleAuthProvider();
   }
 
