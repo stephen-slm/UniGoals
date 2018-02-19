@@ -8,6 +8,7 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import * as routePaths from './routePaths';
 
+import Home from '../Home/Home';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
 import SignOut from '../Login/SignOut';
@@ -84,16 +85,41 @@ export default class Application extends React.Component {
                 version={version}
               >
                 <Route
-                  path={this.routePaths.signOut}
+                  exact
+                  path="/"
                   render={() => (
-                    <SignOut
-                      removeProfile={removeProfile}
+                    <Home
                       history={this.history}
+                      profile={profile}
+                      updateProfile={updateProfile}
+                      updateCourseName={updateCourseName}
+                      years={years}
+                      updateYears={updateYears}
+                      removeYear={removeYear}
+                      updateYearTitle={updateYearTitle}
+                      removeUnitRow={removeUnitRow}
+                      insertNewYear={insertNewYear}
+                      insertUnitRow={insertUnitRow}
+                      updateRowContent={updateRowContent}
+                      updateUnitTitle={updateUnitTitle}
+                      addUnitTable={addUnitTable}
+                      removeUnitTable={removeUnitTable}
                       firebase={this.firebase}
+                      exampleUser={profile.exampleUser}
                     />
                   )}
                 />
               </Navigation>
+              <Route
+                path={this.routePaths.signOut}
+                render={() => (
+                  <SignOut
+                    removeProfile={removeProfile}
+                    history={this.history}
+                    firebase={this.firebase}
+                  />
+                )}
+              />
             </div>
           </MuiThemeProvider>
         </Router>

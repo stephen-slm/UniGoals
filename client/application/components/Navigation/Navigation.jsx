@@ -125,36 +125,41 @@ class Navigation extends React.Component {
     const { classes } = this.props;
 
     return (
-      <AppBar position="static" color="secondary" className={classes.root}>
-        <HelpBox
-          handleSubmit={this.submitHelpMessage}
-          error={this.state.invalidhelpMessage}
-          handleClose={this.showHelpBox}
-          open={this.state.showHelp}
-          minLength={constants.HELP_MESSAGE.MIN}
-          maxLength={constants.HELP_MESSAGE.MAX}
-        />
-        <Toolbar>
-          <Typography variant="body2" color="inherit" className={classes.flex}>
-            Uni Goals, {this.props.profile.name} - {this.props.profile.course_university}
-          </Typography>
-          <div>
-            <Badge
-              badgeContent={_.size(this.props.notifications)}
-              className={classes.mail}
-              color="primary"
-            >
-              <MailIcon />
-            </Badge>
-            <IconButton color="inherit" onClick={this.showHelpBox}>
-              <HelpIcon />
-            </IconButton>
-            <IconButton aria-haspopup="true" onClick={this.showSignOutBox} color="inherit">
-              <ExitIcon />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <div>
+        <AppBar position="static" color="primary" className={classes.root}>
+          <HelpBox
+            handleSubmit={this.submitHelpMessage}
+            error={this.state.invalidhelpMessage}
+            handleClose={this.showHelpBox}
+            open={this.state.showHelp}
+            minLength={constants.HELP_MESSAGE.MIN}
+            maxLength={constants.HELP_MESSAGE.MAX}
+          />
+          <Toolbar>
+            <Typography variant="body2" color="inherit" className={classes.flex}>
+              Uni Goals, {this.props.profile.name} - {this.props.profile.course_university}
+            </Typography>
+            <div>
+              <IconButton color="inherit" onClick={this.showNotifications}>
+                <Badge
+                  badgeContent={_.size(this.props.notifications)}
+                  className={classes.mail}
+                  color="secondary"
+                >
+                  <MailIcon />
+                </Badge>
+              </IconButton>
+              <IconButton color="inherit" onClick={this.showHelpBox}>
+                <HelpIcon />
+              </IconButton>
+              <IconButton aria-haspopup="true" onClick={this.showSignOutBox} color="inherit">
+                <ExitIcon />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {this.props.children}
+      </div>
     );
   }
 }
