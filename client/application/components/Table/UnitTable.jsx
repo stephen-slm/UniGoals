@@ -5,6 +5,8 @@ import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
 
 import * as constants from '../../utils/constants';
 import Percentages from '../Summary/Percentages';
@@ -63,7 +65,20 @@ class UnitTable extends React.Component {
     this.updateUnitTitle = this.updateUnitTitle.bind(this);
     this.updateUnitTitleDatabase = this.updateUnitTitleDatabase.bind(this);
 
-    this.state = {};
+    this.insertRowBelow = this.insertRowBelow.bind(this);
+    this.showDeleteUnitBox = this.showDeleteUnitBox.bind(this);
+
+    this.mouseOverEdit = this.mouseOverEdit.bind(this);
+    this.moveOutEdit = this.moveOutEdit.bind(this);
+    this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
+    this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
+
+    this.state = {
+      editing: false,
+      showDeleteUnit: false,
+      showInsertRow: false,
+      isDeletingUnit: false,
+    };
   }
 
   // Returns the current total to be displayed at the bottom of the table
@@ -81,6 +96,27 @@ class UnitTable extends React.Component {
     });
 
     return { weighting: parseInt(weighting, 10), achieved: parseFloat(achieved / 100).toFixed(2) };
+  }
+
+  /**
+   * inserts a new row at the bottom of the current table, this does not require
+   * any more information but the firebase will return a key which will require
+   * for creating the row in the redux, (without this we cannot update this row for
+   * the firebase or the redux)
+   */
+  insertRowBelow() {
+    if (this.props.isExample) return;
+
+    const { tableIndex, yearIndex } = this.props;
+
+    if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
+      console.log(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
+    } else {
+      this.props.firebase
+        .insertUnitRowById(yearIndex, tableIndex)
+        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
+        .catch((error) => console.log(error.message));
+    }
   }
 
   /**
@@ -133,27 +169,6 @@ class UnitTable extends React.Component {
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
       this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
       this.props.firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
-    }
-  }
-
-  /**
-   * inserts a new row at the bottom of the current table, this does not require
-   * any more information but the firebase will return a key which will require
-   * for creating the row in the redux, (without this we cannot update this row for
-   * the firebase or the redux)
-   */
-  insertRowBelow() {
-    if (this.props.isExample) return;
-
-    const { tableIndex, yearIndex } = this.props;
-
-    if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
-      console.log(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
-    } else {
-      this.props.firebase
-        .insertUnitRowById(yearIndex, tableIndex)
-        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch((error) => console.log(error));
     }
   }
 
@@ -219,6 +234,37 @@ class UnitTable extends React.Component {
     }
   }
 
+  mouseOverEdit() {
+    this.setState({
+      editing: true,
+    });
+  }
+
+  moveOutEdit() {
+    this.setState({
+      editing: false,
+    });
+  }
+
+  moveOverShowInsert() {
+    this.setState({
+      showInsertRow: true,
+    });
+  }
+
+  moveHideShowInsert() {
+    this.setState({
+      showInsertRow: false,
+    });
+  }
+
+  showDeleteUnitBox() {
+    this.setState({
+      isDeletingUnit: !this.state.isDeletingUnit,
+      tableTitle: this.state.tableTitle,
+    });
+  }
+
   render() {
     const { classes } = this.props;
     const totals = this.calculateTotal();
@@ -235,16 +281,26 @@ class UnitTable extends React.Component {
           type="h5"
         />
         <Percentages height={2} unit={this.props.unit} backdrop={false} />
-        <Typography component="div" className={classes.tableWrapper}>
+        <Typography
+          component="div"
+          className={classes.tableWrapper}
+          onMouseEnter={this.moveOverShowInsert}
+          onMouseLeave={this.moveHideShowInsert}
+        >
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
                 <TableCell>% Weighting</TableCell>
                 <TableCell>% Achieved</TableCell>
+                <TableCell style={{ visibility: this.state.showInsertRow ? 'visible' : 'hidden' }}>
+                  <IconButton onClick={this.insertRowBelow}>
+                    <Icon color="primary">add</Icon>
+                  </IconButton>
+                </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody onMouseEnter={this.mouseOverEdit} onMouseLeave={this.moveOutEdit}>
               {_.map(this.props.unit.content, (row, index) => (
                 <TableRow key={index}>
                   <TableCell>
@@ -278,12 +334,24 @@ class UnitTable extends React.Component {
                       value={_.defaultTo(row.achieved, '0')}
                     />
                   </TableCell>
+                  <TableCell
+                    style={{ visibility: this.state.showInsertRow ? 'visible' : 'hidden' }}
+                  >
+                    <IconButton onClick={() => this.removeRowById(index)}>
+                      <Icon color="secondary">clear</Icon>
+                    </IconButton>
+                  </TableCell>
                 </TableRow>
               ))}
               <TableRow>
                 <TableCell>Total</TableCell>
                 <TableCell>{totals.weighting}</TableCell>
                 <TableCell>{totals.achieved}</TableCell>
+                <TableCell style={{ visibility: this.state.showInsertRow ? 'visible' : 'hidden' }}>
+                  <IconButton onClick={this.showDeleteUnitBox}>
+                    <Icon color="primary">delete</Icon>
+                  </IconButton>
+                </TableCell>
               </TableRow>
             </TableBody>
           </Table>

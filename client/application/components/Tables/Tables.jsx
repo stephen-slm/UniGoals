@@ -82,6 +82,7 @@ class Tables extends React.Component {
               removeUnitTable={this.props.removeUnitTable}
               firebase={this.props.firebase}
               unit={unit}
+              isExample={this.props.isExample}
             />
           </div>
         ))}
@@ -103,8 +104,11 @@ Tables.propTypes = {
   removeUnitTable: PropTypes.func.isRequired,
   updateUnitTitle: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
+  isExample: PropTypes.bool,
 };
 
-Tables.defaultProps = {};
+Tables.defaultProps = {
+  isExample: false,
+};
 
 export default withStyles(styles)(Tables);
