@@ -9,7 +9,6 @@ import Tables from './HomeTables/Tables';
 
 import * as style from './home.less';
 
-
 export default class Home extends React.Component {
   constructor() {
     super();
@@ -71,7 +70,6 @@ export default class Home extends React.Component {
           removeUnitTable={this.props.removeUnitTable}
           firebase={this.props.firebase}
           exampleUser={this.props.exampleUser}
-
           units={year.units}
         />
       </div>
@@ -80,21 +78,17 @@ export default class Home extends React.Component {
 
   generateTabs() {
     if (_.size(this.props.years[Object.keys(this.props.years)[0]]) === 0) {
-      return (<div />);
+      return <div />;
     }
 
-    return _.map(this.props.years, (year, index) => (<Tab2
-      id={index}
-      key={index}
-      title={year.title}
-      panel={this.getTabContent(index, year)}
-    />));
+    return _.map(this.props.years, (year, index) => (
+      <Tab2 id={index} key={index} title={year.title} panel={this.getTabContent(index, year)} />
+    ));
   }
 
   updateId(newTabId) {
     this.setState({ selectedId: newTabId });
   }
-
 
   render() {
     const tabContent = this.generateTabs();

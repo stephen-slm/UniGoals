@@ -5,8 +5,6 @@ function isMobileDevice() {
   return false;
 }
 
-export {
-  isMobileDevice,
-};
+export { isMobileDevice };
 
 export default isMobileDevice;

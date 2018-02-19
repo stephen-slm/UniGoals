@@ -60,6 +60,9 @@ class UnitTable extends React.Component {
     this.updateRowContent = this.updateRowContent.bind(this);
     this.updateRowCententDatabase = this.updateRowCententDatabase.bind(this);
 
+    this.updateUnitTitle = this.updateUnitTitle.bind(this);
+    this.updateUnitTitleDatabase = this.updateUnitTitleDatabase.bind(this);
+
     this.state = {};
   }
 
@@ -197,7 +200,7 @@ class UnitTable extends React.Component {
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
       return;
       // TODO: Could not update content, due to rowIndex or columnIndex being undefined!
-    } else if (!Table.validateChangeUpdate(columnIndex, updatedChange)) {
+    } else if (!UnitTable.validateChangeUpdate(columnIndex, updatedChange)) {
       return;
       // TODO: `${columnIndex} update did not meet requirements`
     }
@@ -223,7 +226,10 @@ class UnitTable extends React.Component {
     return (
       <Paper className={classes.root} elevation={3}>
         <EditableText
+          className={classes.title}
           maxLength={constants.UNIT.TITLE.MAX}
+          onChange={this.updateUnitTitle}
+          onConfirm={this.updateUnitTitleDatabase}
           value={this.props.unit.title}
           variant="headline"
           type="h5"

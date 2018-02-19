@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Tabs, { Tab } from 'material-ui/Tabs';
 import { withStyles } from 'material-ui/styles';
 
+import Tables from '../Tables/Tables';
 import Summary from '../Summary/Summary';
 
 import * as constants from '../../utils/constants';
@@ -11,7 +12,7 @@ import * as constants from '../../utils/constants';
 const styles = (theme) => ({ root: {} });
 
 class Home extends React.Component {
-  constructor(props) {
+  constructor() {
     super();
 
     this.handleChange = this.handleChange.bind(this);
@@ -36,15 +37,31 @@ class Home extends React.Component {
 
   generateTab(year, index) {
     return (
-      <Summary
-        updateYearTitle={this.props.updateYearTitle}
-        firebase={this.props.firebase}
-        units={year.units}
-        profile={this.props.profile}
-        history={this.props.history}
-        yearIndex={index}
-        yearTitle={year.title}
-      />
+      <div>
+        <Summary
+          insertNewYear={this.props.insertNewYear}
+          removeYear={this.props.removeYear}
+          updateYearTitle={this.props.updateYearTitle}
+          firebase={this.props.firebase}
+          units={year.units}
+          profile={this.props.profile}
+          history={this.props.history}
+          yearIndex={index}
+          yearTitle={year.title}
+        />
+        <Tables
+          yearIndex={index}
+          insertUnitRow={this.props.insertUnitRow}
+          updateYears={this.props.updateYears}
+          updateRowContent={this.props.updateRowContent}
+          removeUnitRow={this.props.removeUnitRow}
+          updateUnitTitle={this.props.updateUnitTitle}
+          addUnitTable={this.props.addUnitTable}
+          removeUnitTable={this.props.removeUnitTable}
+          firebase={this.props.firebase}
+          units={year.units}
+        />
+      </div>
     );
   }
 
@@ -77,19 +94,17 @@ Home.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   updateYearTitle: PropTypes.func.isRequired,
   firebase: PropTypes.shape({}).isRequired,
-  //   updateYears: PropTypes.func.isRequired,
-  //   insertNewYear: PropTypes.func.isRequired,
-  //   removeYear: PropTypes.func.isRequired,
-  //   updateYearTitle: PropTypes.func.isRequired,
+  updateYears: PropTypes.func.isRequired,
+  insertNewYear: PropTypes.func.isRequired,
+  removeYear: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
-  //   removeUnitRow: PropTypes.func.isRequired,
-  //   insertUnitRow: PropTypes.func.isRequired,
-  //   updateRowContent: PropTypes.func.isRequired,
-  //   updateUnitTitle: PropTypes.func.isRequired,
-  //   addUnitTable: PropTypes.func.isRequired,
-  //   removeUnitTable: PropTypes.func.isRequired,
-  //   updateProfile: PropTypes.func.isRequired,
-  //   exampleUser: PropTypes.bool,
+  removeUnitRow: PropTypes.func.isRequired,
+  insertUnitRow: PropTypes.func.isRequired,
+  updateRowContent: PropTypes.func.isRequired,
+  updateUnitTitle: PropTypes.func.isRequired,
+  addUnitTable: PropTypes.func.isRequired,
+  removeUnitTable: PropTypes.func.isRequired,
+  updateProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
     course_name: PropTypes.string,

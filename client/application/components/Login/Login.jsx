@@ -24,6 +24,9 @@ const styles = (theme) => ({
     minWidth: 300,
     maxWidth: '60%',
     margin: '0 auto',
+    [theme.breakpoints.down('md')]: {
+      maxWidth: '90%',
+    },
   },
   text: {
     textAlign: 'justify',

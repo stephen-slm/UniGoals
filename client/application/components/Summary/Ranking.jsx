@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
-
+import uuid from 'uuid/v4';
 import _ from 'lodash';
 
 const styles = (theme) => ({
@@ -88,7 +88,7 @@ class Ranking extends React.Component {
         </Typography>
         <Typography className={classes.wrapper} component="div">
           {ranking.map((rank, index) => (
-            <Typography key={rank.title} className={classes.entry} component="span">
+            <Typography key={uuid()} className={classes.entry} component="span">
               <Typography className={classes.link} href={String(rank.link)} component="a">
                 {index + 1}. {rank.title}
               </Typography>

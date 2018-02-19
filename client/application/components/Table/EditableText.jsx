@@ -161,7 +161,7 @@ class EditableText extends React.Component {
     return (
       <Typography
         component="div"
-        className={classes.root}
+        className={`${this.props.className} ${classes.root}`}
         onFocus={this.handleFocus}
         tabIndex={tabIndex}
       >
@@ -189,6 +189,7 @@ EditableText.propTypes = {
   selectAllOnFocus: PropTypes.bool,
   isEditing: PropTypes.bool,
   value: PropTypes.string,
+  className: PropTypes.string,
   defaultValue: PropTypes.string,
   type: PropTypes.string,
   disabled: PropTypes.bool,
@@ -200,6 +201,7 @@ EditableText.propTypes = {
 };
 
 EditableText.defaultProps = {
+  className: '',
   onChange: () => null,
   onConfirm: () => null,
   onEdit: () => null,
@@ -210,7 +212,7 @@ EditableText.defaultProps = {
   value: null,
   defaultValue: null,
   disabled: false,
-  minWidth: 40,
+  minWidth: 80,
   maxLength: Infinity,
   placeholder: 'Click to Edit',
   type: 'div',

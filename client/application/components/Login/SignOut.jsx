@@ -16,7 +16,7 @@ export default class SignOut extends React.Component {
   }
 
   render() {
-    return (<div>Sign out</div>);
+    return <div>Sign out</div>;
   }
 }
 

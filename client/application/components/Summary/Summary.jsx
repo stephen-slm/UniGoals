@@ -22,6 +22,9 @@ const styles = (theme) => ({
     paddingBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
+    [theme.breakpoints.down('md')]: {
+      maxWidth: '90%',
+    },
   },
   addButton: {
     float: 'left',
@@ -35,10 +38,6 @@ const styles = (theme) => ({
   },
   grid: {
     flexGrow: 1,
-  },
-  paper: {
-    // height: 140,
-    // width: 100,
   },
 });
 
@@ -113,12 +112,12 @@ class Summary extends React.Component {
   }
 
   insertNewYear() {
-    if (this.props.exampleUser) return;
+    if (this.props.isExample) return;
 
     this.props.firebase
       .insertNewYear()
       .then((year) => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
-      .catch((error) => toaster.danger(error.message));
+      .catch((error) => console.log(error.message));
   }
 
   // Deletes the current active year from firebae and redux
@@ -128,7 +127,7 @@ class Summary extends React.Component {
     this.props.firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
-      .catch((error) => toaster.danger(error.message));
+      .catch((error) => console.log(error.message));
 
     this.showDeleteYear();
   }
@@ -140,15 +139,15 @@ class Summary extends React.Component {
       <Paper className={classes.root} elevation={3}>
         <Icon
           style={{ display: this.props.isExample ? 'none' : undefined }}
-          onClick={() => console.log('clicked add')}
+          onClick={this.insertNewYear}
           className={classes.addButton}
           color="primary"
         >
-          add_circle
+          add
         </Icon>
         <Icon
           style={{ display: this.props.isExample ? 'none' : undefined }}
-          onClick={() => console.log('clicked remove')}
+          onClick={this.showDeleteYear}
           className={classes.removeButton}
           color="secondary"
         >
@@ -196,12 +195,16 @@ class Summary extends React.Component {
 
 Summary.propTypes = {
   yearIndex: PropTypes.string,
+  removeYear: PropTypes.func,
+  insertNewYear: PropTypes.func,
   updateYearTitle: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
   units: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
   yearTitle: PropTypes.string,
   firebase: PropTypes.shape({
+    deleteYear: PropTypes.func,
+    insertNewYear: PropTypes.func,
     updateYearTitle: PropTypes.func,
   }).isRequired,
   profile: PropTypes.shape({
@@ -216,6 +219,8 @@ Summary.defaultProps = {
   yearIndex: 0,
   isExample: false,
   yearTitle: 'Year',
+  removeYear: () => null,
+  insertNewYear: () => null,
 };
 
 export default withStyles(styles)(Summary);

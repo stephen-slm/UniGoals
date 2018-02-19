@@ -28,9 +28,7 @@ const config = {
       },
     ],
   },
-  plugins: [
-    new DashboardPlugin(),
-  ],
+  plugins: [new DashboardPlugin()],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
