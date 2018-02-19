@@ -14,6 +14,7 @@ const styles = (theme) => ({
     paddingRight: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
     maxWidth: theme.spacing.unit * 24,
+    minHeight: '100px',
   },
   title: {
     textAlign: 'center',
@@ -119,7 +120,7 @@ class Perentages extends React.Component {
    * Calulates the users unit overal grade.
    * @param {object} data user units
    */
-  static calulateTotalGrade(data) {
+  static calulateTotalGradeSummary(data) {
     if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
       return 0;
     }
@@ -143,6 +144,18 @@ class Perentages extends React.Component {
     return parseFloat(totalAchieved / 100 / _.size(data)).toFixed(2);
   }
 
+  static calculateTotalGradeStandard(unit) {
+    let achieved = 0;
+
+    _.forEach(unit, (row) => {
+      if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
+        achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
+      }
+    });
+
+    return parseFloat(achieved / 100).toFixed(2);
+  }
+
   constructor() {
     super();
 
@@ -156,9 +169,10 @@ class Perentages extends React.Component {
 
     if (this.props.isSummary) {
       percentages = Perentages.calculateAverageGradePercentSummary(this.props.units);
-      total = Perentages.calulateTotalGrade(this.props.units);
+      total = Perentages.calulateTotalGradeSummary(this.props.units);
     } else {
       percentages = Perentages.calculateAverageGradePercent(this.props.unit.content);
+      total = Perentages.calculateTotalGradeStandard(this.props.unit.content);
     }
 
     return (

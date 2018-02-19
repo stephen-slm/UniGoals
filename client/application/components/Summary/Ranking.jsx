@@ -11,6 +11,7 @@ const styles = (theme) => ({
     marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
     paddingBottom: theme.spacing.unit,
+    minHeight: '100px',
   },
   title: {
     textAlign: 'center',

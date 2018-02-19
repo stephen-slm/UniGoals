@@ -216,11 +216,11 @@ class Login extends React.Component {
               rows.
             </Typography>
             <UnitTable
+              isExample={this.state.isExample}
               yearIndex="example"
               tableIndex="example"
               firebase={this.props.firebase}
               unit={homePageData.units[Object.keys(homePageData.units)[2]]}
-              isExample={this.state.isExample}
             />
           </CardContent>
         </Card>

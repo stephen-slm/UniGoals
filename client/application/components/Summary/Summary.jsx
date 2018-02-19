@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 
@@ -137,14 +138,13 @@ class Summary extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <Icon
+        <IconButton
           style={{ display: this.props.isExample ? 'none' : undefined }}
           onClick={this.insertNewYear}
           className={classes.addButton}
-          color="primary"
         >
-          add
-        </Icon>
+          <Icon color="primary">add</Icon>
+        </IconButton>
         <Icon
           style={{ display: this.props.isExample ? 'none' : undefined }}
           onClick={this.showDeleteYear}
