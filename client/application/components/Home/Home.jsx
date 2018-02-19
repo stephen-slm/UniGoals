@@ -71,6 +71,8 @@ class Home extends React.Component {
     return (
       <div className={classes.root}>
         <Tabs
+          scrollable
+          scrollButtons="off"
           value={this.state.selectedId}
           indicatorColor="primary"
           textColor="primary"
