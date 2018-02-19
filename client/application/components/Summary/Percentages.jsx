@@ -115,6 +115,34 @@ class Perentages extends React.Component {
     };
   }
 
+  /**
+   * Calulates the users unit overal grade.
+   * @param {object} data user units
+   */
+  static calulateTotalGrade(data) {
+    if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
+      return 0;
+    }
+
+    let totalAchieved = 0;
+
+    _.forEach(data, (unit) => {
+      _.forEach(unit.content, (unitContent) => {
+        if (
+          !_.isNil(unitContent.weighting) &&
+          !_.isNil(unitContent.achieved) &&
+          (unitContent.weighting !== '' && unitContent.achieved !== '')
+        ) {
+          if (parseFloat(unitContent.achieved) > 0) {
+            totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
+          }
+        }
+      });
+    });
+
+    return parseFloat(totalAchieved / 100 / _.size(data)).toFixed(2);
+  }
+
   constructor() {
     super();
 
@@ -124,9 +152,11 @@ class Perentages extends React.Component {
   render() {
     const { classes } = this.props;
     let percentages;
+    let total = 0;
 
     if (this.props.isSummary) {
       percentages = Perentages.calculateAverageGradePercentSummary(this.props.units);
+      total = Perentages.calulateTotalGrade(this.props.units);
     } else {
       percentages = Perentages.calculateAverageGradePercent(this.props.unit.content);
     }
@@ -149,7 +179,7 @@ class Perentages extends React.Component {
               <Grid container justify="center" spacing={Number(8)}>
                 <Grid item>Average: {_.defaultTo(percentages.average, 0)}%</Grid>
                 <Grid item>Max: {_.defaultTo(percentages.max, 100)}%</Grid>
-                <Grid item>Total: {0}%</Grid>
+                <Grid item>Total: {total}%</Grid>
               </Grid>
             </Grid>
           </Grid>

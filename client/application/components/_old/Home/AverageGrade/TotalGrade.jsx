@@ -18,7 +18,11 @@ export default class TotalGrade extends React.Component {
 
     _.forEach(data, (unit) => {
       _.forEach(unit.content, (unitContent) => {
-        if (!_.isNil(unitContent.weighting) && !_.isNil(unitContent.achieved) && (unitContent.weighting !== '' && unitContent.achieved !== '')) {
+        if (
+          !_.isNil(unitContent.weighting) &&
+          !_.isNil(unitContent.achieved) &&
+          (unitContent.weighting !== '' && unitContent.achieved !== '')
+        ) {
           if (parseFloat(unitContent.achieved) > 0) {
             totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
           }
@@ -34,7 +38,10 @@ export default class TotalGrade extends React.Component {
     const totalGrade = TotalGrade.calulateTotalGrade(this.props.data);
 
     return (
-      <div className={`pt-card pt-elevation-1 ${this.props.className}`} style={{ width: 120, height: this.props.height }}>
+      <div
+        className={`pt-card pt-elevation-1 ${this.props.className}`}
+        style={{ width: 120, height: this.props.height }}
+      >
         <div style={{ textAlign: 'center', marginTop: 25 }}>
           <div>Total Grade</div>
           <Tooltip content="Total Grade" position={Position.BOTTOM}>{`${totalGrade}%`}</Tooltip>
@@ -49,7 +56,6 @@ TotalGrade.propTypes = {
   className: PropTypes.string,
   height: PropTypes.number,
 };
-
 
 TotalGrade.defaultProps = {
   data: null,
