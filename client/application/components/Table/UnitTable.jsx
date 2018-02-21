@@ -75,14 +75,10 @@ class UnitTable extends React.Component {
     this.insertRowBelow = this.insertRowBelow.bind(this);
     this.showDeleteUnitBox = this.showDeleteUnitBox.bind(this);
 
-    this.mouseOverEdit = this.mouseOverEdit.bind(this);
-    this.moveOutEdit = this.moveOutEdit.bind(this);
     this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
     this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
 
     this.state = {
-      editing: false,
-      showDeleteUnit: false,
       showInsertRow: false,
       isDeletingUnit: false,
     };
@@ -156,7 +152,7 @@ class UnitTable extends React.Component {
 
     if (this.props.isExample) return;
 
-    console.log(`Deleted ${this.state.tableTitle === null ? 'the' : this.state.tableTitle} unit`);
+    console.log(`Deleted ${this.props.unit.title === null ? 'the' : this.props.unit.title} unit`);
     const { tableIndex: unitTableIndex, yearIndex } = this.props;
 
     this.props.removeUnitTable(yearIndex, unitTableIndex);
@@ -241,18 +237,6 @@ class UnitTable extends React.Component {
     }
   }
 
-  mouseOverEdit() {
-    this.setState({
-      editing: true,
-    });
-  }
-
-  moveOutEdit() {
-    this.setState({
-      editing: false,
-    });
-  }
-
   moveOverShowInsert() {
     this.setState({
       showInsertRow: true,
@@ -282,8 +266,8 @@ class UnitTable extends React.Component {
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
           title={this.props.unit.title}
-          handleDelete={this.deleteUnitTable}
-          handleClose={this.showDeleteUnitBox}
+          onDelete={this.deleteUnitTable}
+          onClose={this.showDeleteUnitBox}
         />
         <EditableText
           className={classes.title}

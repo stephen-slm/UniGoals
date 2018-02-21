@@ -9,6 +9,7 @@ import Icon from 'material-ui/Icon';
 import * as constants from '../../utils/constants';
 
 import UnitTable from '../Table/UnitTable';
+import Expandable from '../Table/Expandable';
 
 const styles = (theme) => ({
   root: {
@@ -71,7 +72,7 @@ class Tables extends React.Component {
         </Button>
         {_.map(this.props.units, (unit, index) => (
           <div key={index} id={`${index}`}>
-            <UnitTable
+            <Expandable
               tableIndex={index}
               yearIndex={this.props.yearIndex}
               insertUnitRow={this.props.insertUnitRow}
