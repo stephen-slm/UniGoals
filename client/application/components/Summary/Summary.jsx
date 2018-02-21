@@ -11,6 +11,7 @@ import _ from 'lodash';
 import Ranking from './Ranking';
 import Percentages from './Percentages';
 import EditableText from '../Utilities/EditableText';
+import DeleteModule from '../Utilities/DeleteModule';
 
 import * as constants from '../../utils/constants';
 
@@ -71,6 +72,7 @@ class Summary extends React.Component {
     this.insertNewYear = this.insertNewYear.bind(this);
 
     this.state = {
+      isDeletingYear: false,
       currentWeek: Summary.getCurrentYearWeek(),
       isSummary: true,
       yearTitle: props.yearTitle,
@@ -138,6 +140,13 @@ class Summary extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
+        <DeleteModule
+          disabled={this.props.isExample}
+          open={this.state.isDeletingYear}
+          title={this.props.yearTitle}
+          onDelete={this.deleteSelectedYear}
+          onClose={this.showDeleteYear}
+        />
         <IconButton
           style={{ display: this.props.isExample ? 'none' : undefined }}
           onClick={this.insertNewYear}
