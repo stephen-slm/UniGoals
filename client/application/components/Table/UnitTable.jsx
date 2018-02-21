@@ -10,7 +10,13 @@ import IconButton from 'material-ui/IconButton';
 
 import * as constants from '../../utils/constants';
 import Percentages from '../Summary/Percentages';
-import EditableText from './EditableText';
+import EditableText from '../Utilities/EditableText';
+import DeleteModule from '../Utilities/DeleteModule';
+
+/**
+ * todo: look into doing this for diplaying and hiding tables for just looking at the content
+ * https://material-ui-next.com/utils/transitions/
+ */
 
 const styles = (theme) => ({
   root: {
@@ -58,6 +64,7 @@ class UnitTable extends React.Component {
     super();
 
     this.calculateTotal = this.calculateTotal.bind(this);
+    this.deleteUnitTable = this.deleteUnitTable.bind(this);
 
     this.updateRowContent = this.updateRowContent.bind(this);
     this.updateRowCententDatabase = this.updateRowCententDatabase.bind(this);
@@ -271,6 +278,13 @@ class UnitTable extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
+        <DeleteModule
+          disabled={this.props.isExample}
+          open={this.state.isDeletingUnit}
+          title={this.props.unit.title}
+          handleDelete={this.deleteUnitTable}
+          handleClose={this.showDeleteUnitBox}
+        />
         <EditableText
           className={classes.title}
           maxLength={constants.UNIT.TITLE.MAX}

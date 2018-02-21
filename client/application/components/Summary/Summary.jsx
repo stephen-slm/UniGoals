@@ -10,7 +10,7 @@ import { withStyles } from 'material-ui/styles';
 import _ from 'lodash';
 import Ranking from './Ranking';
 import Percentages from './Percentages';
-import EditableText from '../Table/EditableText';
+import EditableText from '../Utilities/EditableText';
 
 import * as constants from '../../utils/constants';
 
