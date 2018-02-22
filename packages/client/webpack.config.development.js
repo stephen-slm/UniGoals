@@ -1,5 +1,4 @@
 const DashboardPlugin = require('webpack-dashboard/plugin');
-const FlowBabelWebpackPlugin = require('flow-babel-webpack-plugin');
 const path = require('path');
 
 const BUILD_DIR = path.resolve(__dirname, 'public/components/js/');
@@ -22,7 +21,7 @@ const config = {
       },
     ],
   },
-  plugins: [new DashboardPlugin(), new FlowBabelWebpackPlugin()],
+  plugins: [new DashboardPlugin()],
   resolve: {
     extensions: ['.js', '.jsx'],
   },

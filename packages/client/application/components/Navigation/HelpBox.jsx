@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Dialog, {
   DialogActions,
   DialogContent,
@@ -8,7 +9,7 @@ import Dialog, {
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
 
-class HelpBox extends React.Component<> {
+class HelpBox extends React.Component {
   constructor(props) {
     super(props);
 
@@ -32,7 +33,7 @@ class HelpBox extends React.Component<> {
             If you have any problems or help please ask below and I will email you back!
           </DialogContentText>
           <TextField
-            inputRef={(ref: Event) => {
+            inputRef={(ref) => {
               this.helpText = ref;
             }}
             label="Feedback"
@@ -57,6 +58,16 @@ class HelpBox extends React.Component<> {
     );
   }
 }
+
+HelpBox.propTypes = {
+  fullWidth: PropTypes.bool,
+  minLength: PropTypes.number,
+  maxLength: PropTypes.number,
+  error: PropTypes.bool,
+  open: PropTypes.bool,
+  handleClose: PropTypes.func,
+  handleSubmit: PropTypes.func.isRequired,
+};
 
 HelpBox.defaultProps = {
   error: false,

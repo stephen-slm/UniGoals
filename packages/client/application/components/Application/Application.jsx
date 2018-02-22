@@ -70,7 +70,7 @@ export default class Application extends React.Component {
       return (
         <Router>
           <MuiThemeProvider theme={theme}>
-            <div className={style.applicationStyle}>
+            <div>
               <Navigation
                 history={this.history}
                 routePaths={this.routePaths}
@@ -127,7 +127,7 @@ export default class Application extends React.Component {
     return (
       <Router>
         <MuiThemeProvider theme={theme}>
-          <div className={style.applicationStyle}>
+          <div>
             <Route
               exact
               path="*"
