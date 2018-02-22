@@ -255,7 +255,12 @@ class UnitTable extends React.Component {
     const totals = this.calculateTotal();
 
     return (
-      <Paper className={classes.root} elevation={3}>
+      <Paper
+        className={classes.root}
+        elevation={3}
+        onMouseEnter={this.moveOverShowInsert}
+        onMouseLeave={this.moveHideShowInsert}
+      >
         <DeleteModule
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
