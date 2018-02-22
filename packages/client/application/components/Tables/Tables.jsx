@@ -15,7 +15,7 @@ const styles = (theme) => ({
     maxWidth: '75%',
     marginBottom: theme.spacing.unit * 5,
     paddingBottom: theme.spacing.unit * 3,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('sm')]: {
       maxWidth: '95%',
     },
   },

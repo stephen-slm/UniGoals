@@ -24,7 +24,7 @@ const styles = (theme) => ({
     textAlign: 'center',
   },
   tableWrapper: {
-    overflow: 'auto',
+    overflow: 'scroll',
     minWidth: '30%',
   },
   table: {
