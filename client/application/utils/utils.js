@@ -25,6 +25,18 @@ export function getAchievedTotalFromUnit(unit) {
   return total;
 }
 
+export function calculateTotalGradeStandard(unit) {
+  let achieved = 0;
+
+  _.forEach(unit, (row) => {
+    if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
+      achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
+    }
+  });
+
+  return parseFloat(achieved / 100).toFixed(2);
+}
+
 /**
  * Applying the weighiting to all the units, getting the overal unit total and ordering
  * the content based on this information with title, total and a link based on the

@@ -9,18 +9,21 @@ import ExpansionPanel, {
 } from 'material-ui/ExpansionPanel';
 
 import UnitTable from './UnitTable';
+import { calculateTotalGradeStandard } from '../../utils/utils';
 
 const styles = (theme) => ({
   root: {
-    margin: '25px auto',
+    margin: '0px auto',
     maxWidth: '80%',
+    [theme.breakpoints.down('md')]: {
+      maxWidth: '100%',
+    },
   },
   heading: {
     fontSize: theme.typography.pxToRem(15),
   },
   secondaryHeading: {
-    fontSize: theme.typography.pxToRem(15),
-    color: theme.palette.text.secondary,
+    float: 'right',
   },
   icon: {
     verticalAlign: 'bottom',
@@ -41,6 +44,8 @@ const Expandable = (props) => {
   const { classes } = props;
 
   const passableProps = Object.assign({}, props);
+  const total = calculateTotalGradeStandard(props.unit.content);
+
   delete passableProps.classes;
 
   return (
@@ -51,7 +56,7 @@ const Expandable = (props) => {
             <Typography className={classes.heading}>{props.unit.title}</Typography>
           </div>
           <div className={classes.column}>
-            <Typography className={classes.secondaryHeading}>Display total percentage</Typography>
+            <Typography className={classes.secondaryHeading}>Total: {total}%</Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.details }}>
@@ -66,6 +71,7 @@ Expandable.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   unit: PropTypes.shape({
     title: PropTypes.string,
+    content: PropTypes.shape({}),
   }).isRequired,
 };
 

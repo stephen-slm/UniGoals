@@ -13,19 +13,12 @@ import Percentages from '../Summary/Percentages';
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
 
-/**
- * todo: look into doing this for diplaying and hiding tables for just looking at the content
- * https://material-ui-next.com/utils/transitions/
- */
-
 const styles = (theme) => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
   },
   title: {
     textAlign: 'center',
