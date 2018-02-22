@@ -28,6 +28,7 @@ const styles = (theme) => ({
     minWidth: '30%',
   },
   table: {
+    overflow: 'auto',
     maxWidth: '75%',
     margin: '0 auto',
   },
