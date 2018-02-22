@@ -10,6 +10,8 @@ import HelpIcon from 'material-ui-icons/Help';
 import ExitIcon from 'material-ui-icons/ExitToApp';
 import Badge from 'material-ui/Badge';
 import MailIcon from 'material-ui-icons/Mail';
+
+import SignOutBox from './SignOutBox';
 import HelpBox from './HelpBox';
 
 import * as constants from '../../utils/constants';
@@ -44,6 +46,7 @@ class Navigation extends React.Component {
     };
 
     this.submitHelpMessage = this.submitHelpMessage.bind(this);
+    this.signOut = this.signOut.bind(this);
 
     this.showNotifications = this.showNotifications.bind(this);
     this.showHelpBox = this.showHelpBox.bind(this);
@@ -84,6 +87,10 @@ class Navigation extends React.Component {
     this.setState({
       showSignOut: !this.state.showSignOut,
     });
+  }
+
+  signOut() {
+    this.props.history.go('/signout');
   }
 
   /**
@@ -127,6 +134,12 @@ class Navigation extends React.Component {
     return (
       <div>
         <AppBar position="static" color="primary" className={classes.root}>
+          <SignOutBox
+            onClose={this.showSignOutBox}
+            onSignOut={this.signOut}
+            open={this.state.showSignOut}
+            name={this.props.profile.name}
+          />
           <HelpBox
             handleSubmit={this.submitHelpMessage}
             error={this.state.invalidhelpMessage}
@@ -172,7 +185,6 @@ Navigation.propTypes = {
     getNotificationRef: PropTypes.func,
   }).isRequired,
   children: PropTypes.shape({}).isRequired,
-  routePaths: PropTypes.shape().isRequired,
   version: PropTypes.string.isRequired,
   removeNotification: PropTypes.func.isRequired,
   updateNotifications: PropTypes.func.isRequired,
@@ -181,6 +193,9 @@ Navigation.propTypes = {
     email: PropTypes.string,
     course_university: PropTypes.string,
     given_name: PropTypes.string,
+  }).isRequired,
+  history: PropTypes.shape({
+    go: PropTypes.func,
   }).isRequired,
 };
 
