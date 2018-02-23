@@ -13,7 +13,7 @@ import Percentages from '../Summary/Percentages';
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
@@ -24,8 +24,9 @@ const styles = (theme) => ({
     textAlign: 'center',
   },
   tableWrapper: {
-    overflow: 'scroll',
+    overflow: 'auto',
     minWidth: '30%',
+    '-webkit-overflow-scrolling': 'touch',
   },
   table: {
     overflow: 'auto',
@@ -83,7 +84,7 @@ class UnitTable extends React.Component {
     let weighting = 0;
     let achieved = 0;
 
-    _.forEach(this.props.unit.content, (row) => {
+    _.forEach(this.props.unit.content, row => {
       if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
         achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
       }
@@ -111,8 +112,8 @@ class UnitTable extends React.Component {
     } else {
       this.props.firebase
         .insertUnitRowById(yearIndex, tableIndex)
-        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch((error) => console.log(error.message));
+        .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
+        .catch(error => console.log(error.message));
     }
   }
 
@@ -134,7 +135,7 @@ class UnitTable extends React.Component {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
       this.props.firebase
         .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
-        .catch((error) => console.log(error.message));
+        .catch(error => console.log(error.message));
     }
   }
 
@@ -255,12 +256,7 @@ class UnitTable extends React.Component {
     const totals = this.calculateTotal();
 
     return (
-      <Paper
-        className={classes.root}
-        elevation={3}
-        onMouseEnter={this.moveOverShowInsert}
-        onMouseLeave={this.moveHideShowInsert}
-      >
+      <Paper className={classes.root} elevation={3}>
         <DeleteModule
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
@@ -283,6 +279,7 @@ class UnitTable extends React.Component {
           className={classes.tableWrapper}
           onMouseEnter={this.moveOverShowInsert}
           onMouseLeave={this.moveHideShowInsert}
+          onTouchStart={this.moveOverShowInsert}
         >
           <Table className={classes.table}>
             <TableHead>
@@ -304,8 +301,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="Section"
                       maxLength={constants.TABLE.NAME.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'name')}
-                      onConfirm={(change) => this.updateRowCententDatabase(change, index, 'name')}
+                      onChange={change => this.updateRowContent(change, index, 'name')}
+                      onConfirm={change => this.updateRowCententDatabase(change, index, 'name')}
                       value={_.defaultTo(row.name, 'Section')}
                     />
                   </TableCell>
@@ -313,8 +310,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Weighting"
                       maxLength={constants.TABLE.WEIGHT.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'weighting')}
-                      onConfirm={(change) =>
+                      onChange={change => this.updateRowContent(change, index, 'weighting')}
+                      onConfirm={change =>
                         this.updateRowCententDatabase(change, index, 'weighting')
                       }
                       value={_.defaultTo(row.weighting, '0')}
@@ -324,10 +321,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Achieved"
                       maxLength={constants.TABLE.ACHIEVED.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'achieved')}
-                      onConfirm={(change) =>
-                        this.updateRowCententDatabase(change, index, 'achieved')
-                      }
+                      onChange={change => this.updateRowContent(change, index, 'achieved')}
+                      onConfirm={change => this.updateRowCententDatabase(change, index, 'achieved')}
                       value={_.defaultTo(row.achieved, '0')}
                     />
                   </TableCell>
