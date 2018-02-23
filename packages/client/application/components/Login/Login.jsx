@@ -117,9 +117,8 @@ class Login extends React.Component {
 
     return new Promise((resolve, reject) => {
       if (!reauth && login.additionalUserInfo.isNewUser) {
-        const profile = this.props.firebase.generateProfileFromLogin(login);
         this.props.firebase
-          .createNewUser(profile)
+          .createNewUser()
           .then(() => this.props.firebase.getUserContent())
           .then((content) => this.updateContentForUser(content))
           .then(() => this.props.firebase.updateLoginCountAndDate())
