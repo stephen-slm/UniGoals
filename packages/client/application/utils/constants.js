@@ -27,15 +27,7 @@ export const TABLE = {
 };
 
 // The attributes that will be pulled for storing for the users profile when they first sign up
-export const PROFILE_SELECTION = [
-  'email',
-  'family_name',
-  'given_name',
-  'hd',
-  'name',
-  'picture',
-  'verified_email',
-];
+export const PROFILE_SELECTION = ['email', 'displayName', 'photoURL', 'emailVerified'];
 
 export const UNIT = {
   TITLE: {
