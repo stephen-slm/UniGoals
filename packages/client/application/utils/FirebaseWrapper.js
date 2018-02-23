@@ -10,11 +10,13 @@ export default class FirebaseWrapper {
     firebase.initializeApp(this.configuration);
 
     this.database = firebase.database();
+    /**
+     * Ensuring that all future authentication request and persisted in the current state and
+     * continuing to use this state for the following refreshes on the webite, meaning that
+     * unless the user clicks that they want to sign out, they will always be logged back
+     * into the site automatically from that same device.
+     */
     this.authentication = firebase.auth();
-
-    // This is temporary before adjusting to sessions
-    this.authentication.signOut();
-
     this.provider = new firebase.auth.GoogleAuthProvider();
   }
 
@@ -25,15 +27,9 @@ export default class FirebaseWrapper {
   authenticate(type) {
     switch (type) {
       case 'mobile':
-        return this.authentication
-          .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-          .then(() => this.authentication.signInWithRedirect(this.provider))
-          .catch(error => Promise.reject(error));
+        return this.authentication.signInWithRedirect(this.provider);
       default:
-        return this.authentication
-          .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-          .then(() => this.authentication.signInWithPopup(this.provider))
-          .catch(error => Promise.reject(error));
+        return this.authentication.signInWithPopup(this.provider);
     }
   }
 
@@ -53,8 +49,8 @@ export default class FirebaseWrapper {
     return this.database
       .ref('users/example')
       .once('value')
-      .then(user => Promise.resolve(user.val()))
-      .catch(error => Promise.reject(error));
+      .then((user) => Promise.resolve(user.val()))
+      .catch((error) => Promise.reject(error));
   }
 
   /**
@@ -101,8 +97,8 @@ export default class FirebaseWrapper {
     return this.database
       .ref(`users/${this.getUid()}`)
       .once('value')
-      .then(user => Promise.resolve(user.val()))
-      .catch(error => Promise.reject(error));
+      .then((user) => Promise.resolve(user.val()))
+      .catch((error) => Promise.reject(error));
   }
 
   /**
@@ -137,7 +133,7 @@ export default class FirebaseWrapper {
     return this.database
       .ref(`users/${this.getUid()}/profile/login_count`)
       .once('value')
-      .then(snapshot => {
+      .then((snapshot) => {
         const count = snapshot.val();
         const newLoginCount = count === null || count === undefined ? 0 : count + 1;
         return this.database.ref(`users/${this.getUid()}/profile/login_count`).set(newLoginCount);
@@ -210,13 +206,16 @@ export default class FirebaseWrapper {
     return this.database
       .ref(`users/${this.getUid()}/years/${yearIndex}/units`)
       .once('value')
-      .then(currentUnitState => {
+      .then((currentUnitState) => {
         if (currentUnitState.numChildren() >= constants.UNIT.MAX) {
           return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`));
         }
 
         const insertUnitRef = this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`);
-        const insertKey = insertUnitRef.push({ title: 'New Unit', content: {} });
+        const insertKey = insertUnitRef.push({
+          title: 'New Unit',
+          content: {},
+        });
         return Promise.resolve(insertKey.key);
       });
   }
@@ -230,7 +229,7 @@ export default class FirebaseWrapper {
     return this.database
       .ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`)
       .once('value')
-      .then(currentRowState => {
+      .then((currentRowState) => {
         if (currentRowState.numChildren() >= constants.UNIT.ENTRY_MAX) {
           return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`));
         }
@@ -273,7 +272,7 @@ export default class FirebaseWrapper {
         timestamp: Date.now(),
       })
       .then(() => Promise.resolve(true))
-      .catch(error => Promise.reject(error));
+      .catch((error) => Promise.reject(error));
   }
 
   /**
@@ -283,7 +282,7 @@ export default class FirebaseWrapper {
   deleteYear(yearIndex) {
     const yearsRef = this.database.ref(`users/${this.getUid()}/years`);
 
-    return yearsRef.once('value').then(years => {
+    return yearsRef.once('value').then((years) => {
       if (_.size(years.val()) === constants.YEAR.MIN) {
         return Promise.reject(new Error(`You cannot have less than ${constants.YEAR.MIN} years`));
       }
@@ -310,7 +309,7 @@ export default class FirebaseWrapper {
 
     return yearsRef
       .once('value')
-      .then(yearsData => {
+      .then((yearsData) => {
         const years = yearsData.val();
         const yearLen = Object.keys(years).length + 1;
         title = `Year ${yearLen} ${getHappyEmoji()}`;
@@ -319,7 +318,7 @@ export default class FirebaseWrapper {
         }
         return this.createNewYear(title);
       })
-      .then(newYearRef => {
+      .then((newYearRef) => {
         const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${newYearRef.key}/units`);
         const sampleKey = sampleOneRef.push({ title: 'New Unit', content: {} });
         return { yearKey: newYearRef.key, title, unitKey: sampleKey.key };
@@ -334,15 +333,18 @@ export default class FirebaseWrapper {
     const firstYear = this.createNewYear();
 
     const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${firstYear.key}/units`);
-    const sampleOneKey = sampleOneRef.push({ title: 'Example Unit', content: {} });
+    const sampleOneKey = sampleOneRef.push({
+      title: 'Example Unit',
+      content: {},
+    });
 
-    this.insertUnitRowById(firstYear.key, sampleOneKey.key).then(unitRow => {
+    this.insertUnitRowById(firstYear.key, sampleOneKey.key).then((unitRow) => {
       this.updateUnitRowSection('Coursework', firstYear.key, sampleOneKey.key, unitRow, 'name');
       this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
       this.updateUnitRowSection('71', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
     });
 
-    this.insertUnitRowById(firstYear.key, sampleOneKey.key).then(unitRow => {
+    this.insertUnitRowById(firstYear.key, sampleOneKey.key).then((unitRow) => {
       this.updateUnitRowSection('Exam', firstYear.key, sampleOneKey.key, unitRow, 'name');
       this.updateUnitRowSection('50', firstYear.key, sampleOneKey.key, unitRow, 'weighting');
       this.updateUnitRowSection('31', firstYear.key, sampleOneKey.key, unitRow, 'achieved');
@@ -358,7 +360,7 @@ export default class FirebaseWrapper {
     return this.database
       .ref('/universities/courses')
       .once('value')
-      .then(courses => Promise.resolve(courses.val()));
+      .then((courses) => Promise.resolve(courses.val()));
   }
 
   /**
@@ -368,7 +370,7 @@ export default class FirebaseWrapper {
     return this.database
       .ref('/universities/uk')
       .once('value')
-      .then(list => Promise.resolve(list.val()));
+      .then((list) => Promise.resolve(list.val()));
   }
 
   /**
@@ -378,12 +380,28 @@ export default class FirebaseWrapper {
     return this.database
       .ref('/universities')
       .once('value')
-      .then(content => Promise.resolve(content.val()));
+      .then((content) => Promise.resolve(content.val()));
   }
 
   // Gets a built ref for the live listeners for updated notifications
   getNotificationRef() {
     return this.database.ref(`users/${this.getUid()}/notifications`);
+  }
+
+  /**
+   * Builds the profile up that would be used to create users while also can be used for displaying
+   * data if its not required from the server when making the first gather of information.
+   * @param {loginObject} login the login object that is returned when authenticating with google
+   */
+  static generateProfileFromLogin(login) {
+    const profileSelectionList = constants.PROFILE_SELECTION;
+    const profile = _.pick(login.additionalUserInfo.profile, profileSelectionList);
+
+    return Object.assign(profile, {
+      token: login.credential.accessToken,
+      hd: _.isNil(profile.hd) ? profile.email.split('@')[1] : profile.hd,
+      new: login.additionalUserInfo.isNewUser,
+    });
   }
 
   /**

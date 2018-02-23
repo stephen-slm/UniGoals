@@ -9,7 +9,6 @@ import { CircularProgress } from 'material-ui/Progress';
 
 import * as homePageData from './homePageData';
 import { isMobileDevice } from '../../utils/utils';
-import * as constants from '../../utils/constants';
 
 import Summary from '../Summary/Summary';
 import UnitTable from '../Table/UnitTable';
@@ -40,21 +39,6 @@ const styles = (theme) => ({
 });
 
 class Login extends React.Component {
-  /**
-   * takes the google login and generates a users profile from the data
-   * @param {object} loginResult Google login result
-   */
-  static generateProfile(loginResult) {
-    const selectionList = constants.PROFILE_SELECTION;
-    const profile = _.pick(loginResult.additionalUserInfo.profile, selectionList);
-
-    return Object.assign(profile, {
-      token: loginResult.credential.accessToken,
-      hd: _.isNil(profile.hd) ? profile.email.split('@')[1] : profile.hd,
-      new: loginResult.additionalUserInfo.isNewUser,
-    });
-  }
-
   constructor() {
     super();
 
@@ -64,28 +48,39 @@ class Login extends React.Component {
     this.loginWithGoogle = this.loginWithGoogle.bind(this);
 
     this.state = {
-      loading: isMobileDevice() === true,
+      loading: true,
       isMobile: isMobileDevice(),
       isExample: true,
     };
   }
 
-  // Checks to see if its a redirect with content
+  /**
+   * Checking to see if its logging in with a redirection or able to automatically log the user
+   * back in with a existing session that is persisted.
+   */
   componentDidMount() {
-    if (this.state.isMobile) {
-      let loginContent = null;
+    const { authentication } = this.props.firebase;
 
-      this.props.firebase.authentication
-        .getRedirectResult()
-        .then((login) => {
-          loginContent = login;
-          if (_.isNil(login.credential)) return Promise.resolve();
-          return this.props.firebase.authentication.signInWithCredential(loginContent.credential);
-        })
-        .then(() => this.authenticate(loginContent))
-        .then(() => this.setState({ loading: false }))
-        .catch((error) => this.handleAuthenticationError(error));
-    }
+    authentication.getRedirectResult().then((login) => {
+      if (!_.isNil(login.user)) {
+        authentication
+          .signInWithCredential(login.credential)
+          .then(() => this.authenticate(login))
+          .catch((error) => this.handleAuthenticationError(error));
+      }
+    });
+
+    // This will wait for the redirection results to complete as the state would not be checked
+    // during the login process, this means that its safe to not have a check for this as it
+    // would never be hit if a device was logging in from the home page, otherwise it will get
+    // the local session and login again if it exists.
+    authentication.onAuthStateChanged((login) => {
+      if (!_.isNil(login)) {
+        this.authenticate(login, true).catch((error) => this.handleAuthenticationError(error));
+      } else {
+        this.setState({ loading: false });
+      }
+    });
   }
 
   /**
@@ -93,13 +88,12 @@ class Login extends React.Component {
    * @param {object} user firebase user content
    * @param {boolean} example if is a exmaple user
    */
-  updateContentForUser(user, example = false) {
-    const content = user;
-    content.profile.exampleUser = example;
+  updateContentForUser(user, exampleUser = false) {
+    const profile = Object.assign(user.profile, { exampleUser });
 
-    this.props.updateProfile(content.profile);
-    this.props.updateYears(content.years);
-    this.props.updateNotifications(content.notifications);
+    this.props.updateProfile(profile);
+    this.props.updateYears(user.years);
+    this.props.updateNotifications(user.notifications);
     return Promise.resolve();
   }
 
@@ -109,14 +103,21 @@ class Login extends React.Component {
     this.setState({ loading: false });
   }
 
-  // proceeds to process the login details, creating accounts if needed and handling content
-  authenticate(login) {
-    if (_.isNil(login.credential)) return Promise.resolve();
+  /**
+   * Takes in a google authentication object, this object would then be used to create the new user
+   * or gather the users content that would then be used to build the following images.
+   * @param {AuthObject} login A authentication object based on reauthentication and authentication
+   * @param {boolean} reauth If the user is reauthenticating or logging (session based)
+   *
+   * TODO: I need to look into making this a single check to create the user, there is duplicate
+   * code that can be removed in this case.
+   */
+  authenticate(login, reauth = false) {
+    if (_.isNil(login)) return Promise.resolve();
 
     return new Promise((resolve, reject) => {
-      const profile = Login.generateProfile(login);
-
-      if (profile.new) {
+      if (!reauth && login.additionalUserInfo.isNewUser) {
+        const profile = this.props.firebase.generateProfileFromLogin(login);
         this.props.firebase
           .createNewUser(profile)
           .then(() => this.props.firebase.getUserContent())
@@ -136,18 +137,17 @@ class Login extends React.Component {
   }
 
   loginWithGoogle() {
-    const { provider, authentication: auth } = this.props.firebase;
-
+    const { provider, authentication } = this.props.firebase;
     this.setState({ loading: true });
 
     if (this.state.isMobile) {
-      auth.signInWithRedirect(provider);
-    } else {
-      auth
-        .signInWithPopup(provider)
-        .then((login) => this.authenticate(login))
-        .catch((error) => this.handleAuthenticationError(error));
+      return authentication.signInWithRedirect(provider);
     }
+
+    return authentication
+      .signInWithPopup(provider)
+      .then((login) => this.authenticate(login))
+      .catch((error) => this.handleAuthenticationError(error));
   }
 
   render() {
@@ -239,6 +239,7 @@ Login.propTypes = {
     createNewUser: PropTypes.func,
     getUserContent: PropTypes.func,
     updateLoginCountAndDate: PropTypes.func,
+    generateProfileFromLogin: PropTypes.func,
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
