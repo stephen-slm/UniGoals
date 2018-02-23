@@ -9,7 +9,7 @@ import Icon from 'material-ui/Icon';
 import * as constants from '../../utils/constants';
 import Expandable from '../Table/Expandable';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     margin: '0 auto',
     maxWidth: '75%',
@@ -55,8 +55,8 @@ class Tables extends React.Component {
     } else {
       this.props.firebase
         .insertUnitById(this.props.yearIndex)
-        .then((ref) => this.insertTableAndNavigate(ref))
-        .catch((error) => console.log(error.message));
+        .then(ref => this.insertTableAndNavigate(ref))
+        .catch(error => console.log(error.message));
     }
   }
 
@@ -68,23 +68,24 @@ class Tables extends React.Component {
         <Button color="primary" className={classes.button} onClick={this.addTable}>
           <Icon>add</Icon> Add Unit
         </Button>
-        {_.map(this.props.units, (unit, index) => (
-          <div key={index} id={`${index}`}>
-            <Expandable
-              tableIndex={index}
-              yearIndex={this.props.yearIndex}
-              insertUnitRow={this.props.insertUnitRow}
-              updateRowContent={this.props.updateRowContent}
-              removeUnitRow={this.props.removeUnitRow}
-              updateUnitTitle={this.props.updateUnitTitle}
-              addUnitTable={this.props.addUnitTable}
-              removeUnitTable={this.props.removeUnitTable}
-              firebase={this.props.firebase}
-              unit={unit}
-              isExample={this.props.isExample}
-            />
-          </div>
-        ))}
+        {!_.isNil(this.props.units) &&
+          _.map(this.props.units, (unit, index) => (
+            <div key={index} id={`${index}`}>
+              <Expandable
+                tableIndex={index}
+                yearIndex={this.props.yearIndex}
+                insertUnitRow={this.props.insertUnitRow}
+                updateRowContent={this.props.updateRowContent}
+                removeUnitRow={this.props.removeUnitRow}
+                updateUnitTitle={this.props.updateUnitTitle}
+                addUnitTable={this.props.addUnitTable}
+                removeUnitTable={this.props.removeUnitTable}
+                firebase={this.props.firebase}
+                unit={unit}
+                isExample={this.props.isExample}
+              />
+            </div>
+          ))}
       </Paper>
     );
   }
@@ -96,7 +97,7 @@ Tables.propTypes = {
     insertUnitById: PropTypes.func,
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
-  units: PropTypes.shape({}).isRequired,
+  units: PropTypes.shape({}),
   insertUnitRow: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
@@ -108,6 +109,7 @@ Tables.propTypes = {
 
 Tables.defaultProps = {
   isExample: false,
+  units: null,
 };
 
 export default withStyles(styles)(Tables);

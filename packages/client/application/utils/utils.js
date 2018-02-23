@@ -10,7 +10,7 @@ export function isMobileDevice() {
 export function getAchievedTotalFromUnit(unit) {
   let total = 0;
 
-  _.forEach(unit.content, (content) => {
+  _.forEach(unit.content, content => {
     if (
       !_.isNil(content.weighting) &&
       !_.isNil(content.achieved) &&
@@ -28,7 +28,7 @@ export function getAchievedTotalFromUnit(unit) {
 export function calculateTotalGradeStandard(unit) {
   let achieved = 0;
 
-  _.forEach(unit, (row) => {
+  _.forEach(unit, row => {
     if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
       achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
     }
@@ -50,7 +50,7 @@ export function calculateTotalGradeStandard(unit) {
 export function calculateTopFiveRankings(units, history) {
   // return early if the size of the data is either 0 on the units or first unit data.
   if (_.size(units) <= 0 || _.size(units[Object.keys(units)[0]]) <= 0) {
-    return 0;
+    return [];
   }
 
   const totalGradesList = _.map(units, (unit, index) => {
@@ -63,7 +63,12 @@ export function calculateTopFiveRankings(units, history) {
     };
   });
 
-  return _.reverse(_.sortBy(totalGradesList, (o) => o.total));
+  return _.reverse(_.sortBy(totalGradesList, o => o.total));
+}
+
+export function getHappyEmoji() {
+  const emojis = ['🎉', '🎆', '🎈', '❤️', '💪', '🔥', '😍', '👨‍🎓👩‍🎓', '🐙', '🤷'];
+  return emojis[_.random(0, emojis.length - 1)];
 }
 
 export default isMobileDevice;

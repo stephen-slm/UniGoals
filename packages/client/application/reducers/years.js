@@ -72,7 +72,11 @@ export default function years(state = {}, action) {
         insertingUnitRow[yearIndex].units[insertingTableIndex].content = {};
       }
 
-      insertingUnitRow[yearIndex].units[insertingTableIndex].content[insertingRowId] = { name: '', weighting: '0', achieved: '0' };
+      insertingUnitRow[yearIndex].units[insertingTableIndex].content[insertingRowId] = {
+        name: '',
+        weighting: '0',
+        achieved: '0',
+      };
       return insertingUnitRow;
     }
 
@@ -99,8 +103,9 @@ export default function years(state = {}, action) {
 
       const updateUnitContent = Object.assign({}, state);
 
-      updateUnitContent[yearIndex].units[updateUnitTableIndex]
-        .content[updateUnitRowIndex][updateUnitColumnIndex] = updateUnitChange;
+      updateUnitContent[yearIndex].units[updateUnitTableIndex].content[updateUnitRowIndex][
+        updateUnitColumnIndex
+      ] = updateUnitChange;
       return updateUnitContent;
     }
 
@@ -113,8 +118,11 @@ export default function years(state = {}, action) {
 
       if (_.isNil(updateTableIndex) || !_.isString(updateTableIndex)) {
         return state;
-      } else if (_.isNil(updateUnitTitle) ||
-        !_.isString(updateUnitTitle) || updateUnitTitle.length > constants.UNIT.TITLE.MAX) {
+      } else if (
+        _.isNil(updateUnitTitle) ||
+        !_.isString(updateUnitTitle) ||
+        updateUnitTitle.length > constants.UNIT.TITLE.MAX
+      ) {
         return state;
       }
 
@@ -134,7 +142,15 @@ export default function years(state = {}, action) {
      */
     case actionTypes.ADD_UNIT_TABLE: {
       const unitTableAdd = Object.assign({}, state);
-      unitTableAdd[action.yearIndex].units[action.key] = { title: '', content: {} };
+
+      console.log(unitTableAdd);
+
+      if (_.isNil(unitTableAdd[action.yearIndex].units)) {
+        unitTableAdd[action.yearIndex].units = {};
+        console.log(unitTableAdd);
+      }
+
+      unitTableAdd[action.yearIndex].units[action.key] = { title: 'New Unit', content: {} };
       return unitTableAdd;
     }
 
@@ -142,7 +158,6 @@ export default function years(state = {}, action) {
       const newYearKey = action.yearKey;
       const newYearTitle = action.title;
       const newYearUnitKey = action.unitKey;
-
 
       if (_.isNil(newYearKey) || !_.isString(newYearKey)) {
         return state;
