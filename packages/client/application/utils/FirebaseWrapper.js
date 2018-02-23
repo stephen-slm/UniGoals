@@ -393,32 +393,36 @@ export default class FirebaseWrapper {
    * data if its not required from the server when making the first gather of information.
    * @param {loginObject} login the login object that is returned when authenticating with google
    */
-  generateProfileFromLogin() {
-    const { currentUser } = this.authentication;
+  static generateProfileFromLogin(login) {
     const profileSelectionList = constants.PROFILE_SELECTION;
-    const profile = _.pick(currentUser, profileSelectionList);
+    const profile = _.pick(login.additionalUserInfo.profile, profileSelectionList);
 
     return Object.assign(profile, {
-      hd: profile.email.split('@')[1],
+      token: login.credential.accessToken,
+      hd: _.isNil(profile.hd) ? profile.email.split('@')[1] : profile.hd,
+      new: login.additionalUserInfo.isNewUser,
     });
   }
 
   /**
    * creates a new user for which is called when a new sign in user happens
+   * @param profile the profile of the user that is being created
    * @returns {firebase.Promise.<*>}
    */
-  createNewUser() {
-    const profile = this.generateProfileFromLogin();
+  createNewUser(profile) {
+    const {
+      email, family_name: familyName, given_name: givenName, hd, name, picture,
+    } = profile;
 
     return this.database
       .ref(`users/${this.getUid()}/profile`)
       .set({
-        given_name: profile.displayName.split(' ')[0],
-        family_name: profile.displayName.split(' ')[1],
-        email: profile.email,
-        picture: profile.photoURL,
-        name: profile.displayName,
-        hd: profile.hd,
+        given_name: familyName,
+        family_name: givenName,
+        email,
+        picture,
+        name,
+        hd,
         last_login: Date.now(),
       })
       .then(() => this.createSampleUnitsForNewUser())
