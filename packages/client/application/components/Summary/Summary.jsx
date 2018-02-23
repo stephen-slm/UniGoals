@@ -16,7 +16,7 @@ import DeleteModule from '../Utilities/DeleteModule';
 
 import * as constants from '../../utils/constants';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
@@ -110,8 +110,8 @@ class Summary extends React.Component {
 
     this.props.firebase
       .insertNewYear()
-      .then((year) => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
-      .catch((error) => console.log(error.message));
+      .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
+      .catch(error => console.log(error.message));
   }
 
   // Deletes the current active year from firebae and redux
@@ -121,7 +121,7 @@ class Summary extends React.Component {
     this.props.firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
-      .catch((error) => console.log(error.message));
+      .catch(error => console.log(error.message));
 
     this.showDeleteYear();
   }
@@ -203,7 +203,7 @@ Summary.propTypes = {
   insertNewYear: PropTypes.func,
   updateYearTitle: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  units: PropTypes.shape({}).isRequired,
+  units: PropTypes.shape({}),
   history: PropTypes.shape({}).isRequired,
   yearTitle: PropTypes.string,
   firebase: PropTypes.shape({
@@ -223,6 +223,7 @@ Summary.defaultProps = {
   yearIndex: 0,
   isExample: false,
   yearTitle: 'Year',
+  units: null,
   removeYear: () => null,
   insertNewYear: () => null,
 };

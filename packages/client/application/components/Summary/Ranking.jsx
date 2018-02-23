@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
@@ -7,7 +8,7 @@ import uuid from 'uuid/v4';
 
 import { calculateTopFiveRankings } from '../../utils/utils';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
@@ -30,7 +31,7 @@ const styles = (theme) => ({
   },
 });
 
-const Ranking = (props) => {
+const Ranking = props => {
   const { classes } = props;
   const ranking = calculateTopFiveRankings(props.units, props.history);
 
@@ -40,13 +41,14 @@ const Ranking = (props) => {
         Unit Ranking
       </Typography>
       <Typography className={classes.wrapper} component="div">
-        {ranking.map((rank, index) => (
-          <Typography key={uuid()} className={classes.entry} component="span">
-            <Typography className={classes.link} href={String(rank.link)} component="a">
-              {index + 1}. {rank.title}
+        {!_.isNil(ranking) &&
+          ranking.map((rank, index) => (
+            <Typography key={uuid()} className={classes.entry} component="span">
+              <Typography className={classes.link} href={String(rank.link)} component="a">
+                {index + 1}. {rank.title}
+              </Typography>
             </Typography>
-          </Typography>
-        ))}
+          ))}
       </Typography>
     </Paper>
   );
@@ -55,8 +57,12 @@ const Ranking = (props) => {
 Ranking.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
-  units: PropTypes.shape({}).isRequired,
+  units: PropTypes.shape({}),
   height: PropTypes.number.isRequired,
+};
+
+Ranking.defaultProps = {
+  units: null,
 };
 
 export default withStyles(styles)(Ranking);
