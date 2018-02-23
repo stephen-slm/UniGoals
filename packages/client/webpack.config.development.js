@@ -21,6 +21,10 @@ const config = {
       },
     ],
   },
+  devServer: {
+    port: 8080,
+    host: '0.0.0.0',
+  },
   plugins: [new DashboardPlugin()],
   resolve: {
     extensions: ['.js', '.jsx'],
