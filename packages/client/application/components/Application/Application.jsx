@@ -11,7 +11,6 @@ import * as routePaths from './routePaths';
 import Home from '../Home/Home';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
-import SignOut from '../Login/SignOut';
 
 const theme = createMuiTheme({
   palette: {
@@ -70,55 +69,44 @@ export default class Application extends React.Component {
       return (
         <Router>
           <MuiThemeProvider theme={theme}>
-            <div>
-              <Navigation
-                history={this.history}
-                routePaths={this.routePaths}
-                profile={profile}
-                notifications={notifications}
-                updateNotifications={updateNotifications}
-                removeNotification={removeNotification}
-                exampleUser={profile.exampleUser}
-                firebase={this.firebase}
-                version={version}
-              >
-                <Route
-                  exact
-                  path="/"
-                  render={() => (
-                    <Home
-                      history={this.history}
-                      profile={profile}
-                      updateProfile={updateProfile}
-                      updateCourseName={updateCourseName}
-                      years={years}
-                      updateYears={updateYears}
-                      removeYear={removeYear}
-                      updateYearTitle={updateYearTitle}
-                      removeUnitRow={removeUnitRow}
-                      insertNewYear={insertNewYear}
-                      insertUnitRow={insertUnitRow}
-                      updateRowContent={updateRowContent}
-                      updateUnitTitle={updateUnitTitle}
-                      addUnitTable={addUnitTable}
-                      removeUnitTable={removeUnitTable}
-                      firebase={this.firebase}
-                      exampleUser={profile.exampleUser}
-                    />
-                  )}
-                />
-              </Navigation>
+            <Navigation
+              history={this.history}
+              routePaths={this.routePaths}
+              profile={profile}
+              removeProfile={removeProfile}
+              notifications={notifications}
+              updateNotifications={updateNotifications}
+              removeNotification={removeNotification}
+              exampleUser={profile.exampleUser}
+              firebase={this.firebase}
+              version={version}
+            >
               <Route
-                path={this.routePaths.signOut}
+                exact
+                path="/"
                 render={() => (
-                  <SignOut
-                    removeProfile={removeProfile}
+                  <Home
                     history={this.history}
+                    profile={profile}
+                    updateProfile={updateProfile}
+                    updateCourseName={updateCourseName}
+                    years={years}
+                    updateYears={updateYears}
+                    removeYear={removeYear}
+                    updateYearTitle={updateYearTitle}
+                    removeUnitRow={removeUnitRow}
+                    insertNewYear={insertNewYear}
+                    insertUnitRow={insertUnitRow}
+                    updateRowContent={updateRowContent}
+                    updateUnitTitle={updateUnitTitle}
+                    addUnitTable={addUnitTable}
+                    removeUnitTable={removeUnitTable}
                     firebase={this.firebase}
+                    exampleUser={profile.exampleUser}
                   />
                 )}
               />
-            </div>
+            </Navigation>
           </MuiThemeProvider>
         </Router>
       );

@@ -87,7 +87,15 @@ class Navigation extends React.Component {
   }
 
   signOut() {
-    this.props.history.go('/signout');
+    /**
+     * When this route is called, the user will be logged out of firebase (google), logging them
+     * out of the application, then the profile of the user will be removed to stop caching
+     * issue when they login. Finally the route address will be reset and the page reloaded.
+     */
+    this.props.firebase.authentication.signOut();
+    this.props.removeProfile();
+    this.props.history.go('/');
+    window.location.reload();
   }
 
   /**
@@ -171,11 +179,15 @@ Navigation.propTypes = {
   firebase: PropTypes.shape({
     sendHelpMessage: PropTypes.func,
     getNotificationRef: PropTypes.func,
+    authentication: PropTypes.shape({
+      signOut: PropTypes.func,
+    }),
   }).isRequired,
   children: PropTypes.shape({}).isRequired,
   version: PropTypes.string.isRequired,
   // removeNotification: PropTypes.func.isRequired,
   updateNotifications: PropTypes.func.isRequired,
+  removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
