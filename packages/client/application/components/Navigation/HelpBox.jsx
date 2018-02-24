@@ -71,7 +71,7 @@ HelpBox.propTypes = {
 
 HelpBox.defaultProps = {
   error: false,
-  fullWidth: false,
+  fullWidth: true,
   minLength: null,
   maxLength: null,
   handleClose: () => undefined,
