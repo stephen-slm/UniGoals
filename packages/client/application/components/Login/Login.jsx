@@ -206,13 +206,12 @@ class Login extends React.Component {
             <Typography className={classes.text} compnent="p">
               Your own unqiue summary page that displays everything you need to quickly know about
               your units! Including your <strong>unit ranks</strong>, how they are compared to other
-              units, <strong> Average</strong>, <strong>Max</strong> and
+              units, <strong> Average</strong>, <strong>Max</strong> and{' '}
               <strong>Total Grade</strong>. Try hovering over the chart and percentages. Each unit
-              looks like the one below, providing a <strong>Title</strong>,
-              <strong>Name</strong>, <strong>Weighting</strong>, and
-              <strong> Achieved</strong> column. Filling these will allow you to make the most of
-              the site. The chart and percentages will also update in real time as you update the
-              rows.
+              looks like the one below, providing a <strong>Title</strong>, <strong>Name</strong>,{' '}
+              <strong>Weighting</strong>, and <strong> Achieved</strong> column. Filling these will
+              allow you to make the most of the site. The chart and percentages will also update in
+              real time as you update the rows.
             </Typography>
             <UnitTable
               isExample={this.state.isExample}
