@@ -1,12 +1,18 @@
 import _ from 'lodash';
 
+/**
+ * Checks that the active client could be a mobile device
+ * @returns {boolean}
+ */
 export function isMobileDevice() {
-  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    return true;
-  }
-  return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
+/**
+ * Gets the total achieved percentage from a single unit
+ * @param unit The unit that the achieved is coming from
+ * @returns {number} A percentage of the achieved
+ */
 export function getAchievedTotalFromUnit(unit) {
   let total = 0;
 
@@ -25,6 +31,11 @@ export function getAchievedTotalFromUnit(unit) {
   return total;
 }
 
+/**
+ * Gets the total possible grade for a standard unit
+ * @param unit The unit that the grade is being gathered from
+ * @returns {string}
+ */
 export function calculateTotalGradeStandard(unit) {
   let achieved = 0;
 
@@ -38,11 +49,11 @@ export function calculateTotalGradeStandard(unit) {
 }
 
 /**
- * Applying the weighiting to all the units, getting the overal unit total and ordering
+ * Applying the weighting to all the units, getting the overall unit total and ordering
  * the content based on this information with title, total and a link based on the
- * current active address, this link being a hash link to the table contntes.
+ * current active address, this link being a hash link to the table conant's.
  *
- * Finally at the end this is reveresed as the lodash sortBy orders them based on
+ * Finally at the end this is reversed as the lodash sortBy orders them based on
  * lowest to highest and we need the vice vera.
  * @param {object} units the unit data
  * @param {object} history react-router history object
@@ -67,7 +78,7 @@ export function calculateTopFiveRankings(units, history) {
 }
 
 export function getHappyEmoji() {
-  const emojis = ['🎉', '🎆', '🎈', '❤️', '💪', '🔥', '😍', '👨‍🎓👩‍🎓', '🐙', '🤷'];
+  const emojis = ['🎉', '🎆', '🎈', '❤️', '💪', '🔥', '😍', '👨‍🎓👩‍🎓', '🐙', '🤷', '😈', '👻', '👽', '🤖', '💩', '🧐', '🤓', '😎', '💯', '💲'];
   return emojis[_.random(0, emojis.length - 1)];
 }
 

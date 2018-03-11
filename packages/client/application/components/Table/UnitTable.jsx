@@ -62,7 +62,7 @@ class UnitTable extends React.Component {
     this.deleteUnitTable = this.deleteUnitTable.bind(this);
 
     this.updateRowContent = this.updateRowContent.bind(this);
-    this.updateRowCententDatabase = this.updateRowCententDatabase.bind(this);
+    this.updateRowContentDatabase = this.updateRowContentDatabase.bind(this);
 
     this.updateUnitTitle = this.updateUnitTitle.bind(this);
     this.updateUnitTitleDatabase = this.updateUnitTitleDatabase.bind(this);
@@ -200,7 +200,7 @@ class UnitTable extends React.Component {
    * @param {string} rowIndex row key
    * @param {string} columnIndex column key
    */
-  updateRowCententDatabase(change, rowIndex, columnIndex) {
+  updateRowContentDatabase(change, rowIndex, columnIndex) {
     if (this.props.isExample) return;
 
     let updatedChange = change;
@@ -302,7 +302,7 @@ class UnitTable extends React.Component {
                       placeholder="Section"
                       maxLength={constants.TABLE.NAME.MAX}
                       onChange={change => this.updateRowContent(change, index, 'name')}
-                      onConfirm={change => this.updateRowCententDatabase(change, index, 'name')}
+                      onConfirm={change => this.updateRowContentDatabase(change, index, 'name')}
                       value={_.defaultTo(row.name, 'Section')}
                     />
                   </TableCell>
@@ -312,7 +312,7 @@ class UnitTable extends React.Component {
                       maxLength={constants.TABLE.WEIGHT.MAX}
                       onChange={change => this.updateRowContent(change, index, 'weighting')}
                       onConfirm={change =>
-                        this.updateRowCententDatabase(change, index, 'weighting')
+                        this.updateRowContentDatabase(change, index, 'weighting')
                       }
                       value={_.defaultTo(row.weighting, '0')}
                     />
@@ -322,7 +322,7 @@ class UnitTable extends React.Component {
                       placeholder="% Achieved"
                       maxLength={constants.TABLE.ACHIEVED.MAX}
                       onChange={change => this.updateRowContent(change, index, 'achieved')}
-                      onConfirm={change => this.updateRowCententDatabase(change, index, 'achieved')}
+                      onConfirm={change => this.updateRowContentDatabase(change, index, 'achieved')}
                       value={_.defaultTo(row.achieved, '0')}
                     />
                   </TableCell>
