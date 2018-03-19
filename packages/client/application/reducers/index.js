@@ -5,6 +5,7 @@ import version from './version';
 import notifications from './notifications';
 import profile from './profile';
 import years from './years';
+import firebase from './firebase';
 
 // setup the master reducer
 const rootReducer = combineReducers({
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   notifications,
   profile,
   years,
+  firebase,
   routing: routerReducer,
 });
 

@@ -5,7 +5,6 @@ import React from 'react';
 import * as _ from 'lodash';
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import FirebaseWrapper from '../../utils/FirebaseWrapper';
 import * as routePaths from './routePaths';
 
 import Home from '../Home/Home';
@@ -27,19 +26,6 @@ export default class Application extends React.Component {
     this.history = createBrowserHistory();
 
     this.history.replace('/');
-
-    /**
-     * creating the firebase wrapper that will be used to authenticate and to interact with the
-     * firebase database
-     */
-    this.firebase = new FirebaseWrapper({
-      apiKey: 'AIzaSyDBSpRMIl4olTWN0AOMCTMVqeIVkhGio_8',
-      authDomain: 'organic-lacing-185810.firebaseapp.com',
-      databaseURL: 'https://organic-lacing-185810.firebaseio.com',
-      projectId: 'organic-lacing-185810',
-      storageBucket: 'organic-lacing-185810.appspot.com',
-      messagingSenderId: '40609903553',
-    });
   }
 
   render() {
@@ -63,6 +49,7 @@ export default class Application extends React.Component {
       updateYearTitle,
       updateProfile,
       version,
+      firebase,
     } = this.props;
 
     if (!_.isNil(profile.name)) {
@@ -78,7 +65,7 @@ export default class Application extends React.Component {
               updateNotifications={updateNotifications}
               removeNotification={removeNotification}
               exampleUser={profile.exampleUser}
-              firebase={this.firebase}
+              firebase={firebase}
               version={version}
             >
               <Route
@@ -101,7 +88,7 @@ export default class Application extends React.Component {
                     updateUnitTitle={updateUnitTitle}
                     addUnitTable={addUnitTable}
                     removeUnitTable={removeUnitTable}
-                    firebase={this.firebase}
+                    firebase={firebase}
                     exampleUser={profile.exampleUser}
                   />
                 )}
@@ -124,7 +111,7 @@ export default class Application extends React.Component {
                   updateProfile={this.props.updateProfile}
                   updateNotifications={this.props.updateNotifications}
                   updateYearTitle={this.props.updateYearTitle}
-                  firebase={this.firebase}
+                  firebase={this.props.firebase}
                   updateYears={this.props.updateYears}
                   history={this.history}
                   version={version}
@@ -140,6 +127,7 @@ export default class Application extends React.Component {
 
 Application.propTypes = {
   version: PropTypes.string.isRequired,
+  firebase: PropTypes.shape().isRequired,
   updateNotifications: PropTypes.func.isRequired,
   updateYearTitle: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,
