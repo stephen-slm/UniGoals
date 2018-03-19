@@ -1,5 +1,4 @@
 const path = require('path');
-const webpack = require('webpack');
 
 const BUILD_DIR = path.resolve(__dirname, 'public/components/js');
 const APP_DIR = path.resolve(__dirname, 'application');
@@ -10,25 +9,40 @@ const config = {
     path: BUILD_DIR,
     filename: 'bundle.js',
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"',
-    }),
-    new webpack.optimize.UglifyJsPlugin(),
-  ],
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.jsx$/,
         include: APP_DIR,
-        loader: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['env', {
+                targets: {
+                  browsers: ['last 2 versions'],
+                },
+              }], 'babel-preset-react',
+            ],
+            babelrc: false,
+            comments: false,
+            minified: true,
+            env: {
+              production: true,
+            },
+          },
+        },
+      },
+      {
+        test: /\.less$/,
+        loader: 'style-loader!css-loader?modules!less-loader',
       },
     ],
   },
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  externals: [],
+  plugins: [],
 };
 
 module.exports = config;

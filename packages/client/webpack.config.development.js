@@ -1,35 +1,58 @@
-const DashboardPlugin = require('webpack-dashboard/plugin');
 const path = require('path');
+const webpack = require('webpack');
 
-const BUILD_DIR = path.resolve(__dirname, 'public/components/js/');
-const APP_DIR = path.resolve(__dirname, 'application/');
+const BUILD_DIR = path.resolve(__dirname, 'public/components/js');
+const APP_DIR = path.resolve(__dirname, 'application');
 
 const config = {
   devtool: 'eval',
   entry: `${APP_DIR}/index.jsx`,
   output: {
     path: BUILD_DIR,
-    publicPath: 'components/js/',
+    publicPath: 'components/js',
     filename: 'bundle.js',
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /\.jsx?$/,
+        test: /\.jsx$/,
         include: APP_DIR,
-        loader: 'babel-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              ['env', {
+                targets: {
+                  browsers: ['last 2 versions'],
+                },
+              }], 'babel-preset-react',
+            ],
+            babelrc: false,
+            comments: true,
+            env: {
+              production: false,
+            },
+          },
+        },
+      },
+      {
+        test: /\.less$/,
+        loader: 'style-loader!css-loader?modules!less-loader',
       },
     ],
   },
-  devServer: {
-    port: 8080,
-    host: '0.0.0.0',
-  },
-  plugins: [new DashboardPlugin()],
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  externals: [],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+  ],
+  devServer: {
+    hot: true,
+    contentBase: './public',
+    historyApiFallback: true,
+    host: '0.0.0.0',
+  },
 };
 
 module.exports = config;
