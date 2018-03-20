@@ -50,7 +50,22 @@ class Summary extends React.Component {
    * the university.
    */
   static getCurrentYearWeek() {
-    return new Date().getDay();
+    const startingWeek = 40; // September
+    const endWeek = 22;
+
+    const currentDate = new Date();
+    const week = Math.ceil((((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000) +
+    new Date(currentDate.getFullYear(), 0, 1).getDay() + 1) / 7);
+
+    if (week < startingWeek && week > endWeek) {
+      return 'Summer Time!';
+    } else if (week <= 54 && week >= startingWeek) {
+      return week - startingWeek;
+    } else if (week >= 1) {
+      return (52 - startingWeek) + week;
+    }
+
+    return week;
   }
 
   constructor(props) {
@@ -162,7 +177,7 @@ class Summary extends React.Component {
         </Typography>
         <Typography component="p">
           {this.props.profile.course_name} - {this.props.profile.name} - Year:{' '}
-          {this.props.profile.course_year}, week: {this.state.currentWeek}
+          {this.props.profile.course_year}, week: {this.state.currentWeek}/34
         </Typography>
         <EditableText
           placeholder="Year"

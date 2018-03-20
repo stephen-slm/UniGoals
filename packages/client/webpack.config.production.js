@@ -42,7 +42,8 @@ const config = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  plugins: [],
+  plugins: [
+  ],
 };
 
 module.exports = config;
