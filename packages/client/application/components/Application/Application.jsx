@@ -13,8 +13,8 @@ import Login from '../Login/Login';
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#EB3623' }, // This is just green.A700 as hex.
-    secondary: { main: '#00A0FF' }, // Purple and green play nicely together.
+    primary: { main: '#F6511D' }, // This is just green.A700 as hex.
+    secondary: { main: '#00A6ED' }, // Purple and green play nicely together.
   },
 });
 
