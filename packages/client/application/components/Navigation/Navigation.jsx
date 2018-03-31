@@ -6,14 +6,15 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import IconButton from 'material-ui/IconButton';
 import HelpIcon from 'material-ui-icons/Help';
-import ExitIcon from 'material-ui-icons/ExitToApp';
+import Icon from 'material-ui/Icon';
+import Button from 'material-ui/Button';
 
 import SignOutBox from './SignOutBox';
 import HelpBox from './HelpBox';
 
 import * as constants from '../../utils/constants';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     color: 'white',
     flexGrow: 1,
@@ -21,13 +22,20 @@ const styles = (theme) => ({
   flex: {
     flex: 1,
   },
-  menuButton: {
-    color: 'white',
-    marginLeft: -12,
-    marginRight: 20,
-  },
   mail: {
     marginRight: theme.spacing.unit,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+  },
+  avatar: {
+    width: 64,
+    height: 64,
+  },
+  logoButton: {
+    padding: '0px',
+    minWidth: '0px',
   },
 });
 
@@ -42,18 +50,18 @@ class Navigation extends React.Component {
       invalidhelpMessage: false,
     };
 
+    this.getWelcomeMessage = this.getWelcomeMessage.bind(this);
     this.submitHelpMessage = this.submitHelpMessage.bind(this);
-    this.signOut = this.signOut.bind(this);
-
     this.showNotifications = this.showNotifications.bind(this);
-    this.showHelpBox = this.showHelpBox.bind(this);
     this.showSignOutBox = this.showSignOutBox.bind(this);
+    this.showHelpBox = this.showHelpBox.bind(this);
+    this.signOut = this.signOut.bind(this);
 
     const notificationRef = props.firebase.getNotificationRef();
 
     // Live notificaiton updates which are triggered every time a notification is added to the
     // users data entry
-    notificationRef.on('value', (snapshot) => {
+    notificationRef.on('value', snapshot => {
       props.updateNotifications(snapshot.val());
     });
   }
@@ -98,6 +106,16 @@ class Navigation extends React.Component {
     window.location.reload();
   }
 
+  getWelcomeMessage() {
+    const time = new Date();
+    const currentHour = time.getHours();
+    const name = this.props.profile.name.split(' ')[0];
+
+    if (currentHour < 12) return `Morning, ${name}`;
+    if (currentHour < 18) return `Afternoon, ${name}`;
+    return `Evening, ${name}`;
+  }
+
   /**
    * Adds a help message into the firebase help route, this route stores
    * the message, name, email and timestamp of user sending the help message
@@ -130,7 +148,7 @@ class Navigation extends React.Component {
     return this.props.firebase
       .sendHelpMessage(message, name, email)
       .then(() => console.log(`Thank you ${givenName} for submitting your help and or question`))
-      .catch((error) => console.log(error.message));
+      .catch(error => console.log(error.message));
   }
 
   render() {
@@ -154,17 +172,21 @@ class Navigation extends React.Component {
             maxLength={constants.HELP_MESSAGE.MAX}
           />
           <Toolbar>
+            <Button onClick={this.showSignOutBox} className={classes.logoButton}>
+              <img src="components/resources/images/logo.svg" alt="logo" className={classes.logo} />
+            </Button>
             <Typography variant="body2" color="inherit" className={classes.flex}>
-              Uni Goals, {this.props.profile.name} - {this.props.profile.course_university}
+              Uni Goals
             </Typography>
-            <div>
-              <IconButton color="inherit" onClick={this.showHelpBox}>
-                <HelpIcon />
-              </IconButton>
-              <IconButton aria-haspopup="true" onClick={this.showSignOutBox} color="inherit">
-                <ExitIcon />
-              </IconButton>
-            </div>
+            <IconButton color="inherit" onClick={this.showSignOutBox}>
+              <Icon color="inherit">notifications</Icon>
+            </IconButton>
+            <IconButton color="inherit" onClick={this.showHelpBox}>
+              <HelpIcon />
+            </IconButton>
+            <Typography variant="div" color="inherit">
+              {this.getWelcomeMessage()}
+            </Typography>
           </Toolbar>
         </AppBar>
         {this.props.children}
@@ -190,6 +212,7 @@ Navigation.propTypes = {
   removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
+    picture: PropTypes.string,
     email: PropTypes.string,
     course_university: PropTypes.string,
     given_name: PropTypes.string,
