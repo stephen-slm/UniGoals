@@ -13,7 +13,7 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-const SignOutBox = (props) => (
+const SignOutBox = props => (
   <Dialog
     open={props.open && !props.disabled}
     transition={Transition}

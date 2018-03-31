@@ -4,10 +4,14 @@ import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import HelpIcon from 'material-ui-icons/Help';
 import Icon from 'material-ui/Icon';
 import Button from 'material-ui/Button';
+
+// Bottom navigation
+import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
+
+// Linking
+import { Link } from 'react-router-dom';
 
 import SignOutBox from './SignOutBox';
 import HelpBox from './HelpBox';
@@ -36,6 +40,20 @@ const styles = theme => ({
   logoButton: {
     padding: '0px',
     minWidth: '0px',
+  },
+  BottomNavigation: {
+    background: theme.palette.primary.main,
+    color: 'white',
+    width: '100%',
+    position: 'fixed',
+    zIndex: 100,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  },
+  bottomNavigationColor: {
+    textDecoration: 'none',
+    color: 'white',
   },
 });
 
@@ -178,18 +196,34 @@ class Navigation extends React.Component {
             <Typography variant="body2" color="inherit" className={classes.flex}>
               Uni Goals
             </Typography>
-            <IconButton color="inherit" onClick={this.showSignOutBox}>
-              <Icon color="inherit">notifications</Icon>
-            </IconButton>
-            <IconButton color="inherit" onClick={this.showHelpBox}>
-              <HelpIcon />
-            </IconButton>
-            <Typography variant="div" color="inherit">
+            <Typography component="div" color="inherit">
               {this.getWelcomeMessage()}
             </Typography>
           </Toolbar>
         </AppBar>
         {this.props.children}
+        <BottomNavigation className={classes.BottomNavigation}>
+          <Link href="/" to="/" style={{ textDecoration: 'none' }}>
+            <BottomNavigationAction
+              label="Favorites"
+              value="favorites"
+              icon={<Icon className={classes.bottomNavigationColor}>home</Icon>}
+            />
+          </Link>
+          <BottomNavigationAction
+            onClick={this.showHelpBox}
+            value="help"
+            icon={<Icon className={classes.bottomNavigationColor}>help</Icon>}
+          />
+          <BottomNavigationAction
+            value="notifications"
+            icon={<Icon className={classes.bottomNavigationColor}>notifications</Icon>}
+          />
+          <BottomNavigationAction
+            value="add"
+            icon={<Icon className={classes.bottomNavigationColor}>add</Icon>}
+          />
+        </BottomNavigation>
       </div>
     );
   }

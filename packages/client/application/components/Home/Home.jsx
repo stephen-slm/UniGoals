@@ -71,6 +71,7 @@ class Home extends React.Component {
   }
 
   render() {
+    // TODO: Delete this class when the grids are complete
     const { classes } = this.props;
 
     return (

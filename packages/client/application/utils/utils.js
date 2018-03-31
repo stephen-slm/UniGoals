@@ -31,6 +31,30 @@ export function getAchievedTotalFromUnit(unit) {
   return total;
 }
 
+export function calulateTotalGradeUnits(units) {
+  if (_.size(units) === 0 || _.size(units[Object.keys(units)[0]]) === 0) {
+    return 0;
+  }
+
+  let totalAchieved = 0;
+
+  _.forEach(units, unit => {
+    _.forEach(unit.content, unitContent => {
+      if (
+        !_.isNil(unitContent.weighting) &&
+        !_.isNil(unitContent.achieved) &&
+        (unitContent.weighting !== '' && unitContent.achieved !== '')
+      ) {
+        if (parseFloat(unitContent.achieved) > 0) {
+          totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
+        }
+      }
+    });
+  });
+
+  return parseFloat(totalAchieved / 100 / _.size(units)).toFixed(2);
+}
+
 /**
  * Gets the total possible grade for a standard unit
  * @param unit The unit that the grade is being gathered from
@@ -78,7 +102,28 @@ export function calculateTopFiveRankings(units, history) {
 }
 
 export function getHappyEmoji() {
-  const emojis = ['🎉', '🎆', '🎈', '❤️', '💪', '🔥', '😍', '👨‍🎓👩‍🎓', '🐙', '🤷', '😈', '👻', '👽', '🤖', '💩', '🧐', '🤓', '😎', '💯', '💲'];
+  const emojis = [
+    '🎉',
+    '🎆',
+    '🎈',
+    '❤️',
+    '💪',
+    '🔥',
+    '😍',
+    '👨‍🎓👩‍🎓',
+    '🐙',
+    '🤷',
+    '😈',
+    '👻',
+    '👽',
+    '🤖',
+    '💩',
+    '🧐',
+    '🤓',
+    '😎',
+    '💯',
+    '💲',
+  ];
   return emojis[_.random(0, emojis.length - 1)];
 }
 

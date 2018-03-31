@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import * as routePaths from './routePaths';
 
-import Home from '../Home/Home';
+import Home from '../Home/HomeN';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
 
@@ -71,6 +71,19 @@ export default class Application extends React.Component {
               <Route
                 exact
                 path="/"
+                render={() => (
+                  <Home
+                    years={years}
+                    firebase={firebase}
+                    exampleUser={profile.exampleUser}
+                    updateNotifications={updateNotifications}
+                    notifications={notifications}
+                  />
+                )}
+              />
+              <Route
+                exact
+                path="/year/:yearIndex"
                 render={() => (
                   <Home
                     history={this.history}

@@ -42,6 +42,9 @@ const styles = theme => ({
   grid: {
     flexGrow: 1,
   },
+  summarySubtext: {
+    textAlign: 'center',
+  },
 });
 
 class Summary extends React.Component {
@@ -54,15 +57,17 @@ class Summary extends React.Component {
     const endWeek = 22;
 
     const currentDate = new Date();
-    const week = Math.ceil((((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000) +
-    new Date(currentDate.getFullYear(), 0, 1).getDay() + 1) / 7);
+    const week = Math.ceil(((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000 +
+        new Date(currentDate.getFullYear(), 0, 1).getDay() +
+        1) /
+        7);
 
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';
     } else if (week <= 54 && week >= startingWeek) {
       return week - startingWeek;
     } else if (week >= 1) {
-      return (52 - startingWeek) + week;
+      return 52 - startingWeek + week;
     }
 
     return week;
@@ -175,17 +180,21 @@ class Summary extends React.Component {
         <Typography variant="headline" component="h5">
           Summary
         </Typography>
-        <Typography component="p">
-          {this.props.profile.course_name} - {this.props.profile.name} - Year:{' '}
-          {this.props.profile.course_year}, week: {this.state.currentWeek}/34
-        </Typography>
-        <EditableText
-          placeholder="Year"
-          maxLength={constants.YEAR.TITLE.MAX}
-          onChange={this.updateYearTitle}
-          onConfirm={this.updateYearTitleDatabase}
-          value={this.state.yearTitle}
-        />
+
+        <div className={classes.summarySubtext}>
+          <Typography component="p">
+            {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week:{' '}
+            {this.state.currentWeek}/34
+          </Typography>
+          <EditableText
+            placeholder="Year"
+            maxLength={constants.YEAR.TITLE.MAX}
+            onChange={this.updateYearTitle}
+            onConfirm={this.updateYearTitleDatabase}
+            value={this.state.yearTitle}
+          />
+        </div>
+
         {/* The heights here need to be calculated based on the num of units up to 5 */}
         <Grid container className={classes.grid}>
           <Grid item xs={12}>

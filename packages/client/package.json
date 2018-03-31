@@ -17,6 +17,7 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "classnames": "^2.2.5",
     "firebase": "^4.11.0",
     "firebase-bolt": "^0.8.2",
     "firebase-tools": "^3.17.6",

@@ -8,6 +8,11 @@ import Dialog, {
 } from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import Button from 'material-ui/Button';
+import Slide from 'material-ui/transitions/Slide';
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 class HelpBox extends React.Component {
   constructor(props) {
@@ -24,6 +29,7 @@ class HelpBox extends React.Component {
     return (
       <Dialog
         open={this.props.open}
+        transition={Transition}
         onClose={this.props.handleClose}
         aria-labelledby="Submitting feedback"
       >
@@ -33,7 +39,7 @@ class HelpBox extends React.Component {
             If you have any problems or help please ask below and I will email you back!
           </DialogContentText>
           <TextField
-            inputRef={(ref) => {
+            inputRef={ref => {
               this.helpText = ref;
             }}
             label="Feedback"
