@@ -66,6 +66,16 @@ class Navigation extends React.Component {
     });
   }
 
+  getWelcomeMessage() {
+    const time = new Date();
+    const currentHour = time.getHours();
+    const name = this.props.profile.name.split(' ')[0];
+
+    if (currentHour < 12) return `Morning, ${name}`;
+    if (currentHour < 18) return `Afternoon, ${name}`;
+    return `Evening, ${name}`;
+  }
+
   /**
    * Notificaitons are based on a state, adjusting the state will display the
    * notifications for the user.
@@ -104,16 +114,6 @@ class Navigation extends React.Component {
     this.props.removeProfile();
     this.props.history.go('/');
     window.location.reload();
-  }
-
-  getWelcomeMessage() {
-    const time = new Date();
-    const currentHour = time.getHours();
-    const name = this.props.profile.name.split(' ')[0];
-
-    if (currentHour < 12) return `Morning, ${name}`;
-    if (currentHour < 18) return `Afternoon, ${name}`;
-    return `Evening, ${name}`;
   }
 
   /**
