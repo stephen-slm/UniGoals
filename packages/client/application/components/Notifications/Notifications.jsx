@@ -23,7 +23,7 @@ class Notifications extends React.Component {
     const { classes, notifications } = this.props;
 
     return (
-      <div>
+      <div className={classes.root}>
         {!_.isNil(notifications) &&
           _.map(notifications, (notification, index) => (
             <Notification

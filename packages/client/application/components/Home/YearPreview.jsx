@@ -9,8 +9,6 @@ import { Link } from 'react-router-dom';
 // Years paper
 import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
-import MoreVertIcon from 'material-ui-icons/MoreVert';
-import IconButton from 'material-ui/IconButton';
 
 // Total
 import { calulateTotalGradeUnits } from '../../utils/utils';
