@@ -7,7 +7,7 @@ import { withStyles } from 'material-ui/styles';
 
 import _ from 'lodash';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
@@ -48,7 +48,7 @@ class Perentages extends React.Component {
     let total = 0;
     let maxTotalPossible = 0;
 
-    _.forEach(data, (content) => {
+    _.forEach(data, content => {
       if (parseFloat(content.achieved) > 0) {
         total += parseFloat(content.achieved);
         maxTotalPossible += parseFloat(content.weighting) * parseFloat(content.achieved);
@@ -85,12 +85,12 @@ class Perentages extends React.Component {
     let total = 0;
     let maxTotalPossible = 0;
 
-    _.forEach(data, (unit) => {
+    _.forEach(data, unit => {
       let tableTotal = 0;
       let tableMax = 0;
 
       if (_.size(unit.content) > 0) {
-        _.forEach(unit.content, (content) => {
+        _.forEach(unit.content, content => {
           if (parseFloat(content.achieved) > 0) {
             tableTotal += parseFloat(content.achieved);
             tableMax += parseFloat(content.achieved);
@@ -127,8 +127,8 @@ class Perentages extends React.Component {
 
     let totalAchieved = 0;
 
-    _.forEach(data, (unit) => {
-      _.forEach(unit.content, (unitContent) => {
+    _.forEach(data, unit => {
+      _.forEach(unit.content, unitContent => {
         if (
           !_.isNil(unitContent.weighting) &&
           !_.isNil(unitContent.achieved) &&
@@ -147,7 +147,7 @@ class Perentages extends React.Component {
   static calculateTotalGradeStandard(unit) {
     let achieved = 0;
 
-    _.forEach(unit, (row) => {
+    _.forEach(unit, row => {
       if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
         achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
       }
@@ -191,9 +191,9 @@ class Perentages extends React.Component {
           <Grid container className={classes.grid}>
             <Grid item xs={12}>
               <Grid container justify="center" spacing={Number(8)}>
-                <Grid item>Average: {_.defaultTo(percentages.average, 0)}%</Grid>
-                <Grid item>Max: {_.defaultTo(percentages.max, 100)}%</Grid>
-                <Grid item>Total: {total}%</Grid>
+                <Grid item>Average: {Number(_.defaultTo(percentages.average, 0))}%</Grid>
+                <Grid item>Max: {Number(_.defaultTo(percentages.max, 100))}%</Grid>
+                <Grid item>Total: {Number(total)}%</Grid>
               </Grid>
             </Grid>
           </Grid>

@@ -7,10 +7,13 @@ import * as _ from 'lodash';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import * as routePaths from './routePaths';
 
-import Home from '../Home/HomeN';
+import Home from '../Home/Home';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
 import Notifications from '../Notifications/Notifications';
+
+// Year
+import Year from '../Home/Year';
 
 const theme = createMuiTheme({
   palette: {
@@ -72,7 +75,15 @@ export default class Application extends React.Component {
               <Route
                 exact
                 path={this.routePaths.home}
-                render={() => <Home years={years} firebase={firebase} />}
+                render={() => (
+                  <Home
+                    years={years}
+                    firebase={firebase}
+                    profile={profile}
+                    updateProfile={updateProfile}
+                    insertNewYear={insertNewYear}
+                  />
+                )}
               />
               <Route
                 path={this.routePaths.notifications}
@@ -89,7 +100,7 @@ export default class Application extends React.Component {
               <Route
                 path="/year/:yearIndex"
                 render={() => (
-                  <Home
+                  <Year
                     history={this.history}
                     profile={profile}
                     updateProfile={updateProfile}

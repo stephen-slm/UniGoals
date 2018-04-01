@@ -21,11 +21,15 @@ const config = {
           loader: 'babel-loader',
           options: {
             presets: [
-              ['env', {
-                targets: {
-                  browsers: ['last 2 versions'],
+              [
+                'env',
+                {
+                  targets: {
+                    browsers: ['last 2 versions'],
+                  },
                 },
-              }], 'babel-preset-react',
+              ],
+              'babel-preset-react',
             ],
             babelrc: false,
             comments: true,
@@ -44,14 +48,13 @@ const config = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-  ],
+  plugins: [new webpack.HotModuleReplacementPlugin()],
   devServer: {
     hot: true,
     contentBase: './public',
     historyApiFallback: true,
     host: '0.0.0.0',
+    port: 8080,
   },
 };
 

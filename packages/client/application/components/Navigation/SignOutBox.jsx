@@ -23,7 +23,9 @@ const SignOutBox = props => (
   >
     <DialogTitle>Sign out</DialogTitle>
     <DialogContent>
-      <DialogContentText>{`Are you sure you want to sign out ${props.name}?`}</DialogContentText>
+      <DialogContentText>
+        {`Are you sure you want to sign out ${props.name.split(' ')[0]}?`}
+      </DialogContentText>
     </DialogContent>
     <DialogActions>
       <Button onClick={props.onClose} color="primary">

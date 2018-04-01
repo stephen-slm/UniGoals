@@ -5,7 +5,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
-import Button from 'material-ui/Button';
+import IconButton from 'material-ui/IconButton';
 
 // Bottom navigation
 import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
@@ -171,23 +171,26 @@ class Navigation extends React.Component {
             maxLength={constants.HELP_MESSAGE.MAX}
           />
           <Toolbar>
-            <Button onClick={this.showSignOutBox} className={classes.logoButton}>
+            <Link href="/" to="/" style={{ textDecoration: 'none' }}>
               <img
                 src="/components/resources/images/logo.svg"
                 alt="logo"
                 className={classes.logo}
               />
-            </Button>
+            </Link>
             <Typography variant="body2" color="inherit" className={classes.flex}>
-              Uni Goals
+              UniGoals
             </Typography>
             <Typography component="div" color="inherit">
               {this.getWelcomeMessage()}
             </Typography>
+            <IconButton className={classes.bottomNavigationColor} onClick={this.showSignOutBox}>
+              <Icon>exit_to_app</Icon>
+            </IconButton>
           </Toolbar>
         </AppBar>
         {this.props.children}
-        <BottomNavigation className={classes.BottomNavigation}>
+        <BottomNavigation className={classes.BottomNavigation} showLabel={false}>
           <Link href="/" to="/" style={{ textDecoration: 'none' }}>
             <BottomNavigationAction
               label="Home"
@@ -206,10 +209,6 @@ class Navigation extends React.Component {
               icon={<Icon className={classes.bottomNavigationColor}>notifications</Icon>}
             />
           </Link>
-          <BottomNavigationAction
-            value="add"
-            icon={<Icon className={classes.bottomNavigationColor}>add</Icon>}
-          />
         </BottomNavigation>
       </div>
     );
