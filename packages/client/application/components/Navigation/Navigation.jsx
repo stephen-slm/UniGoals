@@ -63,7 +63,6 @@ class Navigation extends React.Component {
 
     this.state = {
       showNotifications: false,
-      showHelp: false,
       showSignOut: false,
       invalidhelpMessage: false,
     };
@@ -72,16 +71,7 @@ class Navigation extends React.Component {
     this.submitHelpMessage = this.submitHelpMessage.bind(this);
     this.showNotifications = this.showNotifications.bind(this);
     this.showSignOutBox = this.showSignOutBox.bind(this);
-    this.showHelpBox = this.showHelpBox.bind(this);
     this.signOut = this.signOut.bind(this);
-
-    const notificationRef = props.firebase.getNotificationRef();
-
-    // Live notificaiton updates which are triggered every time a notification is added to the
-    // users data entry
-    notificationRef.on('value', snapshot => {
-      props.updateNotifications(snapshot.val());
-    });
   }
 
   getWelcomeMessage() {
@@ -101,15 +91,6 @@ class Navigation extends React.Component {
   showNotifications() {
     this.setState({
       showNotifications: !this.state.showNotifications,
-    });
-  }
-
-  /**
-   * Trigges the overlay for the signed in user when they click the help button
-   */
-  showHelpBox() {
-    this.setState({
-      showHelp: !this.state.showHelp,
     });
   }
 
@@ -149,7 +130,7 @@ class Navigation extends React.Component {
       return this.setState({ invalidhelpMessage: true });
     }
 
-    this.showHelpBox();
+    this.props.showHelpBox();
 
     // Generates a prefilled link for user generated form for submitting help, thiw will
     // be a google form.
@@ -184,14 +165,18 @@ class Navigation extends React.Component {
           <HelpBox
             handleSubmit={this.submitHelpMessage}
             error={this.state.invalidhelpMessage}
-            handleClose={this.showHelpBox}
-            open={this.state.showHelp}
+            handleClose={this.props.showHelpBox}
+            open={this.props.displayHelp}
             minLength={constants.HELP_MESSAGE.MIN}
             maxLength={constants.HELP_MESSAGE.MAX}
           />
           <Toolbar>
             <Button onClick={this.showSignOutBox} className={classes.logoButton}>
-              <img src="components/resources/images/logo.svg" alt="logo" className={classes.logo} />
+              <img
+                src="/components/resources/images/logo.svg"
+                alt="logo"
+                className={classes.logo}
+              />
             </Button>
             <Typography variant="body2" color="inherit" className={classes.flex}>
               Uni Goals
@@ -205,20 +190,22 @@ class Navigation extends React.Component {
         <BottomNavigation className={classes.BottomNavigation}>
           <Link href="/" to="/" style={{ textDecoration: 'none' }}>
             <BottomNavigationAction
-              label="Favorites"
-              value="favorites"
+              label="Home"
+              value="Home"
               icon={<Icon className={classes.bottomNavigationColor}>home</Icon>}
             />
           </Link>
           <BottomNavigationAction
-            onClick={this.showHelpBox}
+            onClick={this.props.showHelpBox}
             value="help"
             icon={<Icon className={classes.bottomNavigationColor}>help</Icon>}
           />
-          <BottomNavigationAction
-            value="notifications"
-            icon={<Icon className={classes.bottomNavigationColor}>notifications</Icon>}
-          />
+          <Link href="/notifications" to="/notifications" style={{ textDecoration: 'none' }}>
+            <BottomNavigationAction
+              value="notifications"
+              icon={<Icon className={classes.bottomNavigationColor}>notifications</Icon>}
+            />
+          </Link>
           <BottomNavigationAction
             value="add"
             icon={<Icon className={classes.bottomNavigationColor}>add</Icon>}
@@ -230,8 +217,9 @@ class Navigation extends React.Component {
 }
 
 Navigation.propTypes = {
+  displayHelp: PropTypes.bool.isRequired,
+  showHelpBox: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  // notifications: PropTypes.shape({}).isRequired,
   firebase: PropTypes.shape({
     sendHelpMessage: PropTypes.func,
     getNotificationRef: PropTypes.func,
@@ -241,8 +229,6 @@ Navigation.propTypes = {
   }).isRequired,
   children: PropTypes.shape({}).isRequired,
   version: PropTypes.string.isRequired,
-  // removeNotification: PropTypes.func.isRequired,
-  updateNotifications: PropTypes.func.isRequired,
   removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,

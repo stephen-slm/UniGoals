@@ -10,6 +10,7 @@ import * as routePaths from './routePaths';
 import Home from '../Home/HomeN';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
+import Notifications from '../Notifications/Notifications';
 
 const theme = createMuiTheme({
   palette: {
@@ -50,6 +51,8 @@ export default class Application extends React.Component {
       updateProfile,
       version,
       firebase,
+      displayHelp,
+      showHelpBox,
     } = this.props;
 
     if (!_.isNil(profile.name)) {
@@ -61,28 +64,29 @@ export default class Application extends React.Component {
               routePaths={this.routePaths}
               profile={profile}
               removeProfile={removeProfile}
-              notifications={notifications}
-              updateNotifications={updateNotifications}
-              removeNotification={removeNotification}
-              exampleUser={profile.exampleUser}
               firebase={firebase}
               version={version}
+              displayHelp={displayHelp}
+              showHelpBox={showHelpBox}
             >
               <Route
                 exact
-                path="/"
+                path={this.routePaths.home}
+                render={() => <Home years={years} firebase={firebase} />}
+              />
+              <Route
+                path={this.routePaths.notifications}
                 render={() => (
-                  <Home
-                    years={years}
-                    firebase={firebase}
-                    exampleUser={profile.exampleUser}
+                  <Notifications
                     updateNotifications={updateNotifications}
+                    removeNotification={removeNotification}
                     notifications={notifications}
+                    showHelpBox={showHelpBox}
+                    firebase={firebase}
                   />
                 )}
               />
               <Route
-                exact
                 path="/year/:yearIndex"
                 render={() => (
                   <Home
@@ -102,7 +106,6 @@ export default class Application extends React.Component {
                     addUnitTable={addUnitTable}
                     removeUnitTable={removeUnitTable}
                     firebase={firebase}
-                    exampleUser={profile.exampleUser}
                   />
                 )}
               />
@@ -139,6 +142,8 @@ export default class Application extends React.Component {
 }
 
 Application.propTypes = {
+  displayHelp: PropTypes.bool.isRequired,
+  showHelpBox: PropTypes.func.isRequired,
   version: PropTypes.string.isRequired,
   firebase: PropTypes.shape().isRequired,
   updateNotifications: PropTypes.func.isRequired,

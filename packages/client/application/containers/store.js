@@ -17,6 +17,7 @@ const firebase = new FirebaseWrapper({
 const defaultState = {
   version,
   firebase,
+  displayHelp: false,
 };
 
 const store = createStore(

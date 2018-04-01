@@ -30,3 +30,6 @@ export const UPDATE_YEARS = 'UPDATE_YEARS';
 export const INSERT_YEAR = 'INSERT_YEAR';
 export const UPDATE_YEAR_TITLE = 'UPDATE_YEAR_TITLE';
 export const REMOVE_YEAR = 'REMOVE_YEAR';
+
+// Help Button
+export const SHOW_HELP_BOX = 'SHOW_HELP_BOX';

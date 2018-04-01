@@ -1,6 +1,5 @@
 import * as actionTypes from './actionTypes';
 
-
 /**
  * Updates the users profile on redux
  * @param {object} profile the users profile
@@ -196,5 +195,11 @@ export function insertNewYear(yearKey, title, unitKey) {
     yearKey,
     title,
     unitKey,
+  };
+}
+
+export function showHelpBox() {
+  return {
+    type: actionTypes.SHOW_HELP_BOX,
   };
 }
