@@ -6,7 +6,6 @@ import Icon from 'material-ui/Icon';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import Tooltip from 'material-ui/Tooltip';
-import { withRouter } from 'react-router';
 
 import _ from 'lodash';
 import Ranking from './Ranking';
@@ -57,17 +56,17 @@ class Summary extends React.Component {
     const endWeek = 22;
 
     const currentDate = new Date();
-    const week = Math.ceil(((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000 +
-        new Date(currentDate.getFullYear(), 0, 1).getDay() +
-        1) /
-        7);
+    const week = Math.ceil((((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000) +
+      new Date(currentDate.getFullYear(), 0, 1).getDay() +
+      1) /
+      7);
 
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';
     } else if (week <= 54 && week >= startingWeek) {
       return week - startingWeek;
     } else if (week >= 1) {
-      return 52 - startingWeek + week;
+      return (52 - startingWeek) + week;
     }
 
     return week;

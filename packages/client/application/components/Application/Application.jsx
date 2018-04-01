@@ -49,7 +49,6 @@ export default class Application extends React.Component {
       removeUnitTable,
       updateNotifications,
       removeNotification,
-      updateCourseName,
       updateYearTitle,
       updateProfile,
       version,
@@ -101,17 +100,14 @@ export default class Application extends React.Component {
                 path="/year/:yearIndex"
                 render={() => (
                   <Year
+                    insertUnitRow={insertUnitRow}
                     history={this.history}
                     profile={profile}
-                    updateProfile={updateProfile}
-                    updateCourseName={updateCourseName}
                     years={years}
                     updateYears={updateYears}
                     removeYear={removeYear}
                     updateYearTitle={updateYearTitle}
                     removeUnitRow={removeUnitRow}
-                    insertNewYear={insertNewYear}
-                    insertUnitRow={insertUnitRow}
                     updateRowContent={updateRowContent}
                     updateUnitTitle={updateUnitTitle}
                     addUnitTable={addUnitTable}
@@ -163,7 +159,6 @@ Application.propTypes = {
   removeProfile: PropTypes.func.isRequired,
   updateYears: PropTypes.func.isRequired,
   profile: PropTypes.shape().isRequired,
-  updateCourseName: PropTypes.func.isRequired,
   removeNotification: PropTypes.func.isRequired,
   removeYear: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,

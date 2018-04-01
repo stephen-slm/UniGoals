@@ -1,5 +1,4 @@
 import React from 'react';
-import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { withRouter } from 'react-router';
@@ -42,8 +41,8 @@ class Year extends React.Component {
           yearTitle={year.title}
         />
         <Tables
-          yearIndex={this.state.selectedId}
           insertUnitRow={this.props.insertUnitRow}
+          yearIndex={this.state.selectedId}
           updateYears={this.props.updateYears}
           updateRowContent={this.props.updateRowContent}
           removeUnitRow={this.props.removeUnitRow}
@@ -79,7 +78,6 @@ Year.propTypes = {
   updateUnitTitle: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,
   removeUnitTable: PropTypes.func.isRequired,
-  updateProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,
     course_name: PropTypes.string,
