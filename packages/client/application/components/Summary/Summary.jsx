@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import Paper from 'material-ui/Paper';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
-import IconButton from 'material-ui/IconButton';
 import Grid from 'material-ui/Grid';
 import { withStyles } from 'material-ui/styles';
 import Tooltip from 'material-ui/Tooltip';
+import { withRouter } from 'react-router';
 
 import _ from 'lodash';
 import Ranking from './Ranking';
@@ -57,17 +57,17 @@ class Summary extends React.Component {
     const endWeek = 22;
 
     const currentDate = new Date();
-
-    let week = (currentDate - new Date((currentDate.getFullYear(), 0, 1))) / 86400000;
-    week += new Date((currentDate.getFullYear(), 0, 1).getDay() + 1) / 7;
-    week = Math.ceil(week);
+    const week = Math.ceil(((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000 +
+        new Date(currentDate.getFullYear(), 0, 1).getDay() +
+        1) /
+        7);
 
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';
     } else if (week <= 54 && week >= startingWeek) {
       return week - startingWeek;
     } else if (week >= 1) {
-      return 52 - (startingWeek + week);
+      return 52 - startingWeek + week;
     }
 
     return week;
@@ -76,11 +76,10 @@ class Summary extends React.Component {
   constructor(props) {
     super();
 
-    this.updateYearTitle = this.updateYearTitle.bind(this);
     this.updateYearTitleDatabase = this.updateYearTitleDatabase.bind(this);
-    this.showDeleteYear = this.showDeleteYear.bind(this);
     this.deleteSelectedYear = this.deleteSelectedYear.bind(this);
-    this.insertNewYear = this.insertNewYear.bind(this);
+    this.updateYearTitle = this.updateYearTitle.bind(this);
+    this.showDeleteYear = this.showDeleteYear.bind(this);
 
     this.state = {
       isDeletingYear: false,
@@ -97,7 +96,6 @@ class Summary extends React.Component {
   }
 
   updateYearTitleDatabase(newTitle) {
-    if (this.props.isExample) return;
     let title = newTitle;
 
     // If the user exists whiel the text is empty, fill with replacement text
@@ -106,6 +104,18 @@ class Summary extends React.Component {
     this.props.firebase.updateYearTitle(this.props.yearIndex, title);
     this.props.updateYearTitle(this.props.yearIndex, title);
     this.setState({ yearTitle: title });
+  }
+
+  // Deletes the current active year from firebae and redux
+  deleteSelectedYear() {
+    this.props.firebase
+      .deleteYear(this.props.yearIndex)
+      .then(() => this.props.removeYear(this.props.yearIndex))
+      .catch(error => console.log(error.message));
+
+    this.showDeleteYear();
+
+    this.props.history.push('/');
   }
 
   /**
@@ -120,30 +130,7 @@ class Summary extends React.Component {
 
   // Shows the delete year dialog
   showDeleteYear() {
-    if (this.props.isExample) return;
-
     this.setState({ isDeletingYear: !this.state.isDeletingYear });
-  }
-
-  insertNewYear() {
-    if (this.props.isExample) return;
-
-    this.props.firebase
-      .insertNewYear()
-      .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
-      .catch(error => console.log(error.message));
-  }
-
-  // Deletes the current active year from firebae and redux
-  deleteSelectedYear() {
-    if (this.props.isExample) return;
-
-    this.props.firebase
-      .deleteYear(this.props.yearIndex)
-      .then(() => this.props.removeYear(this.props.yearIndex))
-      .catch(error => console.log(error.message));
-
-    this.showDeleteYear();
   }
 
   render() {
@@ -152,28 +139,13 @@ class Summary extends React.Component {
     return (
       <Paper className={classes.root} elevation={3}>
         <DeleteModule
-          disabled={this.props.isExample}
           open={this.state.isDeletingYear}
           title={this.props.yearTitle}
           onDelete={this.deleteSelectedYear}
           onClose={this.showDeleteYear}
         />
-        <Tooltip title="Create Year" placement="right">
-          <IconButton
-            style={{ display: this.props.isExample ? 'none' : undefined }}
-            onClick={this.insertNewYear}
-            className={classes.addButton}
-          >
-            <Icon color="primary">add</Icon>
-          </IconButton>
-        </Tooltip>
         <Tooltip title="Delete Year" placement="left">
-          <Icon
-            style={{ display: this.props.isExample ? 'none' : undefined }}
-            onClick={this.showDeleteYear}
-            className={classes.removeButton}
-            color="secondary"
-          >
+          <Icon onClick={this.showDeleteYear} className={classes.removeButton} color="secondary">
             delete
           </Icon>
         </Tooltip>
@@ -222,14 +194,15 @@ class Summary extends React.Component {
 }
 
 Summary.propTypes = {
-  yearIndex: PropTypes.string,
-  removeYear: PropTypes.func,
-  insertNewYear: PropTypes.func,
+  yearIndex: PropTypes.string.isRequired,
   updateYearTitle: PropTypes.func.isRequired,
+  removeYear: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  units: PropTypes.shape({}),
-  history: PropTypes.shape({}).isRequired,
-  yearTitle: PropTypes.string,
+  units: PropTypes.shape({}).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+  yearTitle: PropTypes.string.isRequired,
   firebase: PropTypes.shape({
     deleteYear: PropTypes.func,
     insertNewYear: PropTypes.func,
@@ -240,16 +213,8 @@ Summary.propTypes = {
     course_year: PropTypes.string,
     course_name: PropTypes.string,
   }).isRequired,
-  isExample: PropTypes.bool,
 };
 
-Summary.defaultProps = {
-  yearIndex: 0,
-  isExample: false,
-  yearTitle: 'Year',
-  units: null,
-  removeYear: () => null,
-  insertNewYear: () => null,
-};
+Summary.defaultProps = {};
 
 export default withStyles(styles)(Summary);
