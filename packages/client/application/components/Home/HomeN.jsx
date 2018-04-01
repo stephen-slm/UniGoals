@@ -9,7 +9,12 @@ import Grid from 'material-ui/Grid';
 import YearPreview from './YearPreview';
 
 const styles = theme => ({
-  root: { marginTop: theme.spacing.unit * 2 },
+  root: {
+    marginTop: theme.spacing.unit * 2,
+    maxWidth: '80%',
+    margin: '0 auto',
+    textAlign: 'center',
+  },
 });
 
 const Home = props => {

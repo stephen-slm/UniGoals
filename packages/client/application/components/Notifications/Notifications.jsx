@@ -55,6 +55,9 @@ class Notifications extends React.Component {
         <div>
           <div className={classes.error}>
             <p className={classes.errorTitle}>No Notifications</p>
+            <span role="img" aria-label="sad emoji" className={classes.errorTitle}>
+              😢
+            </span>
             <p className={classes.errorMessage}>
               Sorry there does not seem to be any notifications for you to view.
             </p>
@@ -64,7 +67,13 @@ class Notifications extends React.Component {
                 homepage
               </Link>{' '}
               or{' '}
-              <span className={classes.linker} role="button" onClick={this.props.showHelpBox}>
+              <span
+                tabIndex={0}
+                className={classes.linker}
+                onClick={this.props.showHelpBox}
+                onKeyPress={this.props.showHelpBox}
+                role="button"
+              >
                 send a help message
               </span>{' '}
               if you expected something different
