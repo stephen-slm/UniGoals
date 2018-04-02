@@ -18,6 +18,9 @@ const styles = theme => ({
     textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
       maxWidth: '95%',
+      '@media screen and (orientation:landscape)': {
+        marginBottom: '90px',
+      },
     },
   },
 });
