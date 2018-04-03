@@ -2,7 +2,7 @@
 isCurrentUser(uid) { auth != null && auth.uid == uid }
 
 type NameString extends String {
-    validate() { this.length > 3 && this.length <= 50 }
+    validate() { this.length >= 3 && this.length <= 50 }
 }
 
 type EmailString extends String {
