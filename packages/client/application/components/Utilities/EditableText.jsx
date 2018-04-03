@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
+import uuid from 'uuid/v4';
 
 const styles = () => ({
   root: {
@@ -21,22 +22,19 @@ class EditableText extends React.Component {
 
     const value = props.value == null ? props.defaultValue : props.value;
 
+    this.handleInputFocus = this.handleInputFocus.bind(this);
+    this.handleTextChange = this.handleTextChange.bind(this);
+    this.maybeRenderInput = this.maybeRenderInput.bind(this);
+    this.handleKeyEvent = this.handleKeyEvent.bind(this);
     this.cancelEditing = this.cancelEditing.bind(this);
     this.toggleEditing = this.toggleEditing.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
-    this.handleTextChange = this.handleTextChange.bind(this);
-    this.handleKeyEvent = this.handleKeyEvent.bind(this);
-
-    this.refHandlers = {
-      content: (spanElement) => {
-        this.valueElement = spanElement;
-      },
-    };
 
     this.state = {
       isEditing: props.isEditing === true && props.disabled === false,
       lastValue: value,
       value,
+      inputId: uuid(),
     };
   }
 
@@ -112,7 +110,18 @@ class EditableText extends React.Component {
     }
   }
 
-  maybeRenderInput(value) {
+  /**
+   * Puts the Cursor at the end of the eletement, we use getElement
+   * because the ref is not set fast enough
+   */
+  handleInputFocus() {
+    const inputElement = document.getElementById(`editableEdit-${this.state.inputId}`);
+    const { value } = inputElement.value;
+    inputElement.value = null;
+    inputElement.value = value;
+  }
+
+  maybeRenderInput(value, rootStyle) {
     const { maxLength } = this.props;
     if (!this.state.isEditing) {
       return undefined;
@@ -122,14 +131,24 @@ class EditableText extends React.Component {
       onBlur: this.toggleEditing,
       onChange: this.handleTextChange,
       onKeyDown: this.handleKeyEvent,
-      ref: this.refHandlers.input,
       style: {
         lineHeight: this.state.inputHeight != null ? `${this.state.inputHeight}px` : null,
         width: this.state.inputWidth,
       },
       value,
     };
-    return <input size={Number(this.state.value.length)} type="text" {...props} />;
+    return (
+      <input
+        // Auto focuus on clicking the input
+        autoFocus // eslint-disable-line
+        onFocus={this.handleInputFocus}
+        className={`${this.props.className} ${rootStyle}`}
+        size={Number(this.state.value.length)}
+        type="text"
+        id={`editableEdit-${this.state.inputId}`}
+        {...props}
+      />
+    );
   }
 
   render() {
@@ -155,13 +174,12 @@ class EditableText extends React.Component {
         onFocus={this.handleFocus}
         tabIndex={tabIndex}
       >
-        {this.maybeRenderInput(value)}
+        {this.maybeRenderInput(value, classes.root)}
         <Typography
           variant={this.props.variant}
           style={contentStyle}
           className={classes.span}
           component={this.props.type}
-          ref={this.refHandlers.content}
         >
           {hasValue ? value : this.props.placeholder}
         </Typography>
