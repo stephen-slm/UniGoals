@@ -22,6 +22,11 @@ const styles = theme => ({
   },
   title: {
     textAlign: 'center',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: '1.5rem',
+    fontWeight: '400',
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    lineHeight: '1.35417em',
   },
   tableWrapper: {
     overflow: 'auto',

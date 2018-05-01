@@ -5,6 +5,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
+import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 
 // Bottom navigation
@@ -58,13 +59,14 @@ const styles = theme => ({
 });
 
 class Navigation extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       showNotifications: false,
       showSignOut: false,
       invalidhelpMessage: false,
+      notificationCount: 0,
     };
 
     this.getWelcomeMessage = this.getWelcomeMessage.bind(this);
@@ -72,7 +74,17 @@ class Navigation extends React.Component {
     this.showNotifications = this.showNotifications.bind(this);
     this.showSignOutBox = this.showSignOutBox.bind(this);
     this.signOut = this.signOut.bind(this);
+
+    const notificationRef = props.firebase.getNotificationRef();
+
+    notificationRef.on('value', snapshot => {
+      this.setState({
+        notificationCount: _.size(snapshot.val()),
+      });
+    });
   }
+
+  componentWillReceiveProps(props) {}
 
   getWelcomeMessage() {
     const time = new Date();
@@ -206,7 +218,15 @@ class Navigation extends React.Component {
           <Link href="/notifications" to="/notifications" style={{ textDecoration: 'none' }}>
             <BottomNavigationAction
               value="notifications"
-              icon={<Icon className={classes.bottomNavigationColor}>notifications</Icon>}
+              icon={
+                this.state.notificationCount > 0 ? (
+                  <Badge badgeContent={this.state.notificationCount} color="error">
+                    <Icon className={classes.bottomNavigationColor}>notifications</Icon>
+                  </Badge>
+                ) : (
+                  <Icon className={classes.bottomNavigationColor}>notifications</Icon>
+                )
+              }
             />
           </Link>
         </BottomNavigation>
