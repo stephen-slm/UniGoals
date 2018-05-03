@@ -9,7 +9,7 @@ import Icon from 'material-ui/Icon';
 import * as constants from '../../utils/constants';
 import Expandable from '../Table/Expandable';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: '0 auto',
     maxWidth: '75%',
@@ -55,8 +55,8 @@ class Tables extends React.Component {
     } else {
       this.props.firebase
         .insertUnitById(this.props.yearIndex)
-        .then(ref => this.insertTableAndNavigate(ref))
-        .catch(error => console.log(error.message));
+        .then((ref) => this.insertTableAndNavigate(ref))
+        .catch((error) => console.log(error.message));
     }
   }
 
@@ -72,6 +72,7 @@ class Tables extends React.Component {
           _.map(this.props.units, (unit, index) => (
             <div key={index} id={`${index}`}>
               <Expandable
+                setUnitDoubleWeightStatus={this.props.setUnitDoubleWeightStatus}
                 tableIndex={index}
                 yearIndex={this.props.yearIndex}
                 insertUnitRow={this.props.insertUnitRow}
@@ -98,6 +99,7 @@ Tables.propTypes = {
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   units: PropTypes.shape({}),
+  setUnitDoubleWeightStatus: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   addUnitTable: PropTypes.func.isRequired,

@@ -1,72 +1,60 @@
-import _ from "lodash";
-import React from "react";
-import PropTypes from "prop-types";
-import Paper from "material-ui/Paper";
-import Typography from "material-ui/Typography";
-import { withStyles } from "material-ui/styles";
-import Table, {
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
-} from "material-ui/Table";
-import Icon from "material-ui/Icon";
-import IconButton from "material-ui/IconButton";
+import _ from 'lodash';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Paper from 'material-ui/Paper';
+import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Icon from 'material-ui/Icon';
+import IconButton from 'material-ui/IconButton';
+import { FormControlLabel } from 'material-ui/Form';
+import Switch from 'material-ui/Switch';
 
-import * as constants from "../../utils/constants";
-import Percentages from "../Summary/Percentages";
-import EditableText from "../Utilities/EditableText";
-import DeleteModule from "../Utilities/DeleteModule";
+import * as constants from '../../utils/constants';
+import Percentages from '../Summary/Percentages';
+import EditableText from '../Utilities/EditableText';
+import DeleteModule from '../Utilities/DeleteModule';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
-    margin: "25px auto",
-    maxWidth: "80%",
+    margin: '25px auto',
+    maxWidth: '80%',
     paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3
+    paddingBottom: theme.spacing.unit * 3,
   },
   title: {
-    textAlign: "center",
-    color: "rgba(0, 0, 0, 0.87)",
-    fontSize: "1.5rem",
-    fontWeight: "400",
+    textAlign: 'center',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: '1.5rem',
+    fontWeight: '400',
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    lineHeight: "1.35417em"
+    lineHeight: '1.35417em',
   },
   tableWrapper: {
-    overflow: "auto",
-    minWidth: "30%",
-    "-webkit-overflow-scrolling": "touch"
+    overflow: 'auto',
+    minWidth: '30%',
+    '-webkit-overflow-scrolling': 'touch',
   },
   table: {
-    overflow: "auto",
-    maxWidth: "75%",
-    margin: "0 auto"
-  }
+    overflow: 'auto',
+    maxWidth: '75%',
+    margin: '0 auto',
+  },
 });
 
 class UnitTable extends React.Component {
   static validateChangeUpdate(columnIndex, change) {
-    if (columnIndex === "name" && change.length > constants.TABLE.NAME.MAX) {
+    if (columnIndex === 'name' && change.length > constants.TABLE.NAME.MAX) {
+      return false;
+    } else if (columnIndex === 'name' && change.length < constants.TABLE.NAME.MIN) {
+      return false;
+    } else if (columnIndex === 'weighting' && change.length > constants.TABLE.WEIGHT.MAX) {
+      return false;
+    } else if (columnIndex === 'achieved' && change.length > constants.TABLE.ACHIEVED.MAX) {
       return false;
     } else if (
-      columnIndex === "name" &&
-      change.length < constants.TABLE.NAME.MIN
-    ) {
-      return false;
-    } else if (
-      columnIndex === "weighting" &&
-      change.length > constants.TABLE.WEIGHT.MAX
-    ) {
-      return false;
-    } else if (
-      columnIndex === "achieved" &&
-      change.length > constants.TABLE.ACHIEVED.MAX
-    ) {
-      return false;
-    } else if (
-      (columnIndex === "weighting" || columnIndex === "achieved") &&
-      change !== "" &&
+      (columnIndex === 'weighting' || columnIndex === 'achieved') &&
+      change !== '' &&
       _.isNaN(parseInt(change, 10))
     ) {
       return false;
@@ -92,9 +80,11 @@ class UnitTable extends React.Component {
     this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
     this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
 
+    this.setUnitDoubleWeightedValue = this.setUnitDoubleWeightedValue.bind(this);
+
     this.state = {
       showInsertRow: false,
-      isDeletingUnit: false
+      isDeletingUnit: false,
     };
   }
 
@@ -103,7 +93,7 @@ class UnitTable extends React.Component {
     let weighting = 0;
     let achieved = 0;
 
-    _.forEach(this.props.unit.content, row => {
+    _.forEach(this.props.unit.content, (row) => {
       if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
         achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
       }
@@ -114,7 +104,7 @@ class UnitTable extends React.Component {
 
     return {
       weighting: parseInt(weighting, 10),
-      achieved: parseFloat(achieved / 100).toFixed(2)
+      achieved: parseFloat(achieved / 100).toFixed(2),
     };
   }
 
@@ -130,16 +120,12 @@ class UnitTable extends React.Component {
     const { tableIndex, yearIndex } = this.props;
 
     if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
-      console.log(
-        `Only a maximum of ${
-          constants.UNIT.ENTRY_MAX
-        } rows at anyone time per unit.`
-      );
+      console.log(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
     } else {
       this.props.firebase
         .insertUnitRowById(yearIndex, tableIndex)
-        .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch(error => console.log(error.message));
+        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
+        .catch((error) => console.log(error.message));
     }
   }
 
@@ -149,11 +135,7 @@ class UnitTable extends React.Component {
    */
   updateUnitTitle(change) {
     if (!_.isNil(change) || change !== this.props.unit.title) {
-      this.props.updateUnitTitle(
-        change,
-        this.props.yearIndex,
-        this.props.tableIndex
-      );
+      this.props.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex);
     }
   }
 
@@ -162,13 +144,10 @@ class UnitTable extends React.Component {
    * @param {string} change title change
    */
   updateUnitTitleDatabase(change) {
-    if (
-      (!_.isNil(change) || change !== this.props.unit.title) &&
-      !this.props.isExample
-    ) {
+    if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
       this.props.firebase
         .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
-        .catch(error => console.log(error.message));
+        .catch((error) => console.log(error.message));
     }
   }
 
@@ -180,11 +159,7 @@ class UnitTable extends React.Component {
 
     if (this.props.isExample) return;
 
-    console.log(
-      `Deleted ${
-        this.props.unit.title === null ? "the" : this.props.unit.title
-      } unit`
-    );
+    console.log(`Deleted ${this.props.unit.title === null ? 'the' : this.props.unit.title} unit`);
     const { tableIndex: unitTableIndex, yearIndex } = this.props;
 
     this.props.removeUnitTable(yearIndex, unitTableIndex);
@@ -225,17 +200,8 @@ class UnitTable extends React.Component {
 
     // This means that its the same content as was already there, so there is no need to update
     // when it does not change.
-    if (
-      !_.isNil(change) ||
-      change !== this.props.unit.content[rowIndex][columnIndex]
-    ) {
-      this.props.updateRowContent(
-        change,
-        yearIndex,
-        tableIndex,
-        rowIndex,
-        columnIndex
-      );
+    if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
+      this.props.updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex);
     }
   }
 
@@ -251,12 +217,9 @@ class UnitTable extends React.Component {
 
     let updatedChange = change;
 
-    if (
-      (columnIndex === "achieved" || columnIndex === "weighting") &&
-      updatedChange === ""
-    ) {
-      this.updateRowContent("0", rowIndex, columnIndex);
-      updatedChange = "0";
+    if ((columnIndex === 'achieved' || columnIndex === 'weighting') && updatedChange === '') {
+      this.updateRowContent('0', rowIndex, columnIndex);
+      updatedChange = '0';
     }
 
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
@@ -267,8 +230,7 @@ class UnitTable extends React.Component {
       // TODO: `${columnIndex} update did not meet requirements`
     }
 
-    const validUpdate =
-      updatedChange !== this.props.unit.content[rowIndex][columnIndex];
+    const validUpdate = updatedChange !== this.props.unit.content[rowIndex][columnIndex];
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.isExample) {
       const { tableIndex, yearIndex } = this.props;
@@ -277,28 +239,40 @@ class UnitTable extends React.Component {
         yearIndex,
         tableIndex,
         rowIndex,
-        columnIndex
+        columnIndex,
       );
     }
   }
 
   moveOverShowInsert() {
     this.setState({
-      showInsertRow: true
+      showInsertRow: true,
     });
   }
 
   moveHideShowInsert() {
     this.setState({
-      showInsertRow: false
+      showInsertRow: false,
     });
   }
 
   showDeleteUnitBox() {
     this.setState({
       isDeletingUnit: !this.state.isDeletingUnit,
-      tableTitle: this.state.tableTitle
+      tableTitle: this.state.tableTitle,
     });
+  }
+
+  /**
+   * Updates the units double weighted value to the flipped value of the current
+   */
+  setUnitDoubleWeightedValue() {
+    debugger;
+    const { yearIndex, tableIndex } = this.props;
+    const { double } = this.props.unit;
+
+    this.props.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
+    this.props.firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
   }
 
   render() {
@@ -307,6 +281,16 @@ class UnitTable extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={this.props.unit.double || false}
+              onChange={this.setUnitDoubleWeightedValue}
+              color="primary"
+            />
+          }
+          label="Double unit"
+        />
         <DeleteModule
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
@@ -339,7 +323,7 @@ class UnitTable extends React.Component {
                 <TableCell>% Achieved</TableCell>
                 <TableCell
                   style={{
-                    visibility: this.state.showInsertRow ? "visible" : "hidden"
+                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
                   }}
                 >
                   <IconButton onClick={this.insertRowBelow}>
@@ -348,60 +332,43 @@ class UnitTable extends React.Component {
                 </TableCell>
               </TableRow>
             </TableHead>
-            <TableBody
-              onMouseEnter={this.mouseOverEdit}
-              onMouseLeave={this.moveOutEdit}
-            >
+            <TableBody onMouseEnter={this.mouseOverEdit} onMouseLeave={this.moveOutEdit}>
               {_.map(this.props.unit.content, (row, index) => (
                 <TableRow key={index}>
                   <TableCell>
                     <EditableText
                       placeholder="Section"
                       maxLength={constants.TABLE.NAME.MAX}
-                      onChange={change =>
-                        this.updateRowContent(change, index, "name")
-                      }
-                      onConfirm={change =>
-                        this.updateRowContentDatabase(change, index, "name")
-                      }
-                      value={_.defaultTo(row.name, "Section")}
+                      onChange={(change) => this.updateRowContent(change, index, 'name')}
+                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
+                      value={_.defaultTo(row.name, 'Section')}
                     />
                   </TableCell>
                   <TableCell>
                     <EditableText
                       placeholder="% Weighting"
                       maxLength={constants.TABLE.WEIGHT.MAX}
-                      onChange={change =>
-                        this.updateRowContent(change, index, "weighting")
+                      onChange={(change) => this.updateRowContent(change, index, 'weighting')}
+                      onConfirm={(change) =>
+                        this.updateRowContentDatabase(change, index, 'weighting')
                       }
-                      onConfirm={change =>
-                        this.updateRowContentDatabase(
-                          change,
-                          index,
-                          "weighting"
-                        )
-                      }
-                      value={_.defaultTo(row.weighting, "0")}
+                      value={_.defaultTo(row.weighting, '0')}
                     />
                   </TableCell>
                   <TableCell>
                     <EditableText
                       placeholder="% Achieved"
                       maxLength={constants.TABLE.ACHIEVED.MAX}
-                      onChange={change =>
-                        this.updateRowContent(change, index, "achieved")
+                      onChange={(change) => this.updateRowContent(change, index, 'achieved')}
+                      onConfirm={(change) =>
+                        this.updateRowContentDatabase(change, index, 'achieved')
                       }
-                      onConfirm={change =>
-                        this.updateRowContentDatabase(change, index, "achieved")
-                      }
-                      value={_.defaultTo(row.achieved, "0")}
+                      value={_.defaultTo(row.achieved, '0')}
                     />
                   </TableCell>
                   <TableCell
                     style={{
-                      visibility: this.state.showInsertRow
-                        ? "visible"
-                        : "hidden"
+                      visibility: this.state.showInsertRow ? 'visible' : 'hidden',
                     }}
                   >
                     <IconButton onClick={() => this.removeRowById(index)}>
@@ -416,7 +383,7 @@ class UnitTable extends React.Component {
                 <TableCell>{totals.achieved}</TableCell>
                 <TableCell
                   style={{
-                    visibility: this.state.showInsertRow ? "visible" : "hidden"
+                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
                   }}
                 >
                   <IconButton onClick={this.showDeleteUnitBox}>
@@ -435,33 +402,37 @@ class UnitTable extends React.Component {
 UnitTable.propTypes = {
   updateRowContent: PropTypes.func,
   removeUnitRow: PropTypes.func,
+  setUnitDoubleWeightStatus: PropTypes.func,
   insertUnitRow: PropTypes.func,
   updateUnitTitle: PropTypes.func,
   removeUnitTable: PropTypes.func,
   firebase: PropTypes.shape({
+    setUnitDoubleWeightStatus: PropTypes.func,
     deleteUnitById: PropTypes.func,
     updateUnitTitle: PropTypes.func,
     deleteUnitRowById: PropTypes.func,
     insertUnitRowById: PropTypes.func,
-    updateUnitRowSection: PropTypes.func
+    updateUnitRowSection: PropTypes.func,
   }).isRequired,
   yearIndex: PropTypes.string.isRequired,
   tableIndex: PropTypes.string.isRequired,
   classes: PropTypes.shape({}).isRequired,
   unit: PropTypes.shape({
     content: PropTypes.shape({}),
-    title: PropTypes.string
+    title: PropTypes.string,
+    double: PropTypes.bool,
   }).isRequired,
-  isExample: PropTypes.bool
+  isExample: PropTypes.bool,
 };
 
 UnitTable.defaultProps = {
   isExample: false,
+  setUnitDoubleWeightStatus: () => {},
   updateRowContent: () => {},
   removeUnitRow: () => {},
   insertUnitRow: () => {},
   updateUnitTitle: () => {},
-  removeUnitTable: () => {}
+  removeUnitTable: () => {},
 };
 
 export default withStyles(styles)(UnitTable);

@@ -49,6 +49,7 @@ export default class Application extends React.Component {
       removeUnitTable,
       updateNotifications,
       removeNotification,
+      setUnitDoubleWeightStatus,
       updateYearTitle,
       updateProfile,
       version,
@@ -100,6 +101,7 @@ export default class Application extends React.Component {
                 path="/year/:yearIndex"
                 render={() => (
                   <Year
+                    setUnitDoubleWeightStatus={setUnitDoubleWeightStatus}
                     insertUnitRow={insertUnitRow}
                     history={this.history}
                     profile={profile}
