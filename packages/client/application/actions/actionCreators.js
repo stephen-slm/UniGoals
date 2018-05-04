@@ -177,12 +177,12 @@ export function updateYearTitle(yearIndex, yearTitle) {
  * @param {string} tableIndex the table index
  * @param {boolean} value the new double boolean value
  */
-export function setUnitDoubleWeightStatus(yearIndex, tableIndex, value) {
+export function setUnitDoubleWeightStatus(yearIndex, tableIndex, double) {
   return {
     type: actionTypes.UPDATE_UNIT_DOUBLE_WEIGHT,
     yearIndex,
     tableIndex,
-    value,
+    double,
   };
 }
 

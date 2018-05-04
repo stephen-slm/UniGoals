@@ -92,7 +92,7 @@ export function calculateTopFiveRankings(units, history) {
     const totalAchieved = getAchievedTotalFromUnit(unit);
 
     return {
-      title: unit.title,
+      title: `${unit.title}${unit.double ? ' (double)' : ''}`,
       total: totalAchieved,
       link: `${history.location.search}#${index}`,
     };

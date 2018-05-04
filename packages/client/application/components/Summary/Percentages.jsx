@@ -75,6 +75,8 @@ class Perentages extends React.Component {
    * @param {object} data All the units for the user
    */
   static calculateAverageGradePercentSummary(data) {
+    let doubleCount = 0;
+
     if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
       return {
         average: 0,
@@ -99,13 +101,19 @@ class Perentages extends React.Component {
           }
         });
 
-        total += tableTotal / _.size(unit.content);
-        maxTotalPossible += tableMax / _.size(unit.content);
+        if (unit.double) {
+          doubleCount += 1;
+          total += tableTotal / _.size(unit.content) * 2;
+          maxTotalPossible += tableMax / _.size(unit.content) * 2;
+        } else {
+          total += tableTotal / _.size(unit.content);
+          maxTotalPossible += tableMax / _.size(unit.content);
+        }
       }
     });
 
-    let average = parseFloat(total / _.size(data)).toFixed(2);
-    let max = parseFloat(maxTotalPossible / _.size(data)).toFixed(2);
+    let average = parseFloat(total / (_.size(data) + doubleCount)).toFixed(2);
+    let max = parseFloat(maxTotalPossible / (_.size(data) + doubleCount)).toFixed(2);
 
     if (_.isNaN(Number(average))) average = '0.00';
     if (_.isNaN(Number(max))) max = '0.00';

@@ -267,7 +267,6 @@ class UnitTable extends React.Component {
    * Updates the units double weighted value to the flipped value of the current
    */
   setUnitDoubleWeightedValue() {
-    debugger;
     const { yearIndex, tableIndex } = this.props;
     const { double } = this.props.unit;
 
