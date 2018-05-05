@@ -9,9 +9,9 @@ const styles = () => ({
     position: 'relative',
   },
   span: {
-    display: 'none',
-    ':hover::before': {
-      boxShadow: '',
+    display: 'block',
+    '&:hover': {
+      border: '1px solid #eaeaea',
     },
   },
 });
@@ -142,7 +142,7 @@ class EditableText extends React.Component {
         // Auto focuus on clicking the input
         autoFocus // eslint-disable-line
         onFocus={this.handleInputFocus}
-        className={`${this.props.className} ${rootStyle}`}
+        className={`${this.props.className} ${this.props.classes.root}`}
         size={Number(this.state.value.length)}
         type="text"
         id={`editableEdit-${this.state.inputId}`}
