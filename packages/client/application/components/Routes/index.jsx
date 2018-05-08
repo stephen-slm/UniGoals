@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Route, Redirect } from 'react-router-dom';
 
 export const renderMergedProps = (component, ...rest) => {
@@ -27,3 +28,11 @@ export const PrivateRoute = ({ component, ...rest }) => (
     }
   />
 );
+
+PropsRoute.propTypes = {
+  component: PropTypes.func.isRequired,
+};
+
+PrivateRoute.propTypes = {
+  component: PropTypes.func.isRequired,
+};
