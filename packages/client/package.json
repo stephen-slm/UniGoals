@@ -2,13 +2,11 @@
   "name": "unigoals",
   "version": "0.3.4",
   "author": "MambaSoftware",
-  "description":
-    "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
+  "description": "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
   "scripts": {
     "build:hot": "webpack-dev-server -d --config ./webpack.config.development.js",
     "build:dev": "webpack -d --watch --config ./webpack.config.development.js",
-    "build":
-      "npm run lint && webpack -p --progress --env.production --config ./webpack.config.production.js",
+    "build": "npm run lint && webpack -p --progress --env.production --config ./webpack.config.production.js",
     "lint": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../../.gitignore .",
     "lint:fix": "eslint -c ./.eslintrc.js --ext .js,.jsx --ignore-path ../../.gitignore . --fix",
     "deploy": "yarn run build && firebase deploy"
@@ -19,6 +17,7 @@
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
     "classnames": "^2.2.5",
     "firebase": "^4.11.0",
     "firebase-bolt": "^0.8.2",

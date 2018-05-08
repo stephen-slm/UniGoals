@@ -1,14 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import _ from 'lodash';
-
 import Grid from 'material-ui/Grid';
-import YearPreview from './YearPreview';
-import YearPrviewAdd from './YearPreviewAdd';
-import NewUser from '../Utilities/NewUser';
 
-import * as constants from '../../utils/constants';
+import YearsPreview from '../YearsPreview';
+import NewUser from '../Utilities/NewUser';
 
 const styles = theme => ({
   root: {
@@ -39,16 +35,11 @@ const Home = props => {
         <Grid className={classes.root}>
           <Grid item xs={12}>
             <Grid container justify="center" spacing={16}>
-              {_.map(props.years, (year, index) => (
-                <Grid key={index} item>
-                  <YearPreview year={year} index={index} />
-                </Grid>
-              ))}
-              {_.size(props.years) < constants.YEAR.MAX && (
-                <Grid key={_.size(props.years) + 1} item>
-                  <YearPrviewAdd insertNewYear={props.insertNewYear} firebase={props.firebase} />
-                </Grid>
-              )}
+              <YearsPreview
+                firebase={props.firebase}
+                years={props.years}
+                insertNewYear={props.insertNewYear}
+              />
             </Grid>
           </Grid>
         </Grid>

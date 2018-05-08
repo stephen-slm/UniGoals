@@ -2,7 +2,9 @@ import * as _ from 'lodash';
 
 import * as actionTypes from '../actions/actionTypes';
 
-export default function profile(state = { email: null, new: true }, action) {
+export default function profile(state = {
+  email: null, new: true, name: '', auth: false,
+}, action) {
   switch (action.type) {
     case actionTypes.UPDATE_PROFILE: {
       if (!_.isNil(action.profile) && !_.isNil(action.profile.name)) {

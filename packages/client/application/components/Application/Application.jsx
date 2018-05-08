@@ -1,11 +1,12 @@
 import createBrowserHistory from 'history/createBrowserHistory';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
-import * as _ from 'lodash';
 
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import * as routePaths from './routePaths';
+
+import { PropsRoute, PrivateRoute } from '../Routes';
 
 import Home from '../Home/Home';
 import Navigation from '../Navigation/Navigation';
@@ -17,8 +18,12 @@ import Year from '../Home/Year';
 
 const theme = createMuiTheme({
   palette: {
-    primary: { main: '#F6511D' }, // This is just green.A700 as hex.
-    secondary: { main: '#00A6ED' }, // Purple and green play nicely together.
+    primary: {
+      main: '#F6511D',
+    }, // This is just green.A700 as hex.
+    secondary: {
+      main: '#00A6ED',
+    }, // Purple and green play nicely together.
   },
 });
 
@@ -28,124 +33,148 @@ export default class Application extends React.Component {
 
     this.routePaths = routePaths;
     this.history = createBrowserHistory();
-
-    this.history.replace('/');
   }
 
   render() {
-    const {
-      removeProfile,
-      profile,
-      notifications,
-      years,
-      updateYears,
-      removeUnitRow,
-      removeYear,
-      insertUnitRow,
-      insertNewYear,
-      updateRowContent,
-      updateUnitTitle,
-      addUnitTable,
-      removeUnitTable,
-      updateNotifications,
-      removeNotification,
-      updateYearTitle,
-      updateProfile,
-      version,
-      firebase,
-      displayHelp,
-      showHelpBox,
-    } = this.props;
-
-    if (!_.isNil(profile.name)) {
-      return (
-        <Router>
-          <MuiThemeProvider theme={theme}>
-            <Navigation
-              history={this.history}
-              routePaths={this.routePaths}
-              profile={profile}
-              removeProfile={removeProfile}
-              firebase={firebase}
-              version={version}
-              displayHelp={displayHelp}
-              showHelpBox={showHelpBox}
-            >
-              <Route
-                exact
-                path={this.routePaths.home}
-                render={() => (
-                  <Home
-                    years={years}
-                    firebase={firebase}
-                    profile={profile}
-                    updateProfile={updateProfile}
-                    insertNewYear={insertNewYear}
-                  />
-                )}
-              />
-              <Route
-                path={this.routePaths.notifications}
-                render={() => (
-                  <Notifications
-                    updateNotifications={updateNotifications}
-                    removeNotification={removeNotification}
-                    notifications={notifications}
-                    showHelpBox={showHelpBox}
-                    firebase={firebase}
-                  />
-                )}
-              />
-              <Route
-                path="/year/:yearIndex"
-                render={() => (
-                  <Year
-                    insertUnitRow={insertUnitRow}
-                    history={this.history}
-                    profile={profile}
-                    years={years}
-                    updateYears={updateYears}
-                    removeYear={removeYear}
-                    updateYearTitle={updateYearTitle}
-                    removeUnitRow={removeUnitRow}
-                    updateRowContent={updateRowContent}
-                    updateUnitTitle={updateUnitTitle}
-                    addUnitTable={addUnitTable}
-                    removeUnitTable={removeUnitTable}
-                    firebase={firebase}
-                  />
-                )}
-              />
-            </Navigation>
-          </MuiThemeProvider>
-        </Router>
-      );
-    }
-
     return (
       <Router>
         <MuiThemeProvider theme={theme}>
-          <div>
-            <Route
-              exact
-              path="*"
-              render={() => (
-                <Login
-                  updateProfile={this.props.updateProfile}
-                  updateNotifications={this.props.updateNotifications}
-                  updateYearTitle={this.props.updateYearTitle}
-                  firebase={this.props.firebase}
-                  updateYears={this.props.updateYears}
-                  history={this.history}
-                  version={version}
-                />
-              )}
-            />
-          </div>
+          <Switch>
+            <PropsRoute exact path="/" component={Login} {...this.props} />
+            <PropsRoute exact path="/login" component={Login} {...this.props} />
+            <Navigation
+              history={this.history}
+              routePaths={this.routePaths}
+              profile={this.props.profile}
+              removeProfile={this.props.removeProfile}
+              firebase={this.props.firebase}
+              version={this.props.version}
+              displayHelp={this.props.displayHelp}
+              showHelpBox={this.props.showHelpBox}
+            >
+              <PrivateRoute path="/home" component={Home} {...this.props} />
+              <PrivateRoute path="/notifications" component={Notifications} {...this.props} />
+              <PrivateRoute path="/year/:yearIndex" component={Year} {...this.props} />
+            </Navigation>
+          </Switch>
         </MuiThemeProvider>
       </Router>
     );
   }
+
+  // render() {
+  //   const {
+  //     removeProfile,
+  //     profile,
+  //     notifications,
+  //     years,
+  //     updateYears,
+  //     removeUnitRow,
+  //     removeYear,
+  //     insertUnitRow,
+  //     insertNewYear,
+  //     updateRowContent,
+  //     updateUnitTitle,
+  //     addUnitTable,
+  //     removeUnitTable,
+  //     updateNotifications,
+  //     removeNotification,
+  //     updateYearTitle,
+  //     updateProfile,
+  //     version,
+  //     firebase,
+  //     displayHelp,
+  //     showHelpBox,
+  //   } = this.props;
+
+  //   if (!_.isNil(profile.name)) {
+  //     return (
+  //       <Router>
+  //         <MuiThemeProvider theme={theme}>
+  //           <Navigation
+  //             history={this.history}
+  //             routePaths={this.routePaths}
+  //             profile={profile}
+  //             removeProfile={removeProfile}
+  //             firebase={firebase}
+  //             version={version}
+  //             displayHelp={displayHelp}
+  //             showHelpBox={showHelpBox}
+  //           >
+  //             <Route
+  //               exact
+  //               path={this.routePaths.home}
+  //               render={() => (
+  //                 <Home
+  //                   years={years}
+  //                   firebase={firebase}
+  //                   profile={profile}
+  //                   updateProfile={updateProfile}
+  //                   insertNewYear={insertNewYear}
+  //                 />
+  //               )}
+  //             />
+  //             <Route
+  //               path={this.routePaths.notifications}
+  //               render={() => (
+  //                 <Notifications
+  //                   updateNotifications={updateNotifications}
+  //                   removeNotification={removeNotification}
+  //                   notifications={notifications}
+  //                   showHelpBox={showHelpBox}
+  //                   firebase={firebase}
+  //                 />
+  //               )}
+  //             />
+  //             <Route
+  //               path="/year/:yearIndex"
+  //               render={() => (
+  //                 <Year
+  //                   insertUnitRow={insertUnitRow}
+  //                   history={this.history}
+  //                   profile={profile}
+  //                   years={years}
+  //                   updateYears={updateYears}
+  //                   removeYear={removeYear}
+  //                   updateYearTitle={updateYearTitle}
+  //                   removeUnitRow={removeUnitRow}
+  //                   updateRowContent={updateRowContent}
+  //                   updateUnitTitle={updateUnitTitle}
+  //                   addUnitTable={addUnitTable}
+  //                   removeUnitTable={removeUnitTable}
+  //                   firebase={firebase}
+  //                 />
+  //               )}
+  //             />
+  //           </Navigation>
+  //         </MuiThemeProvider>
+  //       </Router>
+  //     );
+  //   }
+
+  //   return (
+  //     <Router>
+  //       <MuiThemeProvider theme={theme}>
+  //         <div>
+  //           <Route
+  //             exact
+  //             path="*"
+  //             render={() => (
+  //               <Login
+  //                 updateProfile={this.props.updateProfile}
+  //                 updateNotifications={this.props.updateNotifications}
+  //                 updateYearTitle={this.props.updateYearTitle}
+  //                 firebase={this.props.firebase}
+  //                 updateYears={this.props.updateYears}
+  //                 history={this.history}
+  //                 version={version}
+  //               />
+  //             )}
+  //           />
+  //         </div>
+  //       </MuiThemeProvider>
+  //     </Router>
+  //   );
 }
 
 Application.propTypes = {
