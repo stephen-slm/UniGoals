@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 });
 
-const Home = props => {
+const Years = props => {
   const { classes } = props;
 
   return (
@@ -48,7 +48,7 @@ const Home = props => {
   );
 };
 
-Home.propTypes = {
+Years.propTypes = {
   years: PropTypes.shape({
     title: PropTypes.string,
   }).isRequired,
@@ -59,6 +59,6 @@ Home.propTypes = {
   insertNewYear: PropTypes.func.isRequired,
 };
 
-Home.defaultProps = {};
+Years.defaultProps = {};
 
-export default withStyles(styles)(Home);
+export default withStyles(styles)(Years);

@@ -1,5 +1,5 @@
-import createBrowserHistory from 'history/createBrowserHistory';
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import createBrowserHistory from 'history/createBrowserHistory';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -8,10 +8,10 @@ import * as routePaths from './routePaths';
 
 import { PropsRoute, PrivateRoute } from '../Routes';
 
-import Home from '../Home/Home';
+import Notifications from '../Notifications/Notifications';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
-import Notifications from '../Notifications/Notifications';
+import Years from '../Home/Years';
 
 // Year
 import Year from '../Home/Year';
@@ -52,7 +52,7 @@ export default class Application extends React.Component {
               displayHelp={this.props.displayHelp}
               showHelpBox={this.props.showHelpBox}
             >
-              <PrivateRoute path="/home" component={Home} {...this.props} />
+              <PrivateRoute path="/home" component={Years} {...this.props} />
               <PrivateRoute path="/notifications" component={Notifications} {...this.props} />
               <PrivateRoute path="/year/:yearIndex" component={Year} {...this.props} />
             </Navigation>

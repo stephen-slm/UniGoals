@@ -212,6 +212,7 @@ class Login extends React.Component {
               isExample={this.state.isExample}
               yearIndex="Year 1"
               yearTitle="Example Year"
+              removeYear={() => undefined}
             />
             <Typography className={classes.text} compnent="p">
               Your own unqiue summary page that displays everything you need to quickly know about
