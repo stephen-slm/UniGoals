@@ -42,6 +42,7 @@ class Year extends React.Component {
           yearTitle={year.title}
         />
         <Tables
+          setUnitDoubleWeightStatus={this.props.setUnitDoubleWeightStatus}
           insertUnitRow={this.props.insertUnitRow}
           yearIndex={yearIndex}
           updateYears={this.props.updateYears}
@@ -72,6 +73,7 @@ Year.propTypes = {
   firebase: PropTypes.shape({}).isRequired,
   updateYears: PropTypes.func.isRequired,
   removeYear: PropTypes.func.isRequired,
+  setUnitDoubleWeightStatus: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,

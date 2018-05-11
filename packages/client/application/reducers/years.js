@@ -210,6 +210,26 @@ export default function years(state = {}, action) {
       return removeYearState;
     }
 
+    case actionTypes.UPDATE_UNIT_DOUBLE_WEIGHT: {
+      const {
+        yearIndex: updateDoubleYearIndex,
+        double: updateDoubleValue,
+        tableIndex: updateDoubleIndex,
+      } = action;
+
+      if (_.isNil(updateDoubleValue) || !_.isBoolean(updateDoubleValue)) {
+        return state;
+      }
+
+      const updatedUnitWeightDouble = Object.assign({}, state);
+
+      updatedUnitWeightDouble[updateDoubleYearIndex].units[
+        updateDoubleIndex
+      ].double = updateDoubleValue;
+
+      return updatedUnitWeightDouble;
+    }
+
     default: {
       return state;
     }

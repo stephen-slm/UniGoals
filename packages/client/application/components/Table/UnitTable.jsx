@@ -7,13 +7,15 @@ import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
+import { FormControlLabel } from 'material-ui/Form';
+import Switch from 'material-ui/Switch';
 
 import * as constants from '../../utils/constants';
 import Percentages from '../Summary/Percentages';
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
@@ -78,6 +80,8 @@ class UnitTable extends React.Component {
     this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
     this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
 
+    this.setUnitDoubleWeightedValue = this.setUnitDoubleWeightedValue.bind(this);
+
     this.state = {
       showInsertRow: false,
       isDeletingUnit: false,
@@ -89,7 +93,7 @@ class UnitTable extends React.Component {
     let weighting = 0;
     let achieved = 0;
 
-    _.forEach(this.props.unit.content, row => {
+    _.forEach(this.props.unit.content, (row) => {
       if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
         achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
       }
@@ -98,7 +102,10 @@ class UnitTable extends React.Component {
       }
     });
 
-    return { weighting: parseInt(weighting, 10), achieved: parseFloat(achieved / 100).toFixed(2) };
+    return {
+      weighting: parseInt(weighting, 10),
+      achieved: parseFloat(achieved / 100).toFixed(2),
+    };
   }
 
   /**
@@ -117,8 +124,8 @@ class UnitTable extends React.Component {
     } else {
       this.props.firebase
         .insertUnitRowById(yearIndex, tableIndex)
-        .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch(error => console.log(error.message));
+        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
+        .catch((error) => console.log(error.message));
     }
   }
 
@@ -140,7 +147,7 @@ class UnitTable extends React.Component {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
       this.props.firebase
         .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
-        .catch(error => console.log(error.message));
+        .catch((error) => console.log(error.message));
     }
   }
 
@@ -256,12 +263,33 @@ class UnitTable extends React.Component {
     });
   }
 
+  /**
+   * Updates the units double weighted value to the flipped value of the current
+   */
+  setUnitDoubleWeightedValue() {
+    const { yearIndex, tableIndex } = this.props;
+    const { double } = this.props.unit;
+
+    this.props.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
+    this.props.firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
+  }
+
   render() {
     const { classes } = this.props;
     const totals = this.calculateTotal();
 
     return (
       <Paper className={classes.root} elevation={3}>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={this.props.unit.double || false}
+              onChange={this.setUnitDoubleWeightedValue}
+              color="primary"
+            />
+          }
+          label="Double unit"
+        />
         <DeleteModule
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
@@ -292,7 +320,11 @@ class UnitTable extends React.Component {
                 <TableCell>Name</TableCell>
                 <TableCell>% Weighting</TableCell>
                 <TableCell>% Achieved</TableCell>
-                <TableCell style={{ visibility: this.state.showInsertRow ? 'visible' : 'hidden' }}>
+                <TableCell
+                  style={{
+                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
+                  }}
+                >
                   <IconButton onClick={this.insertRowBelow}>
                     <Icon color="primary">add</Icon>
                   </IconButton>
@@ -306,8 +338,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="Section"
                       maxLength={constants.TABLE.NAME.MAX}
-                      onChange={change => this.updateRowContent(change, index, 'name')}
-                      onConfirm={change => this.updateRowContentDatabase(change, index, 'name')}
+                      onChange={(change) => this.updateRowContent(change, index, 'name')}
+                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
                       value={_.defaultTo(row.name, 'Section')}
                     />
                   </TableCell>
@@ -315,8 +347,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Weighting"
                       maxLength={constants.TABLE.WEIGHT.MAX}
-                      onChange={change => this.updateRowContent(change, index, 'weighting')}
-                      onConfirm={change =>
+                      onChange={(change) => this.updateRowContent(change, index, 'weighting')}
+                      onConfirm={(change) =>
                         this.updateRowContentDatabase(change, index, 'weighting')
                       }
                       value={_.defaultTo(row.weighting, '0')}
@@ -326,13 +358,17 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Achieved"
                       maxLength={constants.TABLE.ACHIEVED.MAX}
-                      onChange={change => this.updateRowContent(change, index, 'achieved')}
-                      onConfirm={change => this.updateRowContentDatabase(change, index, 'achieved')}
+                      onChange={(change) => this.updateRowContent(change, index, 'achieved')}
+                      onConfirm={(change) =>
+                        this.updateRowContentDatabase(change, index, 'achieved')
+                      }
                       value={_.defaultTo(row.achieved, '0')}
                     />
                   </TableCell>
                   <TableCell
-                    style={{ visibility: this.state.showInsertRow ? 'visible' : 'hidden' }}
+                    style={{
+                      visibility: this.state.showInsertRow ? 'visible' : 'hidden',
+                    }}
                   >
                     <IconButton onClick={() => this.removeRowById(index)}>
                       <Icon color="secondary">clear</Icon>
@@ -344,7 +380,11 @@ class UnitTable extends React.Component {
                 <TableCell>Total</TableCell>
                 <TableCell>{totals.weighting}</TableCell>
                 <TableCell>{totals.achieved}</TableCell>
-                <TableCell style={{ visibility: this.state.showInsertRow ? 'visible' : 'hidden' }}>
+                <TableCell
+                  style={{
+                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
+                  }}
+                >
                   <IconButton onClick={this.showDeleteUnitBox}>
                     <Icon color="primary">delete</Icon>
                   </IconButton>
@@ -361,10 +401,12 @@ class UnitTable extends React.Component {
 UnitTable.propTypes = {
   updateRowContent: PropTypes.func,
   removeUnitRow: PropTypes.func,
+  setUnitDoubleWeightStatus: PropTypes.func,
   insertUnitRow: PropTypes.func,
   updateUnitTitle: PropTypes.func,
   removeUnitTable: PropTypes.func,
   firebase: PropTypes.shape({
+    setUnitDoubleWeightStatus: PropTypes.func,
     deleteUnitById: PropTypes.func,
     updateUnitTitle: PropTypes.func,
     deleteUnitRowById: PropTypes.func,
@@ -377,12 +419,14 @@ UnitTable.propTypes = {
   unit: PropTypes.shape({
     content: PropTypes.shape({}),
     title: PropTypes.string,
+    double: PropTypes.bool,
   }).isRequired,
   isExample: PropTypes.bool,
 };
 
 UnitTable.defaultProps = {
   isExample: false,
+  setUnitDoubleWeightStatus: () => {},
   updateRowContent: () => {},
   removeUnitRow: () => {},
   insertUnitRow: () => {},
