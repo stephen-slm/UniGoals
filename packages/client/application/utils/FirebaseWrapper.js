@@ -38,7 +38,7 @@ export default class FirebaseWrapper {
    * @returns {string}
    */
   getUid() {
-    return this.authentication.currentUser.uid;
+    return (!_.isNil(this.authentication.currentUser)) ? this.authentication.currentUser.uid : null;
   }
 
   /**

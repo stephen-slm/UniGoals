@@ -34,15 +34,9 @@ class Perentages extends React.Component {
    */
   static calculateAverageGradePercent(data) {
     if (_.size(data) === 0) {
-      return {
-        average: 0,
-        max: 0,
-      };
+      return { average: 0, max: 0 };
     } else if (_.size(data[Object.keys(data)[0]]) === 0) {
-      return {
-        average: 0,
-        max: 0,
-      };
+      return { average: 0, max: 0 };
     }
 
     let total = 0;
@@ -57,7 +51,8 @@ class Perentages extends React.Component {
       }
     });
 
-    // Using _size to get the size of the object, this is because we are using objects not arrays
+    // Using _size to get the size of the object, this is because we are using
+    // objects not arrays
     let average = parseFloat(total / _.size(data)).toFixed(2);
     let max = parseFloat(maxTotalPossible / 100).toFixed(2);
 
@@ -78,10 +73,7 @@ class Perentages extends React.Component {
     let doubleCount = 0;
 
     if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
-      return {
-        average: 0,
-        max: 0,
-      };
+      return { average: 0, max: 0 };
     }
 
     let total = 0;

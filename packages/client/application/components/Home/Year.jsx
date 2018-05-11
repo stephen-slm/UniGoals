@@ -26,7 +26,8 @@ class Year extends React.Component {
   render() {
     const { classes } = this.props;
 
-    const year = this.props.years[this.state.selectedId];
+    const yearIndex = Object.keys(this.props.years)[this.state.selectedId - 1];
+    const year = this.props.years[yearIndex];
 
     return (
       <div className={classes.root}>
@@ -37,13 +38,13 @@ class Year extends React.Component {
           units={year.units}
           profile={this.props.profile}
           history={this.props.history}
-          yearIndex={this.state.selectedId}
+          yearIndex={yearIndex}
           yearTitle={year.title}
         />
         <Tables
           setUnitDoubleWeightStatus={this.props.setUnitDoubleWeightStatus}
           insertUnitRow={this.props.insertUnitRow}
-          yearIndex={this.state.selectedId}
+          yearIndex={yearIndex}
           updateYears={this.props.updateYears}
           updateRowContent={this.props.updateRowContent}
           removeUnitRow={this.props.removeUnitRow}

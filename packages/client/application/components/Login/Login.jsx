@@ -1,19 +1,20 @@
+import { CircularProgress } from 'material-ui/Progress';
+import Card, { CardContent } from 'material-ui/Card';
+import { withStyles } from 'material-ui/styles';
+import Typography from 'material-ui/Typography';
+import { Redirect } from 'react-router-dom';
+import Button from 'material-ui/Button';
+import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import Card, { CardContent } from 'material-ui/Card';
-import { CircularProgress } from 'material-ui/Progress';
 
-import * as homePageData from './homePageData';
 import { isMobileDevice } from '../../utils/utils';
+import * as homePageData from './homePageData';
 
-import Summary from '../Summary/Summary';
 import UnitTable from '../Table/UnitTable';
+import Summary from '../Summary/Summary';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 2,
@@ -39,8 +40,8 @@ const styles = (theme) => ({
 });
 
 class Login extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.authenticate = this.authenticate.bind(this);
     this.updateContentForUser = this.updateContentForUser.bind(this);
@@ -51,6 +52,7 @@ class Login extends React.Component {
       loading: true,
       isMobile: isMobileDevice(),
       isExample: true,
+      redirectToReferrer: props.profile.auth,
     };
   }
 
@@ -61,12 +63,12 @@ class Login extends React.Component {
   componentDidMount() {
     const { authentication } = this.props.firebase;
 
-    authentication.getRedirectResult().then((login) => {
+    authentication.getRedirectResult().then(login => {
       if (!_.isNil(login.user)) {
         authentication
           .signInWithCredential(login.credential)
           .then(() => this.authenticate(login))
-          .catch((error) => this.handleAuthenticationError(error));
+          .catch(error => this.handleAuthenticationError(error));
       }
     });
 
@@ -74,9 +76,9 @@ class Login extends React.Component {
     // during the login process, this means that its safe to not have a check for this as it
     // would never be hit if a device was logging in from the home page, otherwise it will get
     // the local session and login again if it exists.
-    authentication.onAuthStateChanged((login) => {
+    authentication.onAuthStateChanged(login => {
       if (!_.isNil(login)) {
-        this.authenticate(login, true).catch((error) => this.handleAuthenticationError(error));
+        this.authenticate(login, true).catch(error => this.handleAuthenticationError(error));
       } else {
         this.setState({ loading: false });
       }
@@ -88,8 +90,8 @@ class Login extends React.Component {
    * @param {object} user firebase user content
    * @param {boolean} example if is a exmaple user
    */
-  updateContentForUser(user, exampleUser = false) {
-    const profile = Object.assign(user.profile, { exampleUser });
+  updateContentForUser(user, exampleUser = false, auth = false) {
+    const profile = Object.assign(user.profile, { exampleUser, auth });
 
     this.props.updateProfile(profile);
     this.props.updateYears(user.years);
@@ -99,7 +101,7 @@ class Login extends React.Component {
 
   // Handles all errors through a single promise
   handleAuthenticationError(error) {
-    console.log(error.message);
+    console.log(error);
     this.setState({ loading: false });
   }
 
@@ -120,17 +122,17 @@ class Login extends React.Component {
         this.props.firebase
           .createNewUser()
           .then(() => this.props.firebase.getUserContent())
-          .then((content) => this.updateContentForUser(content))
+          .then(content => this.updateContentForUser(content, false, true))
           .then(() => this.props.firebase.updateLoginCountAndDate())
-          .then(() => resolve())
-          .catch((error) => reject(error));
+          .then(() => this.setState({ redirectToReferrer: true }))
+          .catch(error => reject(error));
       } else {
         this.props.firebase
           .getUserContent()
-          .then((content) => this.updateContentForUser(content))
+          .then(content => this.updateContentForUser(content, false, true))
           .then(() => this.props.firebase.updateLoginCountAndDate())
-          .then(() => resolve())
-          .catch((error) => reject(error));
+          .then(() => this.setState({ redirectToReferrer: true }))
+          .catch(error => reject(error));
       }
     });
   }
@@ -145,12 +147,20 @@ class Login extends React.Component {
 
     return authentication
       .signInWithPopup(provider)
-      .then((login) => this.authenticate(login))
-      .catch((error) => this.handleAuthenticationError(error));
+      .then(login => this.authenticate(login))
+      .catch(error => this.handleAuthenticationError(error));
   }
 
   render() {
     const { classes } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    const { redirectToReferrer } = this.state;
+
+    if (redirectToReferrer && !_.isNil(from) && from.pathname !== '/') {
+      return <Redirect to={from} />;
+    } else if (redirectToReferrer) {
+      return <Redirect to="/home" />;
+    }
 
     if (this.state.loading) {
       return (
@@ -202,6 +212,7 @@ class Login extends React.Component {
               isExample={this.state.isExample}
               yearIndex="Year 1"
               yearTitle="Example Year"
+              removeYear={() => undefined}
             />
             <Typography className={classes.text} compnent="p">
               Your own unqiue summary page that displays everything you need to quickly know about
@@ -241,6 +252,12 @@ Login.propTypes = {
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
+  profile: PropTypes.shape({
+    auth: PropTypes.bool,
+  }).isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.shape(),
+  }).isRequired,
   version: PropTypes.string.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateYearTitle: PropTypes.func.isRequired,

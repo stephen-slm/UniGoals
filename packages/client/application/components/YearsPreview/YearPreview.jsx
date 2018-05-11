@@ -53,7 +53,7 @@ const YearPreview = props => {
 YearPreview.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   year: PropTypes.shape({ title: PropTypes.string, units: PropTypes.shape({}) }).isRequired,
-  index: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default withStyles(styles)(YearPreview);
