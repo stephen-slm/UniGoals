@@ -13,13 +13,12 @@ const styles = () => ({
 const UnitSummaryButtons = props => (
   <FormGroup row className={props.classes.root}>
     <FormControlLabel
-      onChange={props.onDoubleClick}
-      control={<Checkbox checked={props.isDoubleWeighted} onChange={() => undefined} />}
+      control={<Checkbox checked={props.isDoubleWeighted} onChange={props.onDoubleClick} />}
       label="Double Weighted"
     />
     <FormControlLabel
       control={
-        <Checkbox checked={props.isDroppedUnit} onChange={() => undefined} color="primary" />
+        <Checkbox checked={props.isDroppedUnit} onChange={props.onDroppedClick} color="primary" />
       }
       label="Dropped Unit"
     />
@@ -30,9 +29,15 @@ UnitSummaryButtons.propTypes = {
   classes: PropTypes.shape({
     root: PropTypes.string,
   }).isRequired,
-  isDoubleWeighted: PropTypes.bool.isRequired,
-  isDroppedUnit: PropTypes.bool.isRequired,
+  isDoubleWeighted: PropTypes.bool,
+  isDroppedUnit: PropTypes.bool,
   onDoubleClick: PropTypes.func.isRequired,
+  onDroppedClick: PropTypes.func.isRequired,
+};
+
+UnitSummaryButtons.defaultProps = {
+  isDoubleWeighted: false,
+  isDroppedUnit: false,
 };
 
 export default withStyles(styles)(UnitSummaryButtons);

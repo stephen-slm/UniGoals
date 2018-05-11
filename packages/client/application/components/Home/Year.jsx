@@ -43,6 +43,7 @@ class Year extends React.Component {
         />
         <Tables
           setUnitDoubleWeightStatus={this.props.setUnitDoubleWeightStatus}
+          setUnitDroppedStatus={this.props.setUnitDroppedStatus}
           insertUnitRow={this.props.insertUnitRow}
           yearIndex={yearIndex}
           updateYears={this.props.updateYears}
@@ -74,6 +75,7 @@ Year.propTypes = {
   updateYears: PropTypes.func.isRequired,
   removeYear: PropTypes.func.isRequired,
   setUnitDoubleWeightStatus: PropTypes.func.isRequired,
+  setUnitDroppedStatus: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,

@@ -38,7 +38,7 @@ export default class FirebaseWrapper {
    * @returns {string}
    */
   getUid() {
-    return (!_.isNil(this.authentication.currentUser)) ? this.authentication.currentUser.uid : null;
+    return !_.isNil(this.authentication.currentUser) ? this.authentication.currentUser.uid : null;
   }
 
   /**
@@ -251,6 +251,19 @@ export default class FirebaseWrapper {
   setUnitDoubleWeightStatus(yearIndex, tableIndex, value) {
     return this.database
       .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/double`)
+      .set(value);
+  }
+
+  /**
+   * updates the dropped unit value of the unit to the value
+   * @param {string} yearKey the year key
+   * @param {string} unitKey the unit key
+   * @param {boolean} value the boolean value
+   * @returns {firebase.Promise.<*>}
+   */
+  setUnitDroppedStatus(yearIndex, tableIndex, value) {
+    return this.database
+      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/dropped`)
       .set(value);
   }
 

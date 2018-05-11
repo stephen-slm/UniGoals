@@ -271,6 +271,17 @@ class UnitTable extends React.Component {
     this.props.firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
   };
 
+  /**
+   * Updates the units double weighted value to the flipped value of the current
+   */
+  setUnitDroppedValue = () => {
+    const { yearIndex, tableIndex } = this.props;
+    const { dropped } = this.props.unit;
+
+    this.props.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
+    this.props.firebase.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
+  };
+
   render() {
     const { classes } = this.props;
     const totals = this.calculateTotal();
@@ -295,6 +306,7 @@ class UnitTable extends React.Component {
         />
         <UnitSummaryButtons
           onDoubleClick={this.setUnitDoubleWeightedValue}
+          onDroppedClick={this.setUnitDroppedValue}
           isDoubleWeighted={this.props.unit.double}
           isDroppedUnit={this.props.unit.dropped}
         />
@@ -391,12 +403,14 @@ class UnitTable extends React.Component {
 UnitTable.propTypes = {
   updateRowContent: PropTypes.func,
   removeUnitRow: PropTypes.func,
-  setUnitDoubleWeightStatus: PropTypes.func,
+  setUnitDoubleWeightStatus: PropTypes.func.isRequired,
+  setUnitDroppedStatus: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func,
   updateUnitTitle: PropTypes.func,
   removeUnitTable: PropTypes.func,
   firebase: PropTypes.shape({
     setUnitDoubleWeightStatus: PropTypes.func,
+    setUnitDroppedStatus: PropTypes.func,
     deleteUnitById: PropTypes.func,
     updateUnitTitle: PropTypes.func,
     deleteUnitRowById: PropTypes.func,
@@ -417,7 +431,6 @@ UnitTable.propTypes = {
 
 UnitTable.defaultProps = {
   isExample: false,
-  setUnitDoubleWeightStatus: () => {},
   updateRowContent: () => {},
   removeUnitRow: () => {},
   insertUnitRow: () => {},
