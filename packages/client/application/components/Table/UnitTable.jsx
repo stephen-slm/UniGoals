@@ -7,15 +7,14 @@ import { withStyles } from 'material-ui/styles';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
-import { FormControlLabel } from 'material-ui/Form';
-import Switch from 'material-ui/Switch';
 
 import * as constants from '../../utils/constants';
 import Percentages from '../Summary/Percentages';
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
+import UnitSummaryButtons from './UnitSummaryButtons';
 
-const styles = (theme) => ({
+const styles = theme => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
@@ -80,8 +79,6 @@ class UnitTable extends React.Component {
     this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
     this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
 
-    this.setUnitDoubleWeightedValue = this.setUnitDoubleWeightedValue.bind(this);
-
     this.state = {
       showInsertRow: false,
       isDeletingUnit: false,
@@ -93,7 +90,7 @@ class UnitTable extends React.Component {
     let weighting = 0;
     let achieved = 0;
 
-    _.forEach(this.props.unit.content, (row) => {
+    _.forEach(this.props.unit.content, row => {
       if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
         achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
       }
@@ -124,8 +121,8 @@ class UnitTable extends React.Component {
     } else {
       this.props.firebase
         .insertUnitRowById(yearIndex, tableIndex)
-        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch((error) => console.log(error.message));
+        .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
+        .catch(error => console.log(error.message));
     }
   }
 
@@ -147,7 +144,7 @@ class UnitTable extends React.Component {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
       this.props.firebase
         .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
-        .catch((error) => console.log(error.message));
+        .catch(error => console.log(error.message));
     }
   }
 
@@ -266,13 +263,13 @@ class UnitTable extends React.Component {
   /**
    * Updates the units double weighted value to the flipped value of the current
    */
-  setUnitDoubleWeightedValue() {
+  setUnitDoubleWeightedValue = () => {
     const { yearIndex, tableIndex } = this.props;
     const { double } = this.props.unit;
 
     this.props.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
     this.props.firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -280,16 +277,6 @@ class UnitTable extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={this.props.unit.double || false}
-              onChange={this.setUnitDoubleWeightedValue}
-              color="primary"
-            />
-          }
-          label="Double unit"
-        />
         <DeleteModule
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
@@ -305,6 +292,11 @@ class UnitTable extends React.Component {
           value={this.props.unit.title}
           variant="headline"
           type="h5"
+        />
+        <UnitSummaryButtons
+          onDoubleClick={this.setUnitDoubleWeightedValue}
+          isDoubleWeighted={this.props.unit.double}
+          isDroppedUnit={this.props.unit.dropped}
         />
         <Percentages height={2} unit={this.props.unit} backdrop={false} />
         <Typography
@@ -338,8 +330,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="Section"
                       maxLength={constants.TABLE.NAME.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'name')}
-                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
+                      onChange={change => this.updateRowContent(change, index, 'name')}
+                      onConfirm={change => this.updateRowContentDatabase(change, index, 'name')}
                       value={_.defaultTo(row.name, 'Section')}
                     />
                   </TableCell>
@@ -347,8 +339,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Weighting"
                       maxLength={constants.TABLE.WEIGHT.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'weighting')}
-                      onConfirm={(change) =>
+                      onChange={change => this.updateRowContent(change, index, 'weighting')}
+                      onConfirm={change =>
                         this.updateRowContentDatabase(change, index, 'weighting')
                       }
                       value={_.defaultTo(row.weighting, '0')}
@@ -358,10 +350,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Achieved"
                       maxLength={constants.TABLE.ACHIEVED.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'achieved')}
-                      onConfirm={(change) =>
-                        this.updateRowContentDatabase(change, index, 'achieved')
-                      }
+                      onChange={change => this.updateRowContent(change, index, 'achieved')}
+                      onConfirm={change => this.updateRowContentDatabase(change, index, 'achieved')}
                       value={_.defaultTo(row.achieved, '0')}
                     />
                   </TableCell>
@@ -420,6 +410,7 @@ UnitTable.propTypes = {
     content: PropTypes.shape({}),
     title: PropTypes.string,
     double: PropTypes.bool,
+    dropped: PropTypes.bool,
   }).isRequired,
   isExample: PropTypes.bool,
 };
