@@ -1,4 +1,5 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
@@ -83,8 +84,6 @@ class Navigation extends React.Component {
       });
     });
   }
-
-  componentWillReceiveProps(props) {}
 
   getWelcomeMessage() {
     const time = new Date();
@@ -201,23 +200,19 @@ class Navigation extends React.Component {
             </IconButton>
           </Toolbar>
         </AppBar>
-        {this.props.children}
-        <BottomNavigation className={classes.BottomNavigation} showLabel={false}>
-          <Link href="/" to="/" style={{ textDecoration: 'none' }}>
+        {!_.isNil(this.props.children) ? this.props.children : null}
+        <BottomNavigation className={classes.BottomNavigation}>
+          <Link href="/home" to="/home" style={{ textDecoration: 'none' }}>
             <BottomNavigationAction
-              label="Home"
-              value="Home"
               icon={<Icon className={classes.bottomNavigationColor}>home</Icon>}
             />
           </Link>
           <BottomNavigationAction
             onClick={this.props.showHelpBox}
-            value="help"
             icon={<Icon className={classes.bottomNavigationColor}>help</Icon>}
           />
           <Link href="/notifications" to="/notifications" style={{ textDecoration: 'none' }}>
             <BottomNavigationAction
-              value="notifications"
               icon={
                 this.state.notificationCount > 0 ? (
                   <Badge badgeContent={this.state.notificationCount} color="error">
@@ -246,7 +241,7 @@ Navigation.propTypes = {
       signOut: PropTypes.func,
     }),
   }).isRequired,
-  children: PropTypes.shape({}).isRequired,
+  children: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   version: PropTypes.string.isRequired,
   removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
