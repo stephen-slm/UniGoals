@@ -11,6 +11,8 @@ import {
   getAchievedFromUnit,
   getMaxAchievedFromUnit,
   getMaxAchievedFromUnits,
+  getAverageFromUnit,
+  getAverageFromUnits,
 } from '../../utils/utils';
 
 const styles = (theme) => ({
@@ -45,10 +47,16 @@ class Perentages extends React.Component {
     let total = 0;
 
     if (this.props.isSummary) {
-      percentages = { max: getMaxAchievedFromUnits(this.props.units).toFixed(2), average: 0 };
+      percentages = {
+        max: getMaxAchievedFromUnits(this.props.units).toFixed(2),
+        average: getAverageFromUnits(this.props.units).toFixed(2),
+      };
       total = getAchievedFromUnits(this.props.units).toFixed(2);
     } else {
-      percentages = { max: getMaxAchievedFromUnit(this.props.unit).toFixed(2), average: 0 };
+      percentages = {
+        max: getMaxAchievedFromUnit(this.props.unit).toFixed(2),
+        average: getAverageFromUnit(this.props.unit).toFixed(2),
+      };
       total = getAchievedFromUnit(this.props.unit).toFixed(2);
       if (this.props.unit.double) {
         total /= 2;

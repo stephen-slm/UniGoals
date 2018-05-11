@@ -266,7 +266,7 @@ class UnitTable extends React.Component {
   render() {
     const { classes } = this.props;
     const totals = {
-      achieved: getAchievedFromUnit(this.props.unit).toFixed(2),
+      achieved: getAchievedFromUnit(this.props.unit, this.props.unit.double).toFixed(2),
       weighting: 0,
     };
 

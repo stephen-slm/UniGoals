@@ -44,8 +44,7 @@ const Expandable = (props) => {
   const { classes } = props;
 
   const passableProps = Object.assign({}, props);
-  let total = getAchievedFromUnit(props.unit);
-  if (props.unit.double) total /= 2;
+  const total = getAchievedFromUnit(props.unit, props.unit.double);
 
   delete passableProps.classes;
 

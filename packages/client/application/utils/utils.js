@@ -27,9 +27,14 @@ export function getSizeOfValidUnits(units) {
 /**
  * This will return a number with with the value of the achieved
  * @param {object} assignment object containing name, weighting, achieved
+ * @param pure if you want the pure result
  */
-export function getAchievedFromAssignment(assignment) {
-  const total = assignment.achieved * assignment.weighting;
+export function getAchievedFromAssignment(assignment, pure = false) {
+  if (pure) {
+    return Number(assignment.achieved);
+  }
+
+  const total = Number(assignment.achieved) * Number(assignment.weighting);
   return total / 100;
 }
 
@@ -52,8 +57,9 @@ export function getMaxAchievedFromAssessment(assignment) {
 /**
  * will return a number of the whole value of a unit
  * @param {object} unit object containing the content of rows of assessments
+ * @param pure if you want the pure value and not * double
  */
-export function getAchievedFromUnit(unit) {
+export function getAchievedFromUnit(unit, pure = false) {
   const { content } = unit;
   let achieved = 0;
 
@@ -65,11 +71,26 @@ export function getAchievedFromUnit(unit) {
     achieved += getAchievedFromAssignment(assessment);
   });
 
-  if (unit.double) {
+  if (unit.double && !pure) {
     return achieved * 2;
   }
 
   return achieved;
+}
+
+/**
+ * gets the average of a unit
+ * @param unit the unit being adjusted
+ * @returns {number} the average of the unit
+ */
+export function getAverageFromUnit(unit) {
+  const { content } = unit;
+  let average = 0;
+  _.forEach(content, (assessment) => {
+    average += getAchievedFromAssignment(assessment, true);
+  });
+
+  return average / _.size(_.filter(unit.content, (e) => Number(e.achieved) > 0));
 }
 
 /**
@@ -107,6 +128,22 @@ export function getAchievedFromUnits(units) {
   });
 
   return achieved / getSizeOfValidUnits(units);
+}
+
+/**
+ * will return the overall average of a year
+ * @param {object} units object of units
+ */
+export function getAverageFromUnits(units) {
+  let average = 0;
+
+  _.forEach(units, (unit) => {
+    average += getAverageFromUnit(unit);
+  });
+
+  debugger;
+
+  return average / getSizeOfValidUnits(units);
 }
 
 /**
