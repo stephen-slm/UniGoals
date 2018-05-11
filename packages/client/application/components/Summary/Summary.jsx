@@ -15,7 +15,7 @@ import DeleteModule from '../Utilities/DeleteModule';
 
 import * as constants from '../../utils/constants';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
@@ -56,17 +56,17 @@ class Summary extends React.Component {
     const endWeek = 22;
 
     const currentDate = new Date();
-    const week = Math.ceil((((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000) +
-      new Date(currentDate.getFullYear(), 0, 1).getDay() +
-      1) /
-      7);
+    const week = Math.ceil(((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000 +
+        new Date(currentDate.getFullYear(), 0, 1).getDay() +
+        1) /
+        7);
 
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';
     } else if (week <= 54 && week >= startingWeek) {
       return week - startingWeek;
     } else if (week >= 1) {
-      return (52 - startingWeek) + week;
+      return 52 - startingWeek + week;
     }
 
     return week;
@@ -110,7 +110,7 @@ class Summary extends React.Component {
     this.props.firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
-      .catch(error => console.log(error.message));
+      .catch((error) => console.log(error.message));
 
     this.showDeleteYear();
 

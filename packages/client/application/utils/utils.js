@@ -1,104 +1,126 @@
 import _ from 'lodash';
 
-/**
- * Checks that the active client could be a mobile device
- * @returns {boolean}
- */
 export function isMobileDevice() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 /**
- * Gets the total achieved percentage from a single unit
- * @param unit The unit that the achieved is coming from
- * @returns {number} A percentage of the achieved
+ * this will get the number of units respecting double and ropped units
+ * @param {object} units object of units
  */
-export function getAchievedTotalFromUnit(unit) {
-  let total = 0;
+export function getSizeOfValidUnits(units) {
+  let size = 0;
 
-  _.forEach(unit.content, content => {
-    if (
-      !_.isNil(content.weighting) &&
-      !_.isNil(content.achieved) &&
-      (content.weighting !== '' && content.achieved !== '')
-    ) {
-      if (parseFloat(content.achieved) > 0) {
-        total += parseFloat(content.weighting) * parseFloat(content.achieved);
-      }
+  _.forEach(units, (unit) => {
+    if (unit.dropped) {
+      size += 0;
+    } else if (unit.double) {
+      size += 2;
+    } else if (!unit.dropped) {
+      size += 1;
     }
   });
 
-  return total;
-}
-
-export function calulateTotalGradeUnits(units) {
-  if (_.size(units) === 0 || _.size(units[Object.keys(units)[0]]) === 0) {
-    return 0;
-  }
-
-  let totalAchieved = 0;
-
-  _.forEach(units, unit => {
-    _.forEach(unit.content, unitContent => {
-      if (
-        !_.isNil(unitContent.weighting) &&
-        !_.isNil(unitContent.achieved) &&
-        (unitContent.weighting !== '' && unitContent.achieved !== '')
-      ) {
-        if (parseFloat(unitContent.achieved) > 0) {
-          totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
-        }
-      }
-    });
-  });
-
-  return parseFloat(totalAchieved / 100 / _.size(units)).toFixed(2);
+  return size;
 }
 
 /**
- * Gets the total possible grade for a standard unit
- * @param unit The unit that the grade is being gathered from
- * @returns {string}
+ * This will return a number with with the value of the achieved
+ * @param {object} assignment object containing name, weighting, achieved
  */
-export function calculateTotalGradeStandard(unit) {
+export function getAchievedFromAssignment(assignment) {
+  const total = assignment.achieved * assignment.weighting;
+  return total / 100;
+}
+
+/**
+ * This will return a number with with the value of the max achieved
+ * @param {object} assignment object containing name, weighting, achieved
+ */
+export function getMaxAchievedFromAssessment(assignment) {
+  let total = 100;
+
+  if (assignment.achieved > 0) {
+    total = assignment.achieved * assignment.weighting;
+  } else {
+    total *= assignment.weighting;
+  }
+
+  return total / 100;
+}
+
+/**
+ * will return a number of the whole value of a unit
+ * @param {object} unit object containing the content of rows of assessments
+ */
+export function getAchievedFromUnit(unit) {
+  const { content } = unit;
   let achieved = 0;
 
-  _.forEach(unit, row => {
-    if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
-      achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
-    }
+  if (unit.dropped) {
+    return achieved;
+  }
+
+  _.forEach(content, (assessment) => {
+    achieved += getAchievedFromAssignment(assessment);
   });
 
-  return parseFloat(achieved / 100).toFixed(2);
+  if (unit.double) {
+    return achieved * 2;
+  }
+
+  return achieved;
 }
 
 /**
- * Applying the weighting to all the units, getting the overall unit total and ordering
- * the content based on this information with title, total and a link based on the
- * current active address, this link being a hash link to the table conant's.
- *
- * Finally at the end this is reversed as the lodash sortBy orders them based on
- * lowest to highest and we need the vice vera.
- * @param {object} units the unit data
- * @param {object} history react-router history object
+ * will return a number of the whole value of a unit
+ * @param {object} unit object containing the content of rows of assessments
  */
-export function calculateTopFiveRankings(units, history) {
-  // return early if the size of the data is either 0 on the units or first unit data.
-  if (_.size(units) <= 0 || _.size(units[Object.keys(units)[0]]) <= 0) {
-    return [];
+export function getMaxAchievedFromUnit(unit) {
+  const { content } = unit;
+  let achieved = 0;
+
+  if (unit.dropped) {
+    return achieved;
   }
 
-  const totalGradesList = _.map(units, (unit, index) => {
-    const totalAchieved = getAchievedTotalFromUnit(unit);
-
-    return {
-      title: `${unit.title}${unit.double ? ' (double)' : ''}`,
-      total: totalAchieved,
-      link: `${history.location.search}#${index}`,
-    };
+  _.forEach(content, (assessment) => {
+    achieved += getMaxAchievedFromAssessment(assessment);
   });
 
-  return _.reverse(_.sortBy(totalGradesList, o => o.total));
+  if (unit.double) {
+    return achieved * 2;
+  }
+
+  return achieved;
+}
+
+/**
+ * will return the overall acheived of a year
+ * @param {object} units object of units
+ */
+export function getAchievedFromUnits(units) {
+  let achieved = 0;
+
+  _.forEach(units, (unit) => {
+    achieved += getAchievedFromUnit(unit);
+  });
+
+  return achieved / getSizeOfValidUnits(units);
+}
+
+/**
+ * will return the overall acheived of a year
+ * @param {object} units object of units
+ */
+export function getMaxAchievedFromUnits(units) {
+  let achieved = 0;
+
+  _.forEach(units, (unit) => {
+    achieved += getMaxAchievedFromUnit(unit);
+  });
+
+  return achieved / getSizeOfValidUnits(units);
 }
 
 export function getHappyEmoji() {
@@ -126,5 +148,3 @@ export function getHappyEmoji() {
   ];
   return emojis[_.random(0, emojis.length - 1)];
 }
-
-export default isMobileDevice;

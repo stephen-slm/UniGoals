@@ -11,9 +11,7 @@ import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 
 // Total
-import { calulateTotalGradeUnits } from '../../utils/utils';
-
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     height: theme.spacing.unit * 15,
     width: theme.spacing.unit * 18,
@@ -23,7 +21,7 @@ const styles = theme => ({
   },
 });
 
-const YearPreview = props => {
+const YearPreview = (props) => {
   const { classes } = props;
 
   return (
@@ -42,7 +40,8 @@ const YearPreview = props => {
         />
         <CardContent>
           <Typography variant="caption">
-            Achieved {Number(calulateTotalGradeUnits(props.year.units))}%
+            Achieved ...
+            {/* Achieved {Number(calulateTotalGradeUnits(props.year.units))}% */}
           </Typography>
         </CardContent>
       </Link>

@@ -9,7 +9,7 @@ import ExpansionPanel, {
 } from 'material-ui/ExpansionPanel';
 
 import UnitTable from './UnitTable';
-import { calculateTotalGradeStandard } from '../../utils/utils';
+import { getAchievedFromUnit } from '../../utils/utils';
 
 const styles = (theme) => ({
   root: {
@@ -44,7 +44,8 @@ const Expandable = (props) => {
   const { classes } = props;
 
   const passableProps = Object.assign({}, props);
-  const total = calculateTotalGradeStandard(props.unit.content);
+  let total = getAchievedFromUnit(props.unit);
+  if (props.unit.double) total /= 2;
 
   delete passableProps.classes;
 
@@ -53,10 +54,14 @@ const Expandable = (props) => {
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <div className={classes.column}>
-            <Typography className={classes.heading}>{props.unit.title}</Typography>
+            <Typography className={classes.heading}>
+              {props.unit.title} {props.unit.double ? '(double)' : ''}{' '}
+            </Typography>
           </div>
           <div className={classes.column}>
-            <Typography className={classes.secondaryHeading}>Total: {total}%</Typography>
+            <Typography className={classes.secondaryHeading}>
+              {props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}
+            </Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.details }}>
@@ -71,6 +76,8 @@ Expandable.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   unit: PropTypes.shape({
     title: PropTypes.string,
+    dropped: PropTypes.bool,
+    double: PropTypes.bool,
     content: PropTypes.shape({}),
   }).isRequired,
 };

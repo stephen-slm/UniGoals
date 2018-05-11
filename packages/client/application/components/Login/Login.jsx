@@ -14,7 +14,7 @@ import * as homePageData from './homePageData';
 import UnitTable from '../Table/UnitTable';
 import Summary from '../Summary/Summary';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 2,
@@ -63,12 +63,12 @@ class Login extends React.Component {
   componentDidMount() {
     const { authentication } = this.props.firebase;
 
-    authentication.getRedirectResult().then(login => {
+    authentication.getRedirectResult().then((login) => {
       if (!_.isNil(login.user)) {
         authentication
           .signInWithCredential(login.credential)
           .then(() => this.authenticate(login))
-          .catch(error => this.handleAuthenticationError(error));
+          .catch((error) => this.handleAuthenticationError(error));
       }
     });
 
@@ -76,9 +76,9 @@ class Login extends React.Component {
     // during the login process, this means that its safe to not have a check for this as it
     // would never be hit if a device was logging in from the home page, otherwise it will get
     // the local session and login again if it exists.
-    authentication.onAuthStateChanged(login => {
+    authentication.onAuthStateChanged((login) => {
       if (!_.isNil(login)) {
-        this.authenticate(login, true).catch(error => this.handleAuthenticationError(error));
+        this.authenticate(login, true).catch((error) => this.handleAuthenticationError(error));
       } else {
         this.setState({ loading: false });
       }
@@ -122,17 +122,17 @@ class Login extends React.Component {
         this.props.firebase
           .createNewUser()
           .then(() => this.props.firebase.getUserContent())
-          .then(content => this.updateContentForUser(content, false, true))
+          .then((content) => this.updateContentForUser(content, false, true))
           .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => this.setState({ redirectToReferrer: true }))
-          .catch(error => reject(error));
+          .catch((error) => reject(error));
       } else {
         this.props.firebase
           .getUserContent()
-          .then(content => this.updateContentForUser(content, false, true))
+          .then((content) => this.updateContentForUser(content, false, true))
           .then(() => this.props.firebase.updateLoginCountAndDate())
           .then(() => this.setState({ redirectToReferrer: true }))
-          .catch(error => reject(error));
+          .catch((error) => reject(error));
       }
     });
   }
@@ -147,8 +147,8 @@ class Login extends React.Component {
 
     return authentication
       .signInWithPopup(provider)
-      .then(login => this.authenticate(login))
-      .catch(error => this.handleAuthenticationError(error));
+      .then((login) => this.authenticate(login))
+      .catch((error) => this.handleAuthenticationError(error));
   }
 
   render() {

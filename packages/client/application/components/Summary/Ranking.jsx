@@ -6,8 +6,6 @@ import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
 import uuid from 'uuid/v4';
 
-import { calculateTopFiveRankings } from '../../utils/utils';
-
 const styles = theme => ({
   root: {
     marginTop: theme.spacing.unit,
@@ -33,7 +31,7 @@ const styles = theme => ({
 
 const Ranking = props => {
   const { classes } = props;
-  const ranking = calculateTopFiveRankings(props.units, props.history);
+  const ranking = ['']; // calculateTopFiveRankings(props.units, props.history);
 
   return (
     <Paper style={{ height: props.height * 40 }} className={classes.root} elevation={1}>

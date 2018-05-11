@@ -9,12 +9,14 @@ import Icon from 'material-ui/Icon';
 import IconButton from 'material-ui/IconButton';
 
 import * as constants from '../../utils/constants';
+import { getAchievedFromUnit } from '../../utils/utils';
+
 import Percentages from '../Summary/Percentages';
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
 import UnitSummaryButtons from './UnitSummaryButtons';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
@@ -64,7 +66,6 @@ class UnitTable extends React.Component {
   constructor() {
     super();
 
-    this.calculateTotal = this.calculateTotal.bind(this);
     this.deleteUnitTable = this.deleteUnitTable.bind(this);
 
     this.updateRowContent = this.updateRowContent.bind(this);
@@ -85,26 +86,6 @@ class UnitTable extends React.Component {
     };
   }
 
-  // Returns the current total to be displayed at the bottom of the table
-  calculateTotal() {
-    let weighting = 0;
-    let achieved = 0;
-
-    _.forEach(this.props.unit.content, row => {
-      if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
-        achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
-      }
-      if (parseFloat(row.weighting) > 0) {
-        weighting += parseFloat(row.weighting);
-      }
-    });
-
-    return {
-      weighting: parseInt(weighting, 10),
-      achieved: parseFloat(achieved / 100).toFixed(2),
-    };
-  }
-
   /**
    * inserts a new row at the bottom of the current table, this does not require
    * any more information but the firebase will return a key which will require
@@ -121,8 +102,8 @@ class UnitTable extends React.Component {
     } else {
       this.props.firebase
         .insertUnitRowById(yearIndex, tableIndex)
-        .then(key => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch(error => console.log(error.message));
+        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
+        .catch((error) => console.log(error.message));
     }
   }
 
@@ -144,7 +125,7 @@ class UnitTable extends React.Component {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
       this.props.firebase
         .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
-        .catch(error => console.log(error.message));
+        .catch((error) => console.log(error.message));
     }
   }
 
@@ -284,7 +265,10 @@ class UnitTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const totals = this.calculateTotal();
+    const totals = {
+      achieved: getAchievedFromUnit(this.props.unit).toFixed(2),
+      weighting: 0,
+    };
 
     return (
       <Paper className={classes.root} elevation={3}>
@@ -342,8 +326,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="Section"
                       maxLength={constants.TABLE.NAME.MAX}
-                      onChange={change => this.updateRowContent(change, index, 'name')}
-                      onConfirm={change => this.updateRowContentDatabase(change, index, 'name')}
+                      onChange={(change) => this.updateRowContent(change, index, 'name')}
+                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
                       value={_.defaultTo(row.name, 'Section')}
                     />
                   </TableCell>
@@ -351,8 +335,8 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Weighting"
                       maxLength={constants.TABLE.WEIGHT.MAX}
-                      onChange={change => this.updateRowContent(change, index, 'weighting')}
-                      onConfirm={change =>
+                      onChange={(change) => this.updateRowContent(change, index, 'weighting')}
+                      onConfirm={(change) =>
                         this.updateRowContentDatabase(change, index, 'weighting')
                       }
                       value={_.defaultTo(row.weighting, '0')}
@@ -362,8 +346,10 @@ class UnitTable extends React.Component {
                     <EditableText
                       placeholder="% Achieved"
                       maxLength={constants.TABLE.ACHIEVED.MAX}
-                      onChange={change => this.updateRowContent(change, index, 'achieved')}
-                      onConfirm={change => this.updateRowContentDatabase(change, index, 'achieved')}
+                      onChange={(change) => this.updateRowContent(change, index, 'achieved')}
+                      onConfirm={(change) =>
+                        this.updateRowContentDatabase(change, index, 'achieved')
+                      }
                       value={_.defaultTo(row.achieved, '0')}
                     />
                   </TableCell>
