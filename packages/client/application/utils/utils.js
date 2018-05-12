@@ -171,6 +171,8 @@ export function functionRankUnitByAchieved(units, history) {
       title: unit.title,
       link: `${history.location.search}#${index}`,
       achieved: getAchievedFromUnit(unit),
+      dropped: unit.dropped,
+      double: unit.double,
     });
   });
 
@@ -192,27 +194,6 @@ export function getMaxAchievedFromUnits(units) {
 }
 
 export function getHappyEmoji() {
-  const emojis = [
-    '🎉',
-    '🎆',
-    '🎈',
-    '❤️',
-    '💪',
-    '🔥',
-    '😍',
-    '👨‍🎓👩‍🎓',
-    '🐙',
-    '🤷',
-    '😈',
-    '👻',
-    '👽',
-    '🤖',
-    '💩',
-    '🧐',
-    '🤓',
-    '😎',
-    '💯',
-    '💲',
-  ];
+  const emojis = ['🎉', '🎆', '🎈', '❤️', '💪', '🔥', '😍', '👨‍🎓👩‍🎓', '🐙', '🤷', '😈', '👻', '👽', '🤖', '💩', '🧐', '🤓', '😎', '💯', '💲'];
   return emojis[_.random(0, emojis.length - 1)];
 }

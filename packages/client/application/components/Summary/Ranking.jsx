@@ -45,7 +45,7 @@ const Ranking = (props) => {
           ranking.map((rank, index) => (
             <Typography key={uuid()} className={classes.entry} component="span">
               <Typography className={classes.link} href={String(rank.link)} component="a">
-                {index + 1}. {rank.title}
+                {index + 1}. {rank.title} {rank.double ? '(double)' : ''} {rank.dropped ? '(dropped)' : ''}
               </Typography>
             </Typography>
           ))}
