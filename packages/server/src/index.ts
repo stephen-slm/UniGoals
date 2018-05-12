@@ -3,11 +3,9 @@ import * as _ from 'lodash';
 import * as adminbase from './components/adminbase';
 
 const sampleNotification: adminbase.IUniNotification = {
-  message: `You can now create years! Check it out <a target=_blank href=>here</a>!
-Allowing you to plan for the following year
-without deleting your current units!`,
+  message: `You can now mark units as double weighted or dropped, allowing you to get a more accurate final result!`,
   timestamp: Date.now(),
-  title: 'Years!',
+  title: 'Double Weighted/Dropped Units!',
 };
 
-adminbase.deployNotification(sampleNotification, true);
+adminbase.deployNotification(sampleNotification, false);

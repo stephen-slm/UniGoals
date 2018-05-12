@@ -8,7 +8,8 @@ import { logger } from './logger';
  * to filter down to our selected user
  */
 
-import { serviceAccount } from './serviceAccount';
+import * as data from './service.json';
+const serviceAccount: any = data;
 
 const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
 
@@ -146,7 +147,7 @@ export function getKeyByFullName(name: string, callback: (content: IUniKeyObject
 }
 
 export function moveRecord(oldRef: any, newRef: any) {
-  oldRef.once('value', (snapshot: FirebaseFirestore.DocumentSnapshot) => {
+  oldRef.once('value', (snapshot: any) => {
     newRef.set(snapshot.val(), (error: Error) => {
       if (_.isNil(error)) {
         oldRef.remove();
