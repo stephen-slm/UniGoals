@@ -87,100 +87,44 @@ class UnitTable extends React.Component {
   }
 
   /**
-   * inserts a new row at the bottom of the current table, this does not require
-   * any more information but the firebase will return a key which will require
-   * for creating the row in the redux, (without this we cannot update this row for
-   * the firebase or the redux)
+   * Updates the units double weighted value to the flipped value of the current
    */
-  insertRowBelow() {
-    if (this.props.isExample) return;
-
-    const { tableIndex, yearIndex } = this.props;
-
-    if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
-      console.log(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
-    } else {
-      this.props.firebase
-        .insertUnitRowById(yearIndex, tableIndex)
-        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch((error) => console.log(error.message));
-    }
-  }
-
-  /**
-   * updates a unit title
-   * @param {string} change title change
-   */
-  updateUnitTitle(change) {
-    if (!_.isNil(change) || change !== this.props.unit.title) {
-      this.props.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex);
-    }
-  }
-
-  /**
-   * updates a unit title on the database
-   * @param {string} change title change
-   */
-  updateUnitTitleDatabase(change) {
-    if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
-      this.props.firebase
-        .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
-        .catch((error) => console.log(error.message));
-    }
-  }
-
-  /**
-   * Removes the table (unit) completely from both firebase and redux
-   */
-  deleteUnitTable() {
-    this.showDeleteUnitBox();
-
-    if (this.props.isExample) return;
-
-    console.log(`Deleted ${this.props.unit.title === null ? 'the' : this.props.unit.title} unit`);
-    const { tableIndex: unitTableIndex, yearIndex } = this.props;
-
-    this.props.removeUnitTable(yearIndex, unitTableIndex);
-    this.props.firebase.deleteUnitById(yearIndex, unitTableIndex);
-  }
-
-  /**
-   * Removes a row from a unit table, requires the row key for removing from both the index
-   * and from the firebase database.
-   * @param {string} rowIndex the row key to remove
-   */
-  removeRowById(rowIndex) {
-    if (this.props.isExample) return;
-
+  setUnitDoubleWeightedValue = () => {
     const { yearIndex, tableIndex } = this.props;
+    const { double } = this.props.unit;
 
-    if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
-      this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
-      this.props.firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
-    }
-  }
+    this.props.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
+    this.props.firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
+  };
 
   /**
-   * Updates a row content based on a key
-   * @param {string} change the change to update
-   * @param {string} rowIndex row key
-   * @param {string} columnIndex column key
+   * Updates the units double weighted value to the flipped value of the current
    */
-  updateRowContent(change, rowIndex, columnIndex) {
-    if (this.props.isExample) return;
-
-    if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
-      return;
-      // TODO: Could not update content, due to rowIndex or columnIndex being undefined!
-    }
-
+  setUnitDroppedValue = () => {
     const { yearIndex, tableIndex } = this.props;
+    const { dropped } = this.props.unit;
 
-    // This means that its the same content as was already there, so there is no need to update
-    // when it does not change.
-    if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
-      this.props.updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex);
-    }
+    this.props.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
+    this.props.firebase.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
+  };
+
+  moveOverShowInsert() {
+    this.setState({
+      showInsertRow: true,
+    });
+  }
+
+  moveHideShowInsert() {
+    this.setState({
+      showInsertRow: false,
+    });
+  }
+
+  showDeleteUnitBox() {
+    this.setState({
+      isDeletingUnit: !this.state.isDeletingUnit,
+      tableTitle: this.state.tableTitle,
+    });
   }
 
   /**
@@ -222,46 +166,102 @@ class UnitTable extends React.Component {
     }
   }
 
-  moveOverShowInsert() {
-    this.setState({
-      showInsertRow: true,
-    });
-  }
+  /**
+   * Updates a row content based on a key
+   * @param {string} change the change to update
+   * @param {string} rowIndex row key
+   * @param {string} columnIndex column key
+   */
+  updateRowContent(change, rowIndex, columnIndex) {
+    if (this.props.isExample) return;
 
-  moveHideShowInsert() {
-    this.setState({
-      showInsertRow: false,
-    });
-  }
+    if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
+      return;
+      // TODO: Could not update content, due to rowIndex or columnIndex being undefined!
+    }
 
-  showDeleteUnitBox() {
-    this.setState({
-      isDeletingUnit: !this.state.isDeletingUnit,
-      tableTitle: this.state.tableTitle,
-    });
+    const { yearIndex, tableIndex } = this.props;
+
+    // This means that its the same content as was already there, so there is no need to update
+    // when it does not change.
+    if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
+      this.props.updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex);
+    }
   }
 
   /**
-   * Updates the units double weighted value to the flipped value of the current
+   * Removes a row from a unit table, requires the row key for removing from both the index
+   * and from the firebase database.
+   * @param {string} rowIndex the row key to remove
    */
-  setUnitDoubleWeightedValue = () => {
-    const { yearIndex, tableIndex } = this.props;
-    const { double } = this.props.unit;
+  removeRowById(rowIndex) {
+    if (this.props.isExample) return;
 
-    this.props.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
-    this.props.firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
-  };
+    const { yearIndex, tableIndex } = this.props;
+
+    if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
+      this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
+      this.props.firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
+    }
+  }
 
   /**
-   * Updates the units double weighted value to the flipped value of the current
+   * Removes the table (unit) completely from both firebase and redux
    */
-  setUnitDroppedValue = () => {
-    const { yearIndex, tableIndex } = this.props;
-    const { dropped } = this.props.unit;
+  deleteUnitTable() {
+    this.showDeleteUnitBox();
 
-    this.props.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
-    this.props.firebase.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
-  };
+    if (this.props.isExample) return;
+
+    console.log(`Deleted ${this.props.unit.title === null ? 'the' : this.props.unit.title} unit`);
+    const { tableIndex: unitTableIndex, yearIndex } = this.props;
+
+    this.props.removeUnitTable(yearIndex, unitTableIndex);
+    this.props.firebase.deleteUnitById(yearIndex, unitTableIndex);
+  }
+
+  /**
+   * updates a unit title on the database
+   * @param {string} change title change
+   */
+  updateUnitTitleDatabase(change) {
+    if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
+      this.props.firebase
+        .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
+        .catch((error) => console.log(error.message));
+    }
+  }
+
+  /**
+   * updates a unit title
+   * @param {string} change title change
+   */
+  updateUnitTitle(change) {
+    if (!_.isNil(change) || change !== this.props.unit.title) {
+      this.props.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex);
+    }
+  }
+
+  /**
+   * inserts a new row at the bottom of the current table, this does not require
+   * any more information but the firebase will return a key which will require
+   * for creating the row in the redux, (without this we cannot update this row for
+   * the firebase or the redux)
+   */
+  insertRowBelow() {
+    if (this.props.isExample) return;
+
+    const { tableIndex, yearIndex } = this.props;
+
+    if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
+      console.log(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
+    } else {
+      this.props.firebase
+        .insertUnitRowById(yearIndex, tableIndex)
+        .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
+        .catch((error) => console.log(error.message));
+    }
+  }
 
   render() {
     const { classes } = this.props;

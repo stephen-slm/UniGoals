@@ -4,5 +4,5 @@
   "semi": true,
   "arrowParens": "always",
   "trailingComma": "all",
-  "printWidth": 100
+  "printWidth": 140
 }

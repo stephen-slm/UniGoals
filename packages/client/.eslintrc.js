@@ -10,6 +10,7 @@ module.exports = {
   plugins: ['sort-requires'],
   // add your custom rules here
   rules: {
+    'max-len': ['error', { code: 140 }],
     'linebreak-style': 0,
     'sort-requires/sort-requires': 2,
     'prefer-promise-reject-errors': 0,
