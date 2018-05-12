@@ -1,12 +1,14 @@
-import React from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
+import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
-import { withStyles } from 'material-ui/styles';
+import PropTypes from 'prop-types';
 import uuid from 'uuid/v4';
+import React from 'react';
+import _ from 'lodash';
 
-const styles = theme => ({
+import { functionRankUnitByAchieved } from '../../utils/utils';
+
+const styles = (theme) => ({
   root: {
     marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
@@ -29,9 +31,9 @@ const styles = theme => ({
   },
 });
 
-const Ranking = props => {
+const Ranking = (props) => {
   const { classes } = props;
-  const ranking = ['']; // calculateTopFiveRankings(props.units, props.history);
+  const ranking = functionRankUnitByAchieved(props.units, props.history);
 
   return (
     <Paper style={{ height: props.height * 40 }} className={classes.root} elevation={1}>

@@ -1,17 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
+import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
+import Tooltip from 'material-ui/Tooltip';
+import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
 import Grid from 'material-ui/Grid';
-import { withStyles } from 'material-ui/styles';
-import Tooltip from 'material-ui/Tooltip';
-
+import PropTypes from 'prop-types';
+import React from 'react';
 import _ from 'lodash';
-import Ranking from './Ranking';
-import Percentages from './Percentages';
+
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
+import Percentages from './Percentages';
+import Ranking from './Ranking';
 
 import * as constants from '../../utils/constants';
 
@@ -56,10 +56,12 @@ class Summary extends React.Component {
     const endWeek = 22;
 
     const currentDate = new Date();
-    const week = Math.ceil(((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000 +
+    const week = Math.ceil(
+      ((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000 +
         new Date(currentDate.getFullYear(), 0, 1).getDay() +
         1) /
-        7);
+        7,
+    );
 
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';

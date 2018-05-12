@@ -1,16 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import _ from 'lodash';
-
-// Navigation
-import { Link } from 'react-router-dom';
-
-// Years paper
 import Card, { CardContent, CardHeader } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
+import { withStyles } from 'material-ui/styles';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import React from 'react';
+import _ from 'lodash';
 
-// Total
+import { getAchievedFromUnits } from '../../utils/utils';
+
 const styles = (theme) => ({
   root: {
     height: theme.spacing.unit * 15,
@@ -40,8 +37,7 @@ const YearPreview = (props) => {
         />
         <CardContent>
           <Typography variant="caption">
-            Achieved ...
-            {/* Achieved {Number(calulateTotalGradeUnits(props.year.units))}% */}
+            Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%
           </Typography>
         </CardContent>
       </Link>

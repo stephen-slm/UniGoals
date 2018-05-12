@@ -86,9 +86,20 @@ export function getAchievedFromUnit(unit, pure = false) {
 export function getAverageFromUnit(unit) {
   const { content } = unit;
   let average = 0;
+
+  if (_.isNil(content) || _.size(content) <= 0) {
+    return average;
+  }
+
   _.forEach(content, (assessment) => {
     average += getAchievedFromAssignment(assessment, true);
   });
+
+  const numberOfValidAssignments = _.size(_.filter(unit.content, (e) => Number(e.achieved) > 0));
+
+  if (numberOfValidAssignments <= 0) {
+    return average;
+  }
 
   return average / _.size(_.filter(unit.content, (e) => Number(e.achieved) > 0));
 }
@@ -138,16 +149,36 @@ export function getAverageFromUnits(units) {
   let average = 0;
 
   _.forEach(units, (unit) => {
-    average += getAverageFromUnit(unit);
+    if (!unit.dropped) {
+      average += getAverageFromUnit(unit);
+    }
   });
-
-  debugger;
 
   return average / getSizeOfValidUnits(units);
 }
 
 /**
- * will return the overall acheived of a year
+ * returns a sorted rank list of all the units
+ * @param units the list of all the units
+ * @param history the current history object
+ * @returns {Array|*} a array of objects
+ */
+export function functionRankUnitByAchieved(units, history) {
+  const simpleUnits = [];
+
+  _.forEach(units, (unit, index) => {
+    simpleUnits.push({
+      title: unit.title,
+      link: `${history.location.search}#${index}`,
+      achieved: getAchievedFromUnit(unit),
+    });
+  });
+
+  return _.reverse(_.sortBy(simpleUnits, ['achieved']));
+}
+
+/**
+ * will return the overall achieved of a year
  * @param {object} units object of units
  */
 export function getMaxAchievedFromUnits(units) {

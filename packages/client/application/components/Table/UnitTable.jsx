@@ -1,20 +1,20 @@
-import _ from 'lodash';
-import React from 'react';
-import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
+import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import IconButton from 'material-ui/IconButton';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
+import Paper from 'material-ui/Paper';
 import Icon from 'material-ui/Icon';
-import IconButton from 'material-ui/IconButton';
+import PropTypes from 'prop-types';
+import React from 'react';
+import _ from 'lodash';
 
-import * as constants from '../../utils/constants';
 import { getAchievedFromUnit } from '../../utils/utils';
+import * as constants from '../../utils/constants';
 
-import Percentages from '../Summary/Percentages';
+import UnitSummaryButtons from './UnitSummaryButtons';
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
-import UnitSummaryButtons from './UnitSummaryButtons';
+import Percentages from '../Summary/Percentages';
 
 const styles = (theme) => ({
   root: {
