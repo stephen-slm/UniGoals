@@ -55,7 +55,11 @@ class UnitTable extends React.Component {
       return false;
     } else if (columnIndex === 'achieved' && change.length > constants.TABLE.ACHIEVED.MAX) {
       return false;
-    } else if ((columnIndex === 'weighting' || columnIndex === 'achieved') && change !== '' && _.isNaN(parseInt(change, 10))) {
+    } else if (
+      (columnIndex === 'weighting' || columnIndex === 'achieved') &&
+      change !== '' &&
+      _.isNaN(parseInt(change, 10))
+    ) {
       return false;
     }
     return true;
@@ -66,15 +70,8 @@ class UnitTable extends React.Component {
 
     this.state = {
       showInsertRow: false,
-      titleEditing: false,
     };
   }
-
-  onEditTitleState = (state) => {
-    this.setState({
-      titleEditing: state,
-    });
-  };
 
   /**
    * Updates the units double weighted value to the flipped value of the current
@@ -139,7 +136,13 @@ class UnitTable extends React.Component {
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.isExample) {
       const { tableIndex, yearIndex } = this.props;
-      this.props.firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
+      this.props.firebase.updateUnitRowSection(
+        updatedChange,
+        yearIndex,
+        tableIndex,
+        rowIndex,
+        columnIndex,
+      );
     }
   };
 
@@ -203,7 +206,9 @@ class UnitTable extends React.Component {
    */
   updateUnitTitleDatabase = (change) => {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
-      this.props.firebase.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex).catch((error) => console.log(error.message));
+      this.props.firebase
+        .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
+        .catch((error) => console.log(error.message));
     }
   };
 
@@ -258,7 +263,6 @@ class UnitTable extends React.Component {
           >
             <EditableText
               className={classes.title}
-              onChangeState={this.onEditTitleState}
               maxLength={constants.UNIT.TITLE.MAX}
               onChange={this.updateUnitTitle}
               onConfirm={this.updateUnitTitleDatabase}
@@ -320,7 +324,9 @@ class UnitTable extends React.Component {
                         placeholder="% Weighting"
                         maxLength={constants.TABLE.WEIGHT.MAX}
                         onChange={(change) => this.updateRowContent(change, index, 'weighting')}
-                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'weighting')}
+                        onConfirm={(change) =>
+                          this.updateRowContentDatabase(change, index, 'weighting')
+                        }
                         value={_.defaultTo(row.weighting, '0')}
                       />
                     </TableCell>
@@ -329,7 +335,9 @@ class UnitTable extends React.Component {
                         placeholder="% Achieved"
                         maxLength={constants.TABLE.ACHIEVED.MAX}
                         onChange={(change) => this.updateRowContent(change, index, 'achieved')}
-                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'achieved')}
+                        onConfirm={(change) =>
+                          this.updateRowContentDatabase(change, index, 'achieved')
+                        }
                         value={_.defaultTo(row.achieved, '0')}
                       />
                     </TableCell>
