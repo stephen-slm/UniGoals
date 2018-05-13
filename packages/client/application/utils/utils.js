@@ -31,19 +31,24 @@ export function getSizeOfValidUnits(units) {
  */
 export function getAchievedFromAssignment(assignment, pure = false) {
   if (pure) {
-    return Number(assignment.achieved);
+    return Number(assignment.achieved.replace(/[^.0-9]/g, ''));
   }
 
-  const total = Number(assignment.achieved) * Number(assignment.weighting);
+  const total = Number(assignment.achieved.replace(/[^.0-9]/g, '')) * Number(assignment.weighting.replace(/[^.0-9]/g, ''));
   return total / 100;
 }
 
 /**
  * This will return a number with with the value of the max achieved
- * @param {object} assignment object containing name, weighting, achieved
+ * @param {object} assign object containing name, weighting, achieved
  */
-export function getMaxAchievedFromAssessment(assignment) {
+export function getMaxAchievedFromAssessment(assign) {
   let total = 100;
+
+  const assignment = {
+    achieved: Number(assign.achieved.replace(/[^.0-9]/g, '')),
+    weighting: Number(assign.weighting.replace(/[^.0-9]/g, '')),
+  };
 
   if (assignment.achieved > 0) {
     total = assignment.achieved * assignment.weighting;
@@ -95,13 +100,13 @@ export function getAverageFromUnit(unit) {
     average += getAchievedFromAssignment(assessment, true);
   });
 
-  const numberOfValidAssignments = _.size(_.filter(unit.content, (e) => Number(e.achieved) > 0));
+  const numberOfValidAssignments = _.size(_.filter(unit.content, (e) => Number(e.achieved.replace(/[^.0-9]/g, '')) > 0));
 
   if (numberOfValidAssignments <= 0) {
     return average;
   }
 
-  return average / _.size(_.filter(unit.content, (e) => Number(e.achieved) > 0));
+  return average / numberOfValidAssignments;
 }
 
 /**

@@ -3,12 +3,9 @@ import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-} from 'material-ui/ExpansionPanel';
+import ExpansionPanel, { ExpansionPanelSummary, ExpansionPanelDetails } from 'material-ui/ExpansionPanel';
 
-import UnitTable from './UnitTable';
+import UnitTable from '../Unit/index';
 import { getAchievedFromUnit } from '../../utils/utils';
 
 const styles = (theme) => ({
@@ -58,9 +55,7 @@ const Expandable = (props) => {
             </Typography>
           </div>
           <div className={classes.column}>
-            <Typography className={classes.secondaryHeading}>
-              {props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}
-            </Typography>
+            <Typography className={classes.secondaryHeading}>{props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}</Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.details }}>

@@ -11,9 +11,8 @@ import _ from 'lodash';
 import { getAchievedFromUnit } from '../../utils/utils';
 import * as constants from '../../utils/constants';
 
-import UnitSummaryButtons from './UnitSummaryButtons';
+import Settings from './Settings';
 import EditableText from '../Utilities/EditableText';
-import DeleteModule from '../Utilities/DeleteModule';
 import Percentages from '../Summary/Percentages';
 
 const styles = (theme) => ({
@@ -23,13 +22,16 @@ const styles = (theme) => ({
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 3,
   },
+  grid: {
+    display: 'grid',
+    gridTemplateColumns: ' [col] auto [col] auto [col] auto [col] 50px',
+  },
   title: {
     textAlign: 'center',
     color: 'rgba(0, 0, 0, 0.87)',
     fontSize: '1.5rem',
     fontWeight: '400',
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-    lineHeight: '1.35417em',
   },
   tableWrapper: {
     overflow: 'auto',
@@ -53,11 +55,7 @@ class UnitTable extends React.Component {
       return false;
     } else if (columnIndex === 'achieved' && change.length > constants.TABLE.ACHIEVED.MAX) {
       return false;
-    } else if (
-      (columnIndex === 'weighting' || columnIndex === 'achieved') &&
-      change !== '' &&
-      _.isNaN(parseInt(change, 10))
-    ) {
+    } else if ((columnIndex === 'weighting' || columnIndex === 'achieved') && change !== '' && _.isNaN(parseInt(change, 10))) {
       return false;
     }
     return true;
@@ -66,25 +64,17 @@ class UnitTable extends React.Component {
   constructor() {
     super();
 
-    this.deleteUnitTable = this.deleteUnitTable.bind(this);
-
-    this.updateRowContent = this.updateRowContent.bind(this);
-    this.updateRowContentDatabase = this.updateRowContentDatabase.bind(this);
-
-    this.updateUnitTitle = this.updateUnitTitle.bind(this);
-    this.updateUnitTitleDatabase = this.updateUnitTitleDatabase.bind(this);
-
-    this.insertRowBelow = this.insertRowBelow.bind(this);
-    this.showDeleteUnitBox = this.showDeleteUnitBox.bind(this);
-
-    this.moveOverShowInsert = this.moveOverShowInsert.bind(this);
-    this.moveHideShowInsert = this.moveHideShowInsert.bind(this);
-
     this.state = {
       showInsertRow: false,
-      isDeletingUnit: false,
+      titleEditing: false,
     };
   }
+
+  onEditTitleState = (state) => {
+    this.setState({
+      titleEditing: state,
+    });
+  };
 
   /**
    * Updates the units double weighted value to the flipped value of the current
@@ -108,24 +98,17 @@ class UnitTable extends React.Component {
     this.props.firebase.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
   };
 
-  moveOverShowInsert() {
+  moveOverShowInsert = () => {
     this.setState({
       showInsertRow: true,
     });
-  }
+  };
 
-  moveHideShowInsert() {
+  moveHideShowInsert = () => {
     this.setState({
       showInsertRow: false,
     });
-  }
-
-  showDeleteUnitBox() {
-    this.setState({
-      isDeletingUnit: !this.state.isDeletingUnit,
-      tableTitle: this.state.tableTitle,
-    });
-  }
+  };
 
   /**
    * Updates a row content based on a key on the firebase database and when updating the
@@ -134,7 +117,7 @@ class UnitTable extends React.Component {
    * @param {string} rowIndex row key
    * @param {string} columnIndex column key
    */
-  updateRowContentDatabase(change, rowIndex, columnIndex) {
+  updateRowContentDatabase = (change, rowIndex, columnIndex) => {
     if (this.props.isExample) return;
 
     let updatedChange = change;
@@ -156,15 +139,9 @@ class UnitTable extends React.Component {
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.isExample) {
       const { tableIndex, yearIndex } = this.props;
-      this.props.firebase.updateUnitRowSection(
-        updatedChange,
-        yearIndex,
-        tableIndex,
-        rowIndex,
-        columnIndex,
-      );
+      this.props.firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
     }
-  }
+  };
 
   /**
    * Updates a row content based on a key
@@ -172,7 +149,7 @@ class UnitTable extends React.Component {
    * @param {string} rowIndex row key
    * @param {string} columnIndex column key
    */
-  updateRowContent(change, rowIndex, columnIndex) {
+  updateRowContent = (change, rowIndex, columnIndex) => {
     if (this.props.isExample) return;
 
     if (_.isNil(rowIndex) || _.isNil(columnIndex)) {
@@ -187,14 +164,14 @@ class UnitTable extends React.Component {
     if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
       this.props.updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex);
     }
-  }
+  };
 
   /**
    * Removes a row from a unit table, requires the row key for removing from both the index
    * and from the firebase database.
    * @param {string} rowIndex the row key to remove
    */
-  removeRowById(rowIndex) {
+  removeRowById = (rowIndex) => {
     if (this.props.isExample) return;
 
     const { yearIndex, tableIndex } = this.props;
@@ -203,12 +180,12 @@ class UnitTable extends React.Component {
       this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
       this.props.firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
     }
-  }
+  };
 
   /**
    * Removes the table (unit) completely from both firebase and redux
    */
-  deleteUnitTable() {
+  deleteUnitTable = () => {
     this.showDeleteUnitBox();
 
     if (this.props.isExample) return;
@@ -218,29 +195,27 @@ class UnitTable extends React.Component {
 
     this.props.removeUnitTable(yearIndex, unitTableIndex);
     this.props.firebase.deleteUnitById(yearIndex, unitTableIndex);
-  }
+  };
 
   /**
    * updates a unit title on the database
    * @param {string} change title change
    */
-  updateUnitTitleDatabase(change) {
+  updateUnitTitleDatabase = (change) => {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
-      this.props.firebase
-        .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
-        .catch((error) => console.log(error.message));
+      this.props.firebase.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex).catch((error) => console.log(error.message));
     }
-  }
+  };
 
   /**
    * updates a unit title
    * @param {string} change title change
    */
-  updateUnitTitle(change) {
+  updateUnitTitle = (change) => {
     if (!_.isNil(change) || change !== this.props.unit.title) {
       this.props.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex);
     }
-  }
+  };
 
   /**
    * inserts a new row at the bottom of the current table, this does not require
@@ -248,7 +223,7 @@ class UnitTable extends React.Component {
    * for creating the row in the redux, (without this we cannot update this row for
    * the firebase or the redux)
    */
-  insertRowBelow() {
+  insertRowBelow = () => {
     if (this.props.isExample) return;
 
     const { tableIndex, yearIndex } = this.props;
@@ -261,7 +236,7 @@ class UnitTable extends React.Component {
         .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
         .catch((error) => console.log(error.message));
     }
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -272,115 +247,117 @@ class UnitTable extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <DeleteModule
-          disabled={this.props.isExample}
-          open={this.state.isDeletingUnit}
-          title={this.props.unit.title}
-          onDelete={this.deleteUnitTable}
-          onClose={this.showDeleteUnitBox}
-        />
-        <EditableText
-          className={classes.title}
-          maxLength={constants.UNIT.TITLE.MAX}
-          onChange={this.updateUnitTitle}
-          onConfirm={this.updateUnitTitleDatabase}
-          value={this.props.unit.title}
-          variant="headline"
-          type="h5"
-        />
-        <UnitSummaryButtons
-          onDoubleClick={this.setUnitDoubleWeightedValue}
-          onDroppedClick={this.setUnitDroppedValue}
-          isDoubleWeighted={this.props.unit.double}
-          isDroppedUnit={this.props.unit.dropped}
-        />
-        <Percentages height={2} unit={this.props.unit} backdrop={false} />
-        <Typography
-          component="div"
-          className={classes.tableWrapper}
-          onMouseEnter={this.moveOverShowInsert}
-          onMouseLeave={this.moveHideShowInsert}
-          onTouchStart={this.moveOverShowInsert}
-        >
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>% Weighting</TableCell>
-                <TableCell>% Achieved</TableCell>
-                <TableCell
-                  style={{
-                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
-                  }}
-                >
-                  <IconButton onClick={this.insertRowBelow}>
-                    <Icon color="primary">add</Icon>
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody onMouseEnter={this.mouseOverEdit} onMouseLeave={this.moveOutEdit}>
-              {_.map(this.props.unit.content, (row, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <EditableText
-                      placeholder="Section"
-                      maxLength={constants.TABLE.NAME.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'name')}
-                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
-                      value={_.defaultTo(row.name, 'Section')}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <EditableText
-                      placeholder="% Weighting"
-                      maxLength={constants.TABLE.WEIGHT.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'weighting')}
-                      onConfirm={(change) =>
-                        this.updateRowContentDatabase(change, index, 'weighting')
-                      }
-                      value={_.defaultTo(row.weighting, '0')}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <EditableText
-                      placeholder="% Achieved"
-                      maxLength={constants.TABLE.ACHIEVED.MAX}
-                      onChange={(change) => this.updateRowContent(change, index, 'achieved')}
-                      onConfirm={(change) =>
-                        this.updateRowContentDatabase(change, index, 'achieved')
-                      }
-                      value={_.defaultTo(row.achieved, '0')}
-                    />
-                  </TableCell>
+        <div className={classes.grid}>
+          <div
+            style={{
+              gridColumn: 'col / span 3',
+              gridRow: '1',
+              textAlign: 'center',
+              paddingLeft: '50px',
+            }}
+          >
+            <EditableText
+              className={classes.title}
+              onChangeState={this.onEditTitleState}
+              maxLength={constants.UNIT.TITLE.MAX}
+              onChange={this.updateUnitTitle}
+              onConfirm={this.updateUnitTitleDatabase}
+              value={this.props.unit.title}
+              variant="headline"
+              type="h5"
+            />
+          </div>
+          <div style={{ gridColumn: 'col / span', gridRow: '1' }}>
+            <Settings
+              unit={this.props.unit}
+              deleteUnitTable={this.deleteUnitTable}
+              setUnitDoubleWeightedValue={this.setUnitDoubleWeightedValue}
+              setUnitDroppedValue={this.setUnitDroppedValue}
+            />
+          </div>
+          <div style={{ gridColumn: 'col / span 4', gridRow: '2' }}>
+            <Percentages height={2} unit={this.props.unit} backdrop={false} />
+          </div>
+          <Typography
+            component="div"
+            className={classes.tableWrapper}
+            onMouseEnter={this.moveOverShowInsert}
+            onMouseLeave={this.moveHideShowInsert}
+            onTouchStart={this.moveOverShowInsert}
+            style={{ gridColumn: 'col / span 4', gridRow: '3' }}
+          >
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>% Weighting</TableCell>
+                  <TableCell>% Achieved</TableCell>
                   <TableCell
                     style={{
                       visibility: this.state.showInsertRow ? 'visible' : 'hidden',
                     }}
                   >
-                    <IconButton onClick={() => this.removeRowById(index)}>
-                      <Icon color="secondary">clear</Icon>
+                    <IconButton onClick={this.insertRowBelow}>
+                      <Icon color="primary">add</Icon>
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              ))}
-              <TableRow>
-                <TableCell>Total</TableCell>
-                <TableCell>{totals.weighting}</TableCell>
-                <TableCell>{totals.achieved}</TableCell>
-                <TableCell
-                  style={{
-                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
-                  }}
-                >
-                  <IconButton onClick={this.showDeleteUnitBox}>
-                    <Icon color="primary">delete</Icon>
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Typography>
+              </TableHead>
+              <TableBody>
+                {_.map(this.props.unit.content, (row, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <EditableText
+                        placeholder="Section"
+                        maxLength={constants.TABLE.NAME.MAX}
+                        onChange={(change) => this.updateRowContent(change, index, 'name')}
+                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
+                        value={_.defaultTo(row.name, 'Section')}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <EditableText
+                        placeholder="% Weighting"
+                        maxLength={constants.TABLE.WEIGHT.MAX}
+                        onChange={(change) => this.updateRowContent(change, index, 'weighting')}
+                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'weighting')}
+                        value={_.defaultTo(row.weighting, '0')}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <EditableText
+                        placeholder="% Achieved"
+                        maxLength={constants.TABLE.ACHIEVED.MAX}
+                        onChange={(change) => this.updateRowContent(change, index, 'achieved')}
+                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'achieved')}
+                        value={_.defaultTo(row.achieved, '0')}
+                      />
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        visibility: this.state.showInsertRow ? 'visible' : 'hidden',
+                      }}
+                    >
+                      <IconButton onClick={() => this.removeRowById(index)}>
+                        <Icon color="secondary">clear</Icon>
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                <TableRow>
+                  <TableCell>Total</TableCell>
+                  <TableCell>{totals.weighting}</TableCell>
+                  <TableCell>{totals.achieved}</TableCell>
+                  <TableCell
+                    style={{
+                      visibility: this.state.showInsertRow ? 'visible' : 'hidden',
+                    }}
+                  />
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Typography>
+        </div>
       </Paper>
     );
   }

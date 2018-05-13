@@ -56,18 +56,19 @@ class Summary extends React.Component {
     const endWeek = 22;
 
     const currentDate = new Date();
-    const currentYear = new Date(new Date().getFullYear(), 0, 1);
-
-    let week = (currentDate - currentYear) / 84600000;
-    week += currentYear.getDay() + 1;
-    week = Math.ceil(week / 7);
+    const week = Math.ceil(
+      ((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000 +
+        new Date(currentDate.getFullYear(), 0, 1).getDay() +
+        1) /
+        7,
+    );
 
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';
     } else if (week <= 54 && week >= startingWeek) {
       return week - startingWeek;
     } else if (week >= 1) {
-      return 52 - (startingWeek + week);
+      return 52 - startingWeek + week;
     }
 
     return week;
@@ -155,7 +156,8 @@ class Summary extends React.Component {
 
         <div className={classes.summarySubtext}>
           <Typography component="p">
-            {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}/34
+            {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week:{' '}
+            {this.state.currentWeek}/34
           </Typography>
           <EditableText
             placeholder="Year"
@@ -171,10 +173,18 @@ class Summary extends React.Component {
           <Grid item xs={12}>
             <Grid container justify="center" spacing={Number(8)}>
               <Grid item>
-                <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
+                <Ranking
+                  height={_.size(this.props.units)}
+                  history={this.props.history}
+                  units={this.props.units}
+                />
               </Grid>
               <Grid item>
-                <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
+                <Percentages
+                  height={_.size(this.props.units)}
+                  units={this.props.units}
+                  isSummary={this.state.isSummary}
+                />
               </Grid>
             </Grid>
           </Grid>

@@ -7,6 +7,7 @@ import uuid from 'uuid/v4';
 const styles = () => ({
   root: {
     position: 'relative',
+    display: 'inline-block',
   },
   span: {
     display: 'none',
@@ -60,6 +61,7 @@ class EditableText extends React.Component {
   cancelEditing() {
     const { lastValue, value } = this.state;
     this.setState({ isEditing: false, value: lastValue });
+    this.props.onChangeState(false);
     if (value !== lastValue) {
       this.props.onChange(lastValue);
     }
@@ -70,15 +72,18 @@ class EditableText extends React.Component {
     if (this.state.isEditing) {
       const { value } = this.state;
       this.setState({ isEditing: false, lastValue: value });
+      this.props.onChangeState(false);
       this.props.onConfirm(value);
     } else if (!this.props.disabled) {
       this.setState({ isEditing: true });
+      this.props.onChangeState(true);
     }
   }
 
   handleFocus() {
     if (!this.props.disabled) {
       this.setState({ isEditing: true });
+      this.props.onChangeState(true);
     }
   }
 
@@ -121,74 +126,57 @@ class EditableText extends React.Component {
     inputElement.value = value;
   }
 
-  maybeRenderInput(value, rootStyle) {
-    const { maxLength } = this.props;
+  maybeRenderInput = (value) => {
+    const { maxLength, classes } = this.props;
     if (!this.state.isEditing) {
-      return undefined;
+      const hasValue = value != null && value !== '';
+
+      const contentStyle = {
+        display: this.state.isEditing ? 'none' : 'inherit',
+      };
+
+      return (
+        <Typography variant={this.props.variant} style={contentStyle} className={classes.span} component={this.props.type}>
+          {hasValue ? value : this.props.placeholder}
+        </Typography>
+      );
     }
     const props = {
       maxLength,
       onBlur: this.toggleEditing,
       onChange: this.handleTextChange,
       onKeyDown: this.handleKeyEvent,
-      style: {
-        lineHeight: this.state.inputHeight != null ? `${this.state.inputHeight}px` : null,
-        width: this.state.inputWidth,
-      },
       value,
     };
     return (
       <input
-        // Auto focuus on clicking the input
         autoFocus // eslint-disable-line
         onFocus={this.handleInputFocus}
-        className={`${this.props.className} ${rootStyle}`}
+        className={this.props.className}
         size={Number(this.state.value.length)}
         type="text"
+        style={{ margin: '0px', padding: '0px' }}
         id={`editableEdit-${this.state.inputId}`}
         {...props}
       />
     );
-  }
+  };
 
   render() {
-    const { disabled } = this.props;
+    const { disabled, classes } = this.props;
     const value = this.props.value == null ? this.state.value : this.props.value;
-    const hasValue = value != null && value !== '';
-
     const tabIndex = this.state.isEditing || disabled ? null : 0;
 
-    const { classes } = this.props;
-
-    const contentStyle = {
-      display: this.state.isEditing ? 'none' : 'inherit',
-      height: this.state.inputHeight,
-      lineHeight: this.state.inputHeight != null ? `${this.state.inputHeight}px` : null,
-      minWidth: this.props.minWidth,
-    };
-
     return (
-      <Typography
-        component="div"
-        className={`${this.props.className} ${classes.root}`}
-        onFocus={this.handleFocus}
-        tabIndex={tabIndex}
-      >
-        {this.maybeRenderInput(value, classes.root)}
-        <Typography
-          variant={this.props.variant}
-          style={contentStyle}
-          className={classes.span}
-          component={this.props.type}
-        >
-          {hasValue ? value : this.props.placeholder}
-        </Typography>
+      <Typography component="div" className={classes.root} onFocus={this.handleFocus} tabIndex={tabIndex}>
+        {this.maybeRenderInput(value)}
       </Typography>
     );
   }
 }
 
 EditableText.propTypes = {
+  onChangeState: PropTypes.func,
   onChange: PropTypes.func,
   onConfirm: PropTypes.func,
   onEdit: PropTypes.func,
@@ -210,6 +198,7 @@ EditableText.propTypes = {
 
 EditableText.defaultProps = {
   className: '',
+  onChangeState: () => null,
   onChange: () => null,
   onConfirm: () => null,
   onEdit: () => null,

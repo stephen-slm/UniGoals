@@ -10,16 +10,11 @@ const styles = () => ({
   },
 });
 
-const UnitSummaryButtons = props => (
+const UnitSummaryButtons = (props) => (
   <FormGroup row className={props.classes.root}>
+    <FormControlLabel control={<Checkbox checked={props.isDoubleWeighted} onChange={props.onDoubleClick} />} label="Double Weighted" />
     <FormControlLabel
-      control={<Checkbox checked={props.isDoubleWeighted} onChange={props.onDoubleClick} />}
-      label="Double Weighted"
-    />
-    <FormControlLabel
-      control={
-        <Checkbox checked={props.isDroppedUnit} onChange={props.onDroppedClick} color="primary" />
-      }
+      control={<Checkbox checked={props.isDroppedUnit} onChange={props.onDroppedClick} color="primary" />}
       label="Dropped Unit"
     />
   </FormGroup>

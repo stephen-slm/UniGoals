@@ -11,7 +11,7 @@ import _ from 'lodash';
 import { isMobileDevice } from '../../utils/utils';
 import * as homePageData from './homePageData';
 
-import UnitTable from '../Table/UnitTable';
+import UnitTable from '../Unit/index';
 import Summary from '../Summary/Summary';
 
 const styles = (theme) => ({
@@ -179,11 +179,7 @@ class Login extends React.Component {
         <Typography variant="subheading" gutterBottom>
           <Typography component="p">
             Full Course &amp; Unit tracking<br />built by a University{' '}
-            <a
-              href="https://www.linkedin.com/in/stephen-lineker-miller/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">
               Student
             </a>{' '}
             for University Students
@@ -197,11 +193,10 @@ class Login extends React.Component {
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.text} compnent="p">
-              UniGoals is a modern University unit tracking tool designed to let you know where you
-              currently stand on your course. Using quick and simple percentages charts to provide
-              fast and accurate content about your course. Simply add your units with there
-              weighting (e.g.coursework, exam, presentations, etc) and quickly see your current
-              percent, average and total maximum grade! Real-time instant results.
+              UniGoals is a modern University unit tracking tool designed to let you know where you currently stand on your course. Using
+              quick and simple percentages charts to provide fast and accurate content about your course. Simply add your units with there
+              weighting (e.g.coursework, exam, presentations, etc) and quickly see your current percent, average and total maximum grade!
+              Real-time instant results.
             </Typography>
             <Summary
               updateYearTitle={this.props.updateYearTitle}
@@ -215,14 +210,12 @@ class Login extends React.Component {
               removeYear={() => undefined}
             />
             <Typography className={classes.text} compnent="p">
-              Your own unqiue summary page that displays everything you need to quickly know about
-              your units! Including your <strong>unit ranks</strong>, how they are compared to other
-              units, <strong> Average</strong>, <strong>Max</strong> and{' '}
-              <strong>Total Grade</strong>. Try hovering over the chart and percentages. Each unit
-              looks like the one below, providing a <strong>Title</strong>, <strong>Name</strong>,{' '}
-              <strong>Weighting</strong>, and <strong> Achieved</strong> column. Filling these will
-              allow you to make the most of the site. The chart and percentages will also update in
-              real time as you update the rows.
+              Your own unqiue summary page that displays everything you need to quickly know about your units! Including your{' '}
+              <strong>unit ranks</strong>, how they are compared to other units, <strong> Average</strong>, <strong>Max</strong> and{' '}
+              <strong>Total Grade</strong>. Try hovering over the chart and percentages. Each unit looks like the one below, providing a{' '}
+              <strong>Title</strong>, <strong>Name</strong>, <strong>Weighting</strong>, and <strong> Achieved</strong> column. Filling
+              these will allow you to make the most of the site. The chart and percentages will also update in real time as you update the
+              rows.
             </Typography>
             <UnitTable
               isExample={this.state.isExample}
