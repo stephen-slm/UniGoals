@@ -20,7 +20,7 @@ import HelpBox from './HelpBox';
 
 import * as constants from '../../utils/constants';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     color: 'white',
     flexGrow: 1,
@@ -78,7 +78,7 @@ class Navigation extends React.Component {
 
     const notificationRef = props.firebase.getNotificationRef();
 
-    notificationRef.on('value', snapshot => {
+    notificationRef.on('value', (snapshot) => {
       this.setState({
         notificationCount: _.size(snapshot.val()),
       });
@@ -158,7 +158,7 @@ class Navigation extends React.Component {
     return this.props.firebase
       .sendHelpMessage(message, name, email)
       .then(() => console.log(`Thank you ${givenName} for submitting your help and or question`))
-      .catch(error => console.log(error.message));
+      .catch((error) => console.log(error.message));
   }
 
   render() {

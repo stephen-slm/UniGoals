@@ -7,7 +7,7 @@ import YearPreview from './YearPreview';
 import YearPrviewAdd from './YearPreviewAdd';
 import * as constants from '../../utils/constants';
 
-const generatedYears = years => {
+const generatedYears = (years) => {
   const readyYears = [];
 
   Object.keys(years).forEach((key, index) => {
@@ -21,7 +21,7 @@ const generatedYears = years => {
   return readyYears;
 };
 
-const YearsPreview = props => (
+const YearsPreview = (props) => (
   <Fragment>
     {generatedYears(props.years)}
     {_.size(props.years) < constants.YEAR.MAX && (

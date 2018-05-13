@@ -8,14 +8,14 @@ export const renderMergedProps = (component, ...rest) => {
 };
 
 export const PropsRoute = ({ component, ...rest }) => (
-  <Route {...rest} render={routeProps => renderMergedProps(component, routeProps, rest)} />
+  <Route {...rest} render={(routeProps) => renderMergedProps(component, routeProps, rest)} />
 );
 
 export const PrivateRoute = ({ component, ...rest }) => (
   <Route
     {...rest}
-    render={routeProps =>
-      (rest.profile.auth ? (
+    render={(routeProps) =>
+      rest.profile.auth ? (
         renderMergedProps(component, routeProps, rest)
       ) : (
         <Redirect
@@ -24,7 +24,7 @@ export const PrivateRoute = ({ component, ...rest }) => (
             state: { from: routeProps.location },
           }}
         />
-      ))
+      )
     }
   />
 );

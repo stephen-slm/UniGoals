@@ -9,7 +9,7 @@ import Icon from 'material-ui/Icon';
 import * as constants from '../../utils/constants';
 import Expandable from '../Table/Expandable';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: '0 auto',
     maxWidth: '75%',
@@ -55,8 +55,8 @@ class Tables extends React.Component {
     } else {
       this.props.firebase
         .insertUnitById(this.props.yearIndex)
-        .then(ref => this.insertTableAndNavigate(ref))
-        .catch(error => console.log(error.message));
+        .then((ref) => this.insertTableAndNavigate(ref))
+        .catch((error) => console.log(error.message));
     }
   }
 

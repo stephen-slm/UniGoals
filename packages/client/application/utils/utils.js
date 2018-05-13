@@ -34,7 +34,9 @@ export function getAchievedFromAssignment(assignment, pure = false) {
     return Number(assignment.achieved.replace(/[^.0-9]/g, ''));
   }
 
-  const total = Number(assignment.achieved.replace(/[^.0-9]/g, '')) * Number(assignment.weighting.replace(/[^.0-9]/g, ''));
+  const total =
+    Number(assignment.achieved.replace(/[^.0-9]/g, '')) *
+    Number(assignment.weighting.replace(/[^.0-9]/g, ''));
   return total / 100;
 }
 
@@ -100,7 +102,9 @@ export function getAverageFromUnit(unit) {
     average += getAchievedFromAssignment(assessment, true);
   });
 
-  const numberOfValidAssignments = _.size(_.filter(unit.content, (e) => Number(e.achieved.replace(/[^.0-9]/g, '')) > 0));
+  const numberOfValidAssignments = _.size(
+    _.filter(unit.content, (e) => Number(e.achieved.replace(/[^.0-9]/g, '')) > 0),
+  );
 
   if (numberOfValidAssignments <= 0) {
     return average;
@@ -199,6 +203,27 @@ export function getMaxAchievedFromUnits(units) {
 }
 
 export function getHappyEmoji() {
-  const emojis = ['🎉', '🎆', '🎈', '❤️', '💪', '🔥', '😍', '👨‍🎓👩‍🎓', '🐙', '🤷', '😈', '👻', '👽', '🤖', '💩', '🧐', '🤓', '😎', '💯', '💲'];
+  const emojis = [
+    '🎉',
+    '🎆',
+    '🎈',
+    '❤️',
+    '💪',
+    '🔥',
+    '😍',
+    '👨‍🎓👩‍🎓',
+    '🐙',
+    '🤷',
+    '😈',
+    '👻',
+    '👽',
+    '🤖',
+    '💩',
+    '🧐',
+    '🤓',
+    '😎',
+    '💯',
+    '💲',
+  ];
   return emojis[_.random(0, emojis.length - 1)];
 }

@@ -1,4 +1,9 @@
-import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle } from 'material-ui/Dialog';
+import Dialog, {
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from 'material-ui/Dialog';
 import IconButton from 'material-ui/IconButton';
 import Button from 'material-ui/Button';
 import Icon from 'material-ui/Icon';
@@ -35,7 +40,11 @@ export default class Settings extends React.Component {
         <IconButton style={{ float: 'right' }} onClick={this.handleClickOpen}>
           <Icon color="primary">settings</Icon>
         </IconButton>
-        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+        >
           <DialogTitle id="form-dialog-title">Settings - {this.props.unit.title}</DialogTitle>
           <DialogContent>
             <DialogContentText>

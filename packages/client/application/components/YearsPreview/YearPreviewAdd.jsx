@@ -5,7 +5,7 @@ import { withStyles } from 'material-ui/styles';
 import Card, { CardContent } from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     height: theme.spacing.unit * 15,
     width: theme.spacing.unit * 18,
@@ -30,8 +30,8 @@ class YearPreviewAdd extends React.Component {
   insertNewYear() {
     this.props.firebase
       .insertNewYear()
-      .then(year => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
-      .catch(error => console.log(error.message));
+      .then((year) => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
+      .catch((error) => console.log(error.message));
   }
 
   render() {

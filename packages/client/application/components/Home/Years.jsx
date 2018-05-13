@@ -6,7 +6,7 @@ import Grid from 'material-ui/Grid';
 import YearsPreview from '../YearsPreview';
 import NewUser from '../Utilities/NewUser';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     marginTop: theme.spacing.unit * 2,
     maxWidth: '80%',
@@ -21,7 +21,7 @@ const styles = theme => ({
   },
 });
 
-const Years = props => {
+const Years = (props) => {
   const { classes } = props;
 
   return (
