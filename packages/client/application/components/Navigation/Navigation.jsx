@@ -6,16 +6,9 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Icon from 'material-ui/Icon';
-import Badge from 'material-ui/Badge';
 import IconButton from 'material-ui/IconButton';
 
-// Bottom navigation
-import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
-import { Link } from 'react-router-dom';
-
-// Linking
-
-import DropDownAvatar from './DropDownAvatar';
+import TemporaryDrawer from './TemporaryDrawer';
 import SignOutBox from './SignOutBox';
 import HelpBox from './HelpBox';
 
@@ -29,29 +22,12 @@ const styles = (theme) => ({
   flex: {
     flex: 1,
   },
-  mail: {
-    marginRight: theme.spacing.unit,
-  },
   logo: {
     width: 50,
     height: 50,
   },
-  logoButton: {
-    padding: '0px',
-    minWidth: '0px',
-  },
-  BottomNavigation: {
-    background: theme.palette.primary.main,
-    color: 'white',
-    width: '100%',
-    position: 'fixed',
-    zIndex: 100,
-    right: 0,
-    left: 0,
-    bottom: 0,
-  },
-  bottomNavigationColor: {
-    textDecoration: 'none',
+  menuIcon: {
+    marginLeft: -(theme.spacing.unit * 2),
     color: 'white',
   },
 });
@@ -63,6 +39,7 @@ class Navigation extends React.Component {
     this.state = {
       showNotifications: false,
       showSignOut: false,
+      showSideDraw: false,
       invalidhelpMessage: false,
       notificationCount: 0,
       avatarAddress: props.firebase.getProfileImageUrl(),
@@ -159,72 +136,61 @@ class Navigation extends React.Component {
       .catch((error) => console.log(error.message));
   }
 
+  handleDrawerChange = () => {
+    this.setState({
+      showSideDraw: !this.state.showSideDraw,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <div>
         <AppBar position="static" color="primary" className={classes.root}>
-          <SignOutBox
-            onClose={this.showSignOutBox}
-            onSignOut={this.signOut}
-            open={this.state.showSignOut}
-            name={this.props.profile.name}
-          />
-          <HelpBox
-            handleSubmit={this.submitHelpMessage}
-            error={this.state.invalidhelpMessage}
-            handleClose={this.props.showHelpBox}
-            open={this.props.displayHelp}
-            minLength={constants.HELP_MESSAGE.MIN}
-            maxLength={constants.HELP_MESSAGE.MAX}
+          <TemporaryDrawer
+            open={this.state.showSideDraw}
+            onClose={this.handleDrawerChange}
+            profile={this.props.profile}
+            url={this.state.avatarAddress}
+            signOutClick={this.showSignOutBox}
+            showHelpBox={this.props.showHelpBox}
+            notificationCount={this.state.notificationCount}
           />
           <Toolbar>
-            <Link href="/" to="/" style={{ textDecoration: 'none' }}>
+            <SignOutBox
+              onClose={this.showSignOutBox}
+              onSignOut={this.signOut}
+              open={this.state.showSignOut}
+              name={this.props.profile.name}
+            />
+            <HelpBox
+              handleSubmit={this.submitHelpMessage}
+              error={this.state.invalidhelpMessage}
+              handleClose={this.props.showHelpBox}
+              open={this.props.displayHelp}
+              minLength={constants.HELP_MESSAGE.MIN}
+              maxLength={constants.HELP_MESSAGE.MAX}
+            />
+            <IconButton className={classes.menuIcon} onClick={this.handleDrawerChange}>
+              <Icon>menu</Icon>
+            </IconButton>
+            <Typography variant="body2" color="inherit" className={classes.flex}>
+              {this.getWelcomeMessage()}
+            </Typography>
+            <Typography component="div" color="inherit">
+              UniGoals
+            </Typography>
+            <IconButton>
               <img
                 src="/components/resources/images/logo.svg"
                 alt="logo"
                 className={classes.logo}
               />
-            </Link>
-            <Typography variant="body2" color="inherit" className={classes.flex}>
-              UniGoals
-            </Typography>
-            <Typography component="div" color="inherit">
-              {this.getWelcomeMessage()}
-            </Typography>
-            <DropDownAvatar
-              profile={this.props.profile}
-              url={this.state.avatarAddress}
-              signOutClick={this.showSignOutBox}
-            />
+            </IconButton>
           </Toolbar>
         </AppBar>
         {!_.isNil(this.props.children) ? this.props.children : null}
-        <BottomNavigation className={classes.BottomNavigation}>
-          <Link href="/home" to="/home" style={{ textDecoration: 'none' }}>
-            <BottomNavigationAction
-              icon={<Icon className={classes.bottomNavigationColor}>home</Icon>}
-            />
-          </Link>
-          <BottomNavigationAction
-            onClick={this.props.showHelpBox}
-            icon={<Icon className={classes.bottomNavigationColor}>help</Icon>}
-          />
-          <Link href="/notifications" to="/notifications" style={{ textDecoration: 'none' }}>
-            <BottomNavigationAction
-              icon={
-                this.state.notificationCount > 0 ? (
-                  <Badge badgeContent={this.state.notificationCount} color="error">
-                    <Icon className={classes.bottomNavigationColor}>notifications</Icon>
-                  </Badge>
-                ) : (
-                  <Icon className={classes.bottomNavigationColor}>notifications</Icon>
-                )
-              }
-            />
-          </Link>
-        </BottomNavigation>
       </div>
     );
   }
@@ -237,6 +203,7 @@ Navigation.propTypes = {
   firebase: PropTypes.shape({
     sendHelpMessage: PropTypes.func,
     getNotificationRef: PropTypes.func,
+    getProfileImageUrl: PropTypes.func,
     authentication: PropTypes.shape({
       signOut: PropTypes.func,
     }),
