@@ -160,7 +160,7 @@ class EditableText extends React.Component {
         className={this.props.className}
         size={Number(this.state.value.length)}
         type="text"
-        style={{ margin: '0px', padding: '0px' }}
+        style={{ margin: '0px', padding: '0px', maxWidth: '100px', wordWrap: 'break-word' }}
         id={`editableEdit-${this.state.inputId}`}
         {...props}
       />

@@ -102,15 +102,13 @@ export function getAverageFromUnit(unit) {
     average += getAchievedFromAssignment(assessment, true);
   });
 
-  const numberOfValidAssignments = _.size(
-    _.filter(unit.content, (e) => Number(e.achieved.replace(/[^.0-9]/g, '')) > 0),
-  );
+  const numValid = _.size(_.filter(content, (e) => Number(e.achieved.replace(/[^.0-9]/g, '')) > 0));
 
-  if (numberOfValidAssignments <= 0) {
+  if (numValid <= 0) {
     return average;
   }
 
-  return average / numberOfValidAssignments;
+  return average / numValid;
 }
 
 /**

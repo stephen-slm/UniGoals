@@ -11,10 +11,11 @@ import IconButton from 'material-ui/IconButton';
 
 // Bottom navigation
 import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
-
-// Linking
 import { Link } from 'react-router-dom';
 
+// Linking
+
+import DropDownAvatar from './DropDownAvatar';
 import SignOutBox from './SignOutBox';
 import HelpBox from './HelpBox';
 
@@ -34,10 +35,6 @@ const styles = (theme) => ({
   logo: {
     width: 50,
     height: 50,
-  },
-  avatar: {
-    width: 64,
-    height: 64,
   },
   logoButton: {
     padding: '0px',
@@ -68,6 +65,7 @@ class Navigation extends React.Component {
       showSignOut: false,
       invalidhelpMessage: false,
       notificationCount: 0,
+      avatarAddress: props.firebase.getProfileImageUrl(),
     };
 
     this.getWelcomeMessage = this.getWelcomeMessage.bind(this);
@@ -195,9 +193,11 @@ class Navigation extends React.Component {
             <Typography component="div" color="inherit">
               {this.getWelcomeMessage()}
             </Typography>
-            <IconButton className={classes.bottomNavigationColor} onClick={this.showSignOutBox}>
-              <Icon>exit_to_app</Icon>
-            </IconButton>
+            <DropDownAvatar
+              profile={this.props.profile}
+              url={this.state.avatarAddress}
+              signOutClick={this.showSignOutBox}
+            />
           </Toolbar>
         </AppBar>
         {!_.isNil(this.props.children) ? this.props.children : null}

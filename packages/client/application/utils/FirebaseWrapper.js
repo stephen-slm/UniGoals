@@ -272,6 +272,16 @@ export default class FirebaseWrapper {
   }
 
   /**
+   * returns the full path to the image of the users profile picture
+   */
+  getProfileImageUrl() {
+    if (!_.isNil(this.authentication.currentUser)) {
+      return this.authentication.currentUser.photoURL;
+    }
+    return '';
+  }
+
+  /**
    * inserts a new row at the bottom of the unit
    * @param unitKey The unit key to insert into
    * @returns {firebase.Promise.<*>}
