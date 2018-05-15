@@ -136,12 +136,7 @@ class EditableText extends React.Component {
       };
 
       return (
-        <Typography
-          variant={this.props.variant}
-          style={contentStyle}
-          className={classes.span}
-          component={this.props.type}
-        >
+        <Typography variant={this.props.variant} style={contentStyle} className={classes.span} component={this.props.type}>
           {hasValue ? value : this.props.placeholder}
         </Typography>
       );
@@ -173,12 +168,7 @@ class EditableText extends React.Component {
     const tabIndex = this.state.isEditing || disabled ? null : 0;
 
     return (
-      <Typography
-        component="div"
-        className={classes.root}
-        onFocus={this.handleFocus}
-        tabIndex={tabIndex}
-      >
+      <Typography component="div" className={classes.root} onFocus={this.handleFocus} tabIndex={tabIndex}>
         {this.maybeRenderInput(value)}
       </Typography>
     );

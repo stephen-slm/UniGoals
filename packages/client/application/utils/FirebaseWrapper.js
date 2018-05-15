@@ -157,9 +157,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   updateUnitTitle(change, yearKey, unitKey) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/title`)
-      .set(change);
+    return this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/title`).set(change);
   }
 
   /**
@@ -182,9 +180,7 @@ export default class FirebaseWrapper {
    */
   updateUnitRowSection(change, yearIndex, tableIndex, rowIndex, columnIndex) {
     return this.database
-      .ref(
-        `users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/content/${rowIndex}/${columnIndex}`,
-      )
+      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/content/${rowIndex}/${columnIndex}`)
       .set(change);
   }
 
@@ -195,9 +191,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   deleteUnitRowById(yearIndex, unitRowKey, tableUnitKey) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableUnitKey}/content/${unitRowKey}`)
-      .remove();
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableUnitKey}/content/${unitRowKey}`).remove();
   }
 
   /**
@@ -210,9 +204,7 @@ export default class FirebaseWrapper {
       .once('value')
       .then((currentUnitState) => {
         if (currentUnitState.numChildren() >= constants.UNIT.MAX) {
-          return Promise.reject(
-            new Error(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`),
-          );
+          return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.MAX} units at anyone time.`));
         }
 
         const insertUnitRef = this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`);
@@ -253,9 +245,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   setUnitDoubleWeightStatus(yearIndex, tableIndex, value) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/double`)
-      .set(value);
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/double`).set(value);
   }
 
   /**
@@ -266,9 +256,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<*>}
    */
   setUnitDroppedStatus(yearIndex, tableIndex, value) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/dropped`)
-      .set(value);
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/dropped`).set(value);
   }
 
   /**
@@ -292,16 +280,10 @@ export default class FirebaseWrapper {
       .once('value')
       .then((currentRowState) => {
         if (currentRowState.numChildren() >= constants.UNIT.ENTRY_MAX) {
-          return Promise.reject(
-            new Error(
-              `Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`,
-            ),
-          );
+          return Promise.reject(new Error(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`));
         }
 
-        const insertingUnitRowRef = this.database.ref(
-          `users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`,
-        );
+        const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`);
 
         const insertingUnitRowKey = insertingUnitRowRef.push({
           name: 'Section',
@@ -319,9 +301,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   deleteUnitById(yearIndex, unitIndex) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${unitIndex}`)
-      .remove();
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${unitIndex}`).remove();
   }
 
   /**
@@ -366,9 +346,7 @@ export default class FirebaseWrapper {
   }
 
   createNewYear(name) {
-    const newYearRef = this.database
-      .ref(`users/${this.getUid()}/years`)
-      .push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
+    const newYearRef = this.database.ref(`users/${this.getUid()}/years`).push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
     return newYearRef;
   }
 
@@ -383,16 +361,12 @@ export default class FirebaseWrapper {
         const yearLen = Object.keys(years).length + 1;
         title = `Year ${yearLen} ${getHappyEmoji()}`;
         if (_.size(years) >= constants.YEAR.MAX) {
-          return Promise.reject(
-            new Error(`Only a maximum of ${constants.YEAR.MAX} years at anyone time.`),
-          );
+          return Promise.reject(new Error(`Only a maximum of ${constants.YEAR.MAX} years at anyone time.`));
         }
         return this.createNewYear(title);
       })
       .then((newYearRef) => {
-        const sampleOneRef = this.database.ref(
-          `users/${this.getUid()}/years/${newYearRef.key}/units`,
-        );
+        const sampleOneRef = this.database.ref(`users/${this.getUid()}/years/${newYearRef.key}/units`);
         const sampleKey = sampleOneRef.push({ title: 'New Unit', content: {} });
         return { yearKey: newYearRef.key, title, unitKey: sampleKey.key };
       });

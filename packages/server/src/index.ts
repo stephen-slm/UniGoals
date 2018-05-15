@@ -8,4 +8,4 @@ const sampleNotification: adminbase.IUniNotification = {
   title: 'Double Weighted/Dropped Units!',
 };
 
-adminbase.deployNotification(sampleNotification, false);
+adminbase.deployNotification(sampleNotification, true);

@@ -37,6 +37,10 @@ const styles = (theme) => ({
     marginTop: theme.spacing.unit + 2,
     gridColumn: '2',
     gridRow: '1',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    maxWidth: theme.spacing.unit * 25,
   },
   logo: {
     width: 50,
@@ -88,11 +92,7 @@ class TemporaryDrawer extends React.Component {
             <div className={classes.toolbar}>
               <div className={classes.iconWrapper}>
                 <div className={classes.iconGrid}>
-                  <Avatar
-                    alt={this.props.profile.name}
-                    src={this.props.url}
-                    className={classes.avatar}
-                  />
+                  <Avatar alt={this.props.profile.name} src={this.props.url} className={classes.avatar} />
                 </div>
                 <div className={classes.iconGridTwo}>{this.props.profile.email}</div>
               </div>
@@ -109,18 +109,18 @@ class TemporaryDrawer extends React.Component {
                 <ListItemIcon>{this.getNotificationBadge()}</ListItemIcon>
                 <ListItemText primary="Notifications" />
               </ListItem>
-              <ListItem button onClick={this.handleProfile}>
-                <ListItemIcon>
-                  <Icon>person</Icon>
-                </ListItemIcon>
-                <ListItemText primary="My Profile" />
-              </ListItem>
-              <ListItem button onClick={this.handleSettings}>
-                <ListItemIcon>
-                  <Icon>settings</Icon>
-                </ListItemIcon>
-                <ListItemText primary="Settings" />
-              </ListItem>
+              {/*<ListItem button onClick={this.handleProfile}>*/}
+              {/*<ListItemIcon>*/}
+              {/*<Icon>person</Icon>*/}
+              {/*</ListItemIcon>*/}
+              {/*<ListItemText primary="My Profile" />*/}
+              {/*</ListItem>*/}
+              {/*<ListItem button onClick={this.handleSettings}>*/}
+              {/*<ListItemIcon>*/}
+              {/*<Icon>settings</Icon>*/}
+              {/*</ListItemIcon>*/}
+              {/*<ListItemText primary="Settings" />*/}
+              {/*</ListItem>*/}
               <ListItem button onClick={this.props.signOutClick}>
                 <ListItemIcon>
                   <Icon>exit_to_app</Icon>
