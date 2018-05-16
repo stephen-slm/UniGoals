@@ -15,7 +15,7 @@ export const PrivateRoute = ({ component, ...rest }) => (
   <Route
     {...rest}
     render={(routeProps) =>
-      rest.profile.auth ? (
+      (rest.profile.auth ? (
         renderMergedProps(component, routeProps, rest)
       ) : (
         <Redirect
@@ -24,7 +24,7 @@ export const PrivateRoute = ({ component, ...rest }) => (
             state: { from: routeProps.location },
           }}
         />
-      )
+      ))
     }
   />
 );
