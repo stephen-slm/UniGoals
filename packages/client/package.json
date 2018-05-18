@@ -2,7 +2,8 @@
   "name": "unigoals",
   "version": "0.3.5",
   "author": "MambaSoftware",
-  "description": "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
+  "description":
+    "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
   "scripts": {
     "build:hot": "webpack-dev-server -d --config ./webpack.config.development.js",
     "build:dev": "webpack -d --watch --config ./webpack.config.development.js",
@@ -13,6 +14,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "@material-ui/core": "^1.0.0",
+    "@material-ui/icons": "^1.0.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
@@ -24,8 +27,6 @@
     "firebase-tools": "^3.17.6",
     "history": "^4.7.2",
     "lodash": "^4.17.5",
-    "material-ui": "^1.0.0-beta.38",
-    "material-ui-icons": "^1.0.0-beta.36",
     "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
