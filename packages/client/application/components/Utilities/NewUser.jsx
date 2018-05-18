@@ -168,7 +168,7 @@ class NewUser extends React.Component {
     return (
       <Dialog
         open={isOpen}
-        transition={Transition}
+        TransitionComponent={Transition}
         onClose={this.addUniversityDetails}
         aria-labelledby="Creation Box"
         aria-describedby="Box for creating new users"

@@ -15,7 +15,7 @@ function Transition(props) {
 const DeleteModule = (props) => (
   <Dialog
     open={props.open && !props.disabled}
-    transition={Transition}
+    TransitionComponent={Transition}
     onClose={props.onClose}
     aria-labelledby={`delete dialog for ${props.title}`}
     aria-describedby={`A delete box used for deleting ${props.title}`}

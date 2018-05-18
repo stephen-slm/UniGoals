@@ -15,7 +15,7 @@ function Transition(props) {
 const SignOutBox = props => (
   <Dialog
     open={props.open && !props.disabled}
-    transition={Transition}
+    TransitionComponent={Transition}
     onClose={props.onClose}
     aria-labelledby={`signout dialog for ${props.name}`}
     aria-describedby={`A signout box used for signing out ${props.name}`}

@@ -28,7 +28,7 @@ class HelpBox extends React.Component {
     return (
       <Dialog
         open={this.props.open}
-        transition={Transition}
+        TransitionComponent={Transition}
         onClose={this.props.handleClose}
         aria-labelledby="Submitting feedback"
       >

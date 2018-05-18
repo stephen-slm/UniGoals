@@ -46,7 +46,6 @@ export default class Settings extends React.Component {
         >
           <DialogTitle id="form-dialog-title">Settings - {this.props.unit.title}</DialogTitle>
           <DialogContent>
-            <DialogContentText>
               <Summary
                 onDoubleClick={this.props.setUnitDoubleWeightedValue}
                 onDroppedClick={this.props.setUnitDroppedValue}
@@ -60,7 +59,6 @@ export default class Settings extends React.Component {
                 onDelete={this.props.deleteUnitTable}
                 onClose={this.showDeleteUnitBox}
               />
-            </DialogContentText>
           </DialogContent>
           <DialogActions style={{ display: 'block' }}>
             <Button style={{ float: 'left' }} onClick={this.showDeleteUnitBox} color="primary">
