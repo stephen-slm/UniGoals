@@ -1,7 +1,6 @@
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -39,26 +38,22 @@ export default class Settings extends React.Component {
         <IconButton style={{ float: 'right' }} onClick={this.handleClickOpen}>
           <Icon color="primary">settings</Icon>
         </IconButton>
-        <Dialog
-          open={this.state.open}
-          onClose={this.handleClose}
-          aria-labelledby="form-dialog-title"
-        >
+        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Settings - {this.props.unit.title}</DialogTitle>
           <DialogContent>
-              <Summary
-                onDoubleClick={this.props.setUnitDoubleWeightedValue}
-                onDroppedClick={this.props.setUnitDroppedValue}
-                isDoubleWeighted={this.props.unit.double}
-                isDroppedUnit={this.props.unit.dropped}
-              />
-              <DeleteModule
-                disabled={this.props.isExample}
-                open={this.state.isDeletingUnit}
-                title={this.props.unit.title}
-                onDelete={this.props.deleteUnitTable}
-                onClose={this.showDeleteUnitBox}
-              />
+            <Summary
+              onDoubleClick={this.props.setUnitDoubleWeightedValue}
+              onDroppedClick={this.props.setUnitDroppedValue}
+              isDoubleWeighted={this.props.unit.double}
+              isDroppedUnit={this.props.unit.dropped}
+            />
+            <DeleteModule
+              disabled={this.props.isExample}
+              open={this.state.isDeletingUnit}
+              title={this.props.unit.title}
+              onDelete={this.props.deleteUnitTable}
+              onClose={this.showDeleteUnitBox}
+            />
           </DialogContent>
           <DialogActions style={{ display: 'block' }}>
             <Button style={{ float: 'left' }} onClick={this.showDeleteUnitBox} color="primary">

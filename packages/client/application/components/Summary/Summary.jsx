@@ -1,5 +1,6 @@
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
@@ -145,9 +146,9 @@ class Summary extends React.Component {
           onClose={this.showDeleteYear}
         />
         <Tooltip title="Delete Year" placement="left">
-          <Icon onClick={this.showDeleteYear} className={classes.removeButton} color="secondary">
-            delete
-          </Icon>
+          <IconButton onClick={this.showDeleteYear} className={classes.removeButton} color="secondary">
+            <Icon>delete</Icon>
+          </IconButton>
         </Tooltip>
         <Typography variant="headline" component="h5">
           Summary
@@ -155,8 +156,7 @@ class Summary extends React.Component {
 
         <div className={classes.summarySubtext}>
           <Typography component="p">
-            {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week:{' '}
-            {this.state.currentWeek}/34
+            {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}/34
           </Typography>
           <EditableText
             placeholder="Year"
@@ -172,18 +172,10 @@ class Summary extends React.Component {
           <Grid item xs={12}>
             <Grid container justify="center" spacing={Number(8)}>
               <Grid item>
-                <Ranking
-                  height={_.size(this.props.units)}
-                  history={this.props.history}
-                  units={this.props.units}
-                />
+                <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
               </Grid>
               <Grid item>
-                <Percentages
-                  height={_.size(this.props.units)}
-                  units={this.props.units}
-                  isSummary={this.state.isSummary}
-                />
+                <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
               </Grid>
             </Grid>
           </Grid>
