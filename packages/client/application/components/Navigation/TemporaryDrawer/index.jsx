@@ -1,15 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import Drawer from 'material-ui/Drawer';
-import Divider from 'material-ui/Divider';
+import { withStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import Divider from '@material-ui/core/Divider';
 import { withRouter } from 'react-router-dom';
-import Badge from 'material-ui/Badge';
-import Avatar from 'material-ui/Avatar';
+import Badge from '@material-ui/core/Badge';
+import Avatar from '@material-ui/core/Avatar';
 
-import List, { ListItemIcon, ListItemText } from 'material-ui/List';
-import ListItem from 'material-ui/List/ListItem';
-import Icon from 'material-ui/Icon';
+import List from '@material-ui/core/List';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import Icon from '@material-ui/core/Icon';
 
 const styles = (theme) => ({
   list: {

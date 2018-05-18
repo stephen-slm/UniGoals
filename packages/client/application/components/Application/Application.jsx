@@ -3,7 +3,7 @@ import createBrowserHistory from 'history/createBrowserHistory';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import * as routePaths from './routePaths';
 
 import { PropsRoute, PrivateRoute } from '../Routes';

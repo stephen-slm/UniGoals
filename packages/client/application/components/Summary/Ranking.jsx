@@ -1,6 +1,6 @@
-import { withStyles } from 'material-ui/styles';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
 import PropTypes from 'prop-types';
 import uuid from 'uuid/v4';
 import React from 'react';

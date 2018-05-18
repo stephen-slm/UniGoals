@@ -1,12 +1,11 @@
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-} from 'material-ui/ExpansionPanel';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
 import UnitTable from '../Unit/index';
 import { getAchievedFromUnit } from '../../utils/utils';
@@ -58,9 +57,7 @@ const Expandable = (props) => {
             </Typography>
           </div>
           <div className={classes.column}>
-            <Typography className={classes.secondaryHeading}>
-              {props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}
-            </Typography>
+            <Typography className={classes.secondaryHeading}>{props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}</Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.details }}>
