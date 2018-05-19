@@ -38,7 +38,12 @@ export default class Settings extends React.Component {
         <IconButton style={{ float: 'right' }} onClick={this.handleClickOpen}>
           <Icon color="primary">settings</Icon>
         </IconButton>
-        <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="form-dialog-title"
+          style={{ visibility: this.state.open ? 'visible' : 'hidden' }}
+        >
           <DialogTitle id="form-dialog-title">Settings - {this.props.unit.title}</DialogTitle>
           <DialogContent>
             <Summary

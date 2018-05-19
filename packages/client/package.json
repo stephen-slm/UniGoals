@@ -2,8 +2,7 @@
   "name": "unigoals",
   "version": "0.3.5",
   "author": "MambaSoftware",
-  "description":
-    "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
+  "description": "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
   "scripts": {
     "build:hot": "webpack-dev-server -d --config ./webpack.config.development.js",
     "build:dev": "webpack -d --watch --config ./webpack.config.development.js",

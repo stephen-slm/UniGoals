@@ -14,6 +14,7 @@ function Transition(props) {
 
 const DeleteModule = (props) => (
   <Dialog
+    style={{ visibility: props.open ? 'visible' : 'hidden' }}
     open={props.open && !props.disabled}
     TransitionComponent={Transition}
     onClose={props.onClose}
