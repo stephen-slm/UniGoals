@@ -2,8 +2,7 @@
   "name": "unigoals",
   "version": "0.3.5-alpha",
   "author": "MambaSoftware",
-  "description":
-    "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
+  "description": "UniGoals is modern day University course unit tracking utility designed to allow you to be able to constantly know where you currently stand on your course.",
   "scripts": {
     "build:hot": "webpack-dev-server -d --config ./webpack.config.development.js",
     "build:dev": "webpack -d --watch --config ./webpack.config.development.js",
@@ -28,14 +27,14 @@
     "history": "^4.7.2",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.1",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-router-hash-link": "^1.2.0",
     "react-router-redux": "^4.0.8",
-    "redux": "^3.7.2",
+    "redux": "^4.0.0",
     "uuid": "^3.2.1"
   },
   "devDependencies": {

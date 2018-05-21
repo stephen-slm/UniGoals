@@ -14,13 +14,11 @@ const styles = () => ({
 const UnitSummaryButtons = (props) => (
   <FormGroup row className={props.classes.root}>
     <FormControlLabel
-      control={<Checkbox checked={props.isDoubleWeighted} onChange={props.onDoubleClick} />}
-      label="Double Weighted"
+      control={<Checkbox checked={props.isDoubleWeighted} onChange={props.onDoubleClick} color="primary" />}
+      label="Double Unit"
     />
     <FormControlLabel
-      control={
-        <Checkbox checked={props.isDroppedUnit} onChange={props.onDroppedClick} color="primary" />
-      }
+      control={<Checkbox checked={props.isDroppedUnit} onChange={props.onDroppedClick} color="secondary" />}
       label="Dropped Unit"
     />
   </FormGroup>
