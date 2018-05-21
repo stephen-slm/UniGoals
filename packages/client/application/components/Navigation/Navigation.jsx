@@ -109,10 +109,7 @@ class Navigation extends React.Component {
     const { name, email, given_name: givenName } = this.props.profile;
     const { version } = this.props;
 
-    if (
-      message.length < constants.HELP_MESSAGE.MIN ||
-      message.length > constants.HELP_MESSAGE_MAX
-    ) {
+    if (message.length < constants.HELP_MESSAGE.MIN || message.length > constants.HELP_MESSAGE_MAX) {
       return this.setState({ invalidhelpMessage: true });
     }
 
@@ -181,13 +178,7 @@ class Navigation extends React.Component {
             <Typography component="div" color="inherit">
               UniGoals
             </Typography>
-            <IconButton>
-              <img
-                src="/components/resources/images/logo.svg"
-                alt="logo"
-                className={classes.logo}
-              />
-            </IconButton>
+            <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
           </Toolbar>
         </AppBar>
         {!_.isNil(this.props.children) ? this.props.children : null}

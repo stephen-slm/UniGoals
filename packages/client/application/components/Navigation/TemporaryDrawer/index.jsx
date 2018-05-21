@@ -88,17 +88,13 @@ class TemporaryDrawer extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Drawer open={this.props.open} onClose={this.props.onClose}>
+      <Drawer open={this.props.open} onClose={this.props.onClose} style={{ visibility: this.props.open ? 'visible' : 'hidden' }}>
         <div tabIndex={0} role="button" onClick={this.props.onClose} onKeyDown={this.props.onClose}>
           <div className={classes.list}>
             <div className={classes.toolbar}>
               <div className={classes.iconWrapper}>
                 <div className={classes.iconGrid}>
-                  <Avatar
-                    alt={this.props.profile.name}
-                    src={this.props.url}
-                    className={classes.avatar}
-                  />
+                  <Avatar alt={this.props.profile.name} src={this.props.url} className={classes.avatar} />
                 </div>
                 <div className={classes.iconGridTwo}>{this.props.profile.email}</div>
               </div>

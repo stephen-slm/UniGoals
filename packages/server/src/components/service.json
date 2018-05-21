@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "organic-lacing-185810",
+  "private_key_id": "a77dd440ec9a1a128da0723eea6dabfb85fb6fcf",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQD4U+p+wxs1wLNo\nSI+snOaA0HqaI+r3PLNxza6Aa2219hkCgyOwkkAr8cyTSwjH699lVdGzfn5NUwLU\n6GgZB3ewOc3QtXkpurF1fcKatOf09s3iobLod9snWot0LUEpsLhA1h+6oX46Kawp\nTisyhhpqdI8AxZQXAJEfSbtopmqP2UIW7lvcbZ6Fac4hEhVbV1x+80WLvuVFXc2d\nR2Oynzj7zevhPV9nch8gVaMu7QpBqOcqDvVGALOFHKnDYV+IHGF0+IGB97MAU5Mm\nX4ycz4aKAg3Awurg2JQvekN3tUT1GdZ9s+bJQIlzVRBgt4FkqsvPEWolWxMrsbdy\n+nfNq/fZAgMBAAECggEAIF7X/4QxZNVkzaA/0lF1nq8OfE9YTrhD7/7O04CtgX2+\nDtzHZzn5UYEomL68O0tdCJmiR1Ki5jN+9///qduWV4uBb8ZoL+9dOKKXHpGcdwtB\nFVzctH8DO2MLMK7Bgsy9h/4hjrOEf9J01cGR0fk3Mk9VYNVgk4sIX9q9qkufMnbu\n8EEmTNJ32YfqQUiWd6EWWlgtFHy5wCDXEUx4bD7126MDkWLcaOzLoj1HCEQeNeMp\naCuXvAv6twdTklSPD/558OwZo1+BEwgIHvZ9MVXp7Q5a7MranQY4onjCeN4jQhm8\nUasjEXnst0V6BkUDKeUoidcLycURmoUoS5RfR0xbTQKBgQD/QKpd4uu1sEsKLEbJ\nLiorXK7KeVzC8jGNFy0Z8+5mj5FPBZjmAPy3L6OAm3RT5OOCQiMg+bhVC1ZBkk+9\nDUjc8/8gxSvzwGm7622x4WwO+LVUiGV+SaOusGLQ0655mjL97DstCLRwwkDe0wqR\nDb9KI9jwRT9Oa3Ci3ssQFCPPTwKBgQD5Dg9Ljr7Pc4cdGWrYJDM3NDs1YX/iHK1H\nrnsWNja8taCiHrk/Lr7dtK0uudqB3JhYq3rM2ORZeJrohEAwrp8UNYS0B2g3ZcHk\nNKnfDWcGclYafE36wNWdWO7YclMVizy3UuOIUdpVAevpCw1qoj61kfET/xFURU+H\nkQTMNfY8VwKBgQDJPlyTxRL9nk6raJkuiD0rDtmoPOMLuBOlH36plY6CQfLYkJsp\ny+FzNBX+kZG3iyBsVGSJ3RidxGBvNkGz1cN6oMynM40hkrRKOqWztvyRGTktupP6\na2ink910s1A+A3rsg9FsAg7xT9YBV/Zewq3scDLbzFzLIR4e6vTCan6JNQKBgQC5\nbI9UqMVFPHUW5CqZG3KKIjgGyT1mAgW8vZnkcp6UJwGeUhOHh+0QsYjSpgqZ7rv6\nIEmAI+b2+gUTIguMcyX67NGNG4qq2/bcSZ1DdP4EXbHfbDa+fz1LNcA1pABZpN2i\ne3LttktASPrz+YeWoY7grfR398pWHHhWrVCOHYrjZwKBgFHnz/3ZidzOMI9xInhT\ndedgGELm5dGsstNpc8E4owjCXUV3sinHjaaWyejo5AfnVPSrJNt6kXmwqkHvoZMq\n2VrbKaeDe9HWlq89yMFAVGQf1JGusRDuvnOqrdKMeXPUv3nmK6kxk0dtC70SCydF\neFl2F9CInaNUdAejVtXASwiZ\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-c6aei@organic-lacing-185810.iam.gserviceaccount.com",
+  "client_id": "100503953948688631323",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-c6aei%40organic-lacing-185810.iam.gserviceaccount.com"
+}

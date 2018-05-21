@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import Icon from '@material-ui/core/Icon';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -25,10 +26,6 @@ const styles = (theme) => ({
     maxWidth: '80%',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 3,
-  },
-  grid: {
-    display: 'grid',
-    gridTemplateColumns: ' [col] auto [col] auto [col] auto [col] 50px',
   },
   title: {
     textAlign: 'center',
@@ -244,15 +241,9 @@ class UnitTable extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <div className={classes.grid}>
-          <div
-            style={{
-              gridColumn: 'col / span 3',
-              gridRow: '1',
-              textAlign: 'center',
-              paddingLeft: '50px',
-            }}
-          >
+        <Grid container justify="center" alignItems="center">
+          <Grid item xs={1} />
+          <Grid item xs={10} style={{ textAlign: 'center' }}>
             <EditableText
               className={classes.title}
               maxLength={constants.UNIT.TITLE.MAX}
@@ -262,98 +253,96 @@ class UnitTable extends React.Component {
               variant="headline"
               type="h5"
             />
-          </div>
-          <div style={{ gridColumn: 'col / span', gridRow: '1' }}>
+          </Grid>
+          <Grid item xs={1} style={{ paddingRight: '5px' }}>
             <Settings
               unit={this.props.unit}
               deleteUnitTable={this.deleteUnitTable}
               setUnitDoubleWeightedValue={this.setUnitDoubleWeightedValue}
               setUnitDroppedValue={this.setUnitDroppedValue}
             />
-          </div>
-          <div style={{ gridColumn: 'col / span 4', gridRow: '2' }}>
-            <Percentages height={2} unit={this.props.unit} backdrop={false} />
-          </div>
-          <Typography
-            component="div"
-            className={classes.tableWrapper}
-            onMouseEnter={this.moveOverShowInsert}
-            onMouseLeave={this.moveHideShowInsert}
-            onTouchStart={this.moveOverShowInsert}
-            style={{ gridColumn: 'col / span 4', gridRow: '3' }}
-          >
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>% Weighting</TableCell>
-                  <TableCell>% Achieved</TableCell>
+          </Grid>
+        </Grid>
+        <Percentages height={2} unit={this.props.unit} backdrop={false} />
+        <Typography
+          component="div"
+          className={classes.tableWrapper}
+          onMouseEnter={this.moveOverShowInsert}
+          onMouseLeave={this.moveHideShowInsert}
+          onTouchStart={this.moveOverShowInsert}
+          style={{ gridColumn: 'col / span 4', gridRow: '3' }}
+        >
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>% Weighting</TableCell>
+                <TableCell>% Achieved</TableCell>
+                <TableCell
+                  style={{
+                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
+                  }}
+                >
+                  <IconButton onClick={this.insertRowBelow}>
+                    <Icon color="primary">add</Icon>
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {_.map(this.props.unit.content, (row, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <EditableText
+                      placeholder="Section"
+                      maxLength={constants.TABLE.NAME.MAX}
+                      onChange={(change) => this.updateRowContent(change, index, 'name')}
+                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
+                      value={_.defaultTo(row.name, 'Section')}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <EditableText
+                      placeholder="% Weighting"
+                      maxLength={constants.TABLE.WEIGHT.MAX}
+                      onChange={(change) => this.updateRowContent(change, index, 'weighting')}
+                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'weighting')}
+                      value={_.defaultTo(row.weighting, '0')}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <EditableText
+                      placeholder="% Achieved"
+                      maxLength={constants.TABLE.ACHIEVED.MAX}
+                      onChange={(change) => this.updateRowContent(change, index, 'achieved')}
+                      onConfirm={(change) => this.updateRowContentDatabase(change, index, 'achieved')}
+                      value={_.defaultTo(row.achieved, '0')}
+                    />
+                  </TableCell>
                   <TableCell
                     style={{
                       visibility: this.state.showInsertRow ? 'visible' : 'hidden',
                     }}
                   >
-                    <IconButton onClick={this.insertRowBelow}>
-                      <Icon color="primary">add</Icon>
+                    <IconButton onClick={() => this.removeRowById(index)}>
+                      <Icon color="secondary">clear</Icon>
                     </IconButton>
                   </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {_.map(this.props.unit.content, (row, index) => (
-                  <TableRow key={index}>
-                    <TableCell>
-                      <EditableText
-                        placeholder="Section"
-                        maxLength={constants.TABLE.NAME.MAX}
-                        onChange={(change) => this.updateRowContent(change, index, 'name')}
-                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'name')}
-                        value={_.defaultTo(row.name, 'Section')}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <EditableText
-                        placeholder="% Weighting"
-                        maxLength={constants.TABLE.WEIGHT.MAX}
-                        onChange={(change) => this.updateRowContent(change, index, 'weighting')}
-                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'weighting')}
-                        value={_.defaultTo(row.weighting, '0')}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <EditableText
-                        placeholder="% Achieved"
-                        maxLength={constants.TABLE.ACHIEVED.MAX}
-                        onChange={(change) => this.updateRowContent(change, index, 'achieved')}
-                        onConfirm={(change) => this.updateRowContentDatabase(change, index, 'achieved')}
-                        value={_.defaultTo(row.achieved, '0')}
-                      />
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        visibility: this.state.showInsertRow ? 'visible' : 'hidden',
-                      }}
-                    >
-                      <IconButton onClick={() => this.removeRowById(index)}>
-                        <Icon color="secondary">clear</Icon>
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                <TableRow>
-                  <TableCell>Total</TableCell>
-                  <TableCell>{totals.weighting}</TableCell>
-                  <TableCell>{totals.achieved}</TableCell>
-                  <TableCell
-                    style={{
-                      visibility: this.state.showInsertRow ? 'visible' : 'hidden',
-                    }}
-                  />
-                </TableRow>
-              </TableBody>
-            </Table>
-          </Typography>
-        </div>
+              ))}
+              <TableRow>
+                <TableCell>Total</TableCell>
+                <TableCell>{totals.weighting}</TableCell>
+                <TableCell>{totals.achieved}</TableCell>
+                <TableCell
+                  style={{
+                    visibility: this.state.showInsertRow ? 'visible' : 'hidden',
+                  }}
+                />
+              </TableRow>
+            </TableBody>
+          </Table>
+        </Typography>
       </Paper>
     );
   }

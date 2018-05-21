@@ -35,12 +35,15 @@ const styles = (theme) => ({
     marginLeft: theme.spacing.unit,
   },
   removeButton: {
-    float: 'right',
+    // float: 'right',
     cursor: 'pointer',
     marginRight: theme.spacing.unit,
   },
   grid: {
     flexGrow: 1,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: '95%',
+    },
   },
   summarySubtext: {
     textAlign: 'center',
@@ -145,32 +148,39 @@ class Summary extends React.Component {
           onDelete={this.deleteSelectedYear}
           onClose={this.showDeleteYear}
         />
-        <Tooltip title="Delete Year" placement="left">
-          <IconButton onClick={this.showDeleteYear} className={classes.removeButton} color="secondary">
-            <Icon>delete</Icon>
-          </IconButton>
-        </Tooltip>
-        <Typography variant="headline" component="h5">
-          Summary
-        </Typography>
+        <div>
+          <Grid container justify="center" alignItems="center" className={classes.grid}>
+            <Grid item xs={1} />
+            <Grid item xs={10}>
+              <Typography variant="headline" component="h5">
+                Summary
+              </Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <Tooltip title="Delete Year" placement="right">
+                <IconButton onClick={this.showDeleteYear} className={classes.removeButton} color="secondary">
+                  <Icon>delete</Icon>
+                </IconButton>
+              </Tooltip>
+            </Grid>
+          </Grid>
 
-        <div className={classes.summarySubtext}>
-          <Typography component="p">
-            {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}/34
-          </Typography>
-          <EditableText
-            placeholder="Year"
-            maxLength={constants.YEAR.TITLE.MAX}
-            onChange={this.updateYearTitle}
-            onConfirm={this.updateYearTitleDatabase}
-            value={this.state.yearTitle}
-          />
-        </div>
-
-        {/* The heights here need to be calculated based on the num of units up to 5 */}
-        <Grid container className={classes.grid}>
-          <Grid item xs={12}>
-            <Grid container justify="center" spacing={Number(8)}>
+          <Grid container className={classes.grid}>
+            <Grid item xs={12}>
+              <div className={classes.summarySubtext}>
+                <Typography component="p">
+                  {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}/34
+                </Typography>
+                <EditableText
+                  placeholder="Year"
+                  maxLength={constants.YEAR.TITLE.MAX}
+                  onChange={this.updateYearTitle}
+                  onConfirm={this.updateYearTitleDatabase}
+                  value={this.state.yearTitle}
+                />
+              </div>
+            </Grid>
+            <Grid container justify="center" spacing={Number(16)}>
               <Grid item>
                 <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
               </Grid>
@@ -179,7 +189,7 @@ class Summary extends React.Component {
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </div>
       </Paper>
     );
   }
