@@ -22,8 +22,8 @@ export function exportUnitToCSV(unit) {
 
   // add the title
   csvContent += `title,${_.defaultTo(unit.title, 'exports')}\r\n`;
-  csvContent += `double,${_.defaultTo(unit.double, false)}\r\n`;
-  csvContent += `dropped,${_.defaultTo(unit.dropped, false)}\r\n`;
+  csvContent += `double,${_.defaultTo(unit.double ? 'Yes' : 'No', 'No')}\r\n`;
+  csvContent += `dropped,${_.defaultTo(unit.dropped ? 'Yes' : 'No', 'No')}\r\n`;
   csvContent += 'name,weighting,achieved,total\r\n';
 
   _.forEach(unit.content, (row) => {
