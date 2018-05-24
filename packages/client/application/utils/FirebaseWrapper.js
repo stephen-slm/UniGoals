@@ -170,6 +170,14 @@ export default class FirebaseWrapper {
   }
 
   /**
+   * replaces the entire profile
+   * @param profile the profile that is being updated
+   */
+  updateProfile(profile) {
+    return this.database.ref(`users/${this.getUid()}/profile`).set(profile);
+  }
+
+  /**
    * update the content on a row for a unit, must contain the change, tablekey, rowKey and then
    * the column index which would be either (name, archieved or weighting)
    * @param change What is being changed

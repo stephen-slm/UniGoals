@@ -55,7 +55,13 @@ export default class Application extends React.Component {
             >
               <PrivateRoute path="/home" component={Years} {...this.props} />
               <PrivateRoute path="/notifications" component={Notifications} {...this.props} />
-              <PrivateRoute path="/profile" component={Profile} profile={this.props.profile} firebase={this.props.firebase} />
+              <PrivateRoute
+                path="/profile"
+                component={Profile}
+                profile={this.props.profile}
+                firebase={this.props.firebase}
+                updateProfile={this.props.updateProfile}
+              />
               <PrivateRoute path="/settings" component={Years} {...this.props} />
               <PrivateRoute path="/year/:yearIndex" component={Year} {...this.props} />
             </Navigation>
