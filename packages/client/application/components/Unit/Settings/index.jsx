@@ -3,15 +3,25 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
+import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Summary from '../Summary';
 import DeleteModule from '../../Utilities/DeleteModule';
+import Summary from '../Summary';
 
-export default class Settings extends React.Component {
+import * as exportings from '../../../utils/export';
+
+const styles = (theme) => ({
+  button: {
+    margin: theme.spacing.unit,
+  },
+});
+
+class Settings extends React.Component {
   state = {
     open: false,
     isDeletingUnit: false,
@@ -32,12 +42,29 @@ export default class Settings extends React.Component {
     });
   };
 
+  exportToCSV = () => {
+    exportings.exportUnitToCSV(this.props.unit);
+  };
+
+  exportToPDF = () => {
+    exportings.exportToPDF(this.props.unit);
+  };
+
   render() {
+    const { classes } = this.props;
+
     return (
       <div>
         <IconButton style={{ float: 'right' }} onClick={this.handleClickOpen}>
           <Icon color="primary">settings</Icon>
         </IconButton>
+        <DeleteModule
+          disabled={this.props.isExample}
+          open={this.state.isDeletingUnit}
+          title={this.props.unit.title}
+          onDelete={this.props.deleteUnitTable}
+          onClose={this.showDeleteUnitBox}
+        />
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -52,13 +79,14 @@ export default class Settings extends React.Component {
               isDoubleWeighted={this.props.unit.double}
               isDroppedUnit={this.props.unit.dropped}
             />
-            <DeleteModule
-              disabled={this.props.isExample}
-              open={this.state.isDeletingUnit}
-              title={this.props.unit.title}
-              onDelete={this.props.deleteUnitTable}
-              onClose={this.showDeleteUnitBox}
-            />
+            <Grid container spacing={8} justify="center" alignItems="center" style={{ flexGrow: 1 }}>
+              <Grid item>
+                <Button color="primary" className={classes.button} onClick={this.exportToCSV}>
+                  Export CSV
+                </Button>
+              </Grid>
+              <Grid item />
+            </Grid>
           </DialogContent>
           <DialogActions style={{ display: 'block' }}>
             <Button style={{ float: 'left' }} onClick={this.showDeleteUnitBox} color="primary">
@@ -79,6 +107,7 @@ Settings.propTypes = {
   setUnitDoubleWeightedValue: PropTypes.func.isRequired,
   deleteUnitTable: PropTypes.func.isRequired,
   setUnitDroppedValue: PropTypes.func.isRequired,
+  classes: PropTypes.shape().isRequired,
   unit: PropTypes.shape({
     title: PropTypes.string,
     double: PropTypes.bool,
@@ -89,3 +118,5 @@ Settings.propTypes = {
 Settings.defaultProps = {
   isExample: false,
 };
+
+export default withStyles(styles)(Settings);
