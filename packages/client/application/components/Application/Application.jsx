@@ -8,6 +8,7 @@ import * as routePaths from './routePaths';
 
 import { PropsRoute, PrivateRoute } from '../Routes';
 
+import Profile from '../Profile';
 import Notifications from '../Notifications/Notifications';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
@@ -54,7 +55,7 @@ export default class Application extends React.Component {
             >
               <PrivateRoute path="/home" component={Years} {...this.props} />
               <PrivateRoute path="/notifications" component={Notifications} {...this.props} />
-              <PrivateRoute path="/profile" component={Years} {...this.props} />
+              <PrivateRoute path="/profile" component={Profile} profile={this.props.profile} firebase={this.props.firebase} />
               <PrivateRoute path="/settings" component={Years} {...this.props} />
               <PrivateRoute path="/year/:yearIndex" component={Year} {...this.props} />
             </Navigation>
