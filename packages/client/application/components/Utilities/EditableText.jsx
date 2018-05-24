@@ -36,6 +36,7 @@ class EditableText extends React.Component {
       lastValue: value,
       value,
       inputId: uuid(),
+      centerText: this.props.centerText,
     };
   }
 
@@ -160,6 +161,7 @@ class EditableText extends React.Component {
           padding: '0px',
           wordWrap: 'break-word',
           width: 'auto',
+          textAlign: this.state.centerText ? 'center' : 'inherit',
         }}
         id={`editableEdit-${this.state.inputId}`}
         {...props}
@@ -189,6 +191,7 @@ EditableText.propTypes = {
   confirmOnEnterKey: PropTypes.bool,
   selectAllOnFocus: PropTypes.bool,
   isEditing: PropTypes.bool,
+  centerText: PropTypes.bool,
   value: PropTypes.string,
   className: PropTypes.string,
   defaultValue: PropTypes.string,
@@ -209,6 +212,7 @@ EditableText.defaultProps = {
   onEdit: () => null,
   onCancel: () => null,
   isEditing: null,
+  centerText: false,
   confirmOnEnterKey: false,
   selectAllOnFocus: false,
   value: null,
