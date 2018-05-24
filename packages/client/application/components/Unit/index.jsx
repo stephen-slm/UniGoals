@@ -180,8 +180,6 @@ class UnitTable extends React.Component {
    * Removes the table (unit) completely from both firebase and redux
    */
   deleteUnitTable = () => {
-    this.showDeleteUnitBox();
-
     if (this.props.isExample) return;
 
     console.log(`Deleted ${this.props.unit.title === null ? 'the' : this.props.unit.title} unit`);

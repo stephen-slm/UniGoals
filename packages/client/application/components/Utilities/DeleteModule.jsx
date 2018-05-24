@@ -12,29 +12,38 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-const DeleteModule = (props) => (
-  <Dialog
-    style={{ visibility: props.open ? 'visible' : 'hidden' }}
-    open={props.open && !props.disabled}
-    TransitionComponent={Transition}
-    onClose={props.onClose}
-    aria-labelledby={`delete dialog for ${props.title}`}
-    aria-describedby={`A delete box used for deleting ${props.title}`}
-  >
-    <DialogTitle>{`Deleting ${props.title}`}</DialogTitle>
-    <DialogContent>
-      <DialogContentText>{`Are you sure you want to delete ${props.title}?`}</DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={props.onClose} color="primary">
-        Close
-      </Button>
-      <Button onClick={props.onDelete} color="primary">
-        Delete
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
+class DeleteModule extends React.Component {
+  onDelete = () => {
+    this.props.onClose();
+    this.props.onDelete();
+  };
+
+  render() {
+    return (
+      <Dialog
+        style={{ visibility: this.props.open ? 'visible' : 'hidden' }}
+        open={this.props.open && !this.props.disabled}
+        TransitionComponent={Transition}
+        onClose={this.props.onClose}
+        aria-labelledby={`delete dialog for ${this.props.title}`}
+        aria-describedby={`A delete box used for deleting ${this.props.title}`}
+      >
+        <DialogTitle>{`Deleting ${this.props.title}`}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{`Are you sure you want to delete ${this.props.title}?`}</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.onClose} color="primary">
+            Close
+          </Button>
+          <Button onClick={this.onDelete} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    );
+  }
+}
 
 DeleteModule.propTypes = {
   title: PropTypes.string.isRequired,
