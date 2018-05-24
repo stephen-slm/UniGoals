@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { getAchievedFromUnit, getAchievedFromAssignment, getAverageFromUnit } from './utils';
+import { getAchievedFromUnit, getAchievedFromAssignment } from './utils';
 
 function exportContent(title, type, encodedContent) {
   const link = document.createElement('a');
@@ -44,4 +44,4 @@ export function exportUnitToCSV(unit) {
   exportContent(unit.title || 'export', 'csv', csvContent);
 }
 
-export function exportUnitToPDF(unit) {}
+export default exportUnitToCSV;
