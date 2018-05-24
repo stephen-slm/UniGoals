@@ -85,11 +85,7 @@ class Settings extends React.Component {
                   Export CSV
                 </Button>
               </Grid>
-              <Grid item>
-                <Button color="secondary" className={classes.button} onClick={this.exportToPDF}>
-                  Export PDF
-                </Button>
-              </Grid>
+              <Grid item />
             </Grid>
           </DialogContent>
           <DialogActions style={{ display: 'block' }}>
