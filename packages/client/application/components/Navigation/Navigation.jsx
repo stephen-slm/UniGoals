@@ -182,7 +182,6 @@ class Navigation extends React.Component {
             <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
           </Toolbar>
         </AppBar>
-        {!_.isNil(this.props.children) ? this.props.children : null}
       </div>
     );
   }
@@ -200,10 +199,10 @@ Navigation.propTypes = {
       signOut: PropTypes.func,
     }),
   }).isRequired,
-  children: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   version: PropTypes.string.isRequired,
   removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
+    auth: PropTypes.bool,
     name: PropTypes.string,
     picture: PropTypes.string,
     email: PropTypes.string,
