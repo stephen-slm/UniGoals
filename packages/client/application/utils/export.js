@@ -1,6 +1,12 @@
 import _ from 'lodash';
 
-import { getAchievedFromUnit, getAchievedFromAssignment } from './utils';
+import {
+  getAchievedFromUnit,
+  getAchievedFromAssignment,
+  getMaxAchievedFromUnits,
+  getAverageFromUnits,
+  getAchievedFromUnits,
+} from './utils';
 
 function exportContent(title, type, encodedContent) {
   const link = document.createElement('a');
@@ -15,12 +21,11 @@ function exportContent(title, type, encodedContent) {
   link.remove();
 }
 
-export function exportUnitToCSV(unit) {
-  // build up csv
-  let csvContent = 'data:text/csv;charset=utf-8,';
+function createUnitCsvContent(unit) {
+  let csvContent = '';
   let totalWeighting = 0;
 
-  // add the title
+  // add the title, double, dropped
   csvContent += `title,${_.defaultTo(unit.title, 'exports')}\r\n`;
   csvContent += `double,${_.defaultTo(unit.double ? 'Yes' : 'No', 'No')}\r\n`;
   csvContent += `dropped,${_.defaultTo(unit.dropped ? 'Yes' : 'No', 'No')}\r\n`;
@@ -36,12 +41,43 @@ export function exportUnitToCSV(unit) {
     totalWeighting += Number(row.weighting);
   });
 
-  let total = getAchievedFromUnit(unit);
-  if (unit.double) total /= 2;
+  let unitTotal = getAchievedFromUnit(unit);
+  if (unit.double) unitTotal /= 2;
 
-  csvContent += `total, ${totalWeighting},${total.toFixed(2)},${total.toFixed(2)}\r\n`;
+  csvContent += `total, ${totalWeighting},${unitTotal.toFixed(2)},${unitTotal.toFixed(2)}\r\n`;
 
+  return csvContent;
+}
+
+function createYearCsvContent(year) {
+  let csvContent = '';
+
+  const average = getAverageFromUnits(year.units).toFixed(2);
+  const max = getMaxAchievedFromUnits(year.units).toFixed(2);
+  const total = getAchievedFromUnits(year.units).toFixed(2);
+
+  csvContent += `year title, ${_.defaultTo(year.title, 'Year title')}\r\n`;
+
+  // average, max, total
+  csvContent += `average, ${_.defaultTo(average, '0')}\r\n`;
+  csvContent += `max, ${_.defaultTo(max, '0')}\r\n`;
+  csvContent += `total, ${_.defaultTo(total, '0')}\r\n\r\n`;
+
+  _.forEach(year.units, (unit) => {
+    csvContent += `${createUnitCsvContent(unit)}\r\n`;
+  });
+
+  return csvContent;
+}
+
+export function exportUnitToCSV(unit) {
+  const csvContent = `data:text/csv;charset=utf-8,${createUnitCsvContent(unit)}`;
   exportContent(unit.title || 'export', 'csv', csvContent);
+}
+
+export function exportYearToCsv(year) {
+  const csvContent = `data:text/csv/;charset=utf-8,${createYearCsvContent(year)}`;
+  exportContent(_.defaultTo(year.title, 'export'), 'csv', csvContent);
 }
 
 export default exportUnitToCSV;
