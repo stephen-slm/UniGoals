@@ -8,6 +8,8 @@ import {
   getAchievedFromUnits,
 } from './utils';
 
+const csvDataString = 'data:text/csv;charset=utf-8,';
+
 function exportContent(title, type, encodedContent) {
   const link = document.createElement('a');
 
@@ -21,6 +23,10 @@ function exportContent(title, type, encodedContent) {
   link.remove();
 }
 
+/**
+ * generates a string ready to be appended ot a encoded string to create a csv
+ * @param {unit} unit the unit needed to generate the content
+ */
 function createUnitCsvContent(unit) {
   let csvContent = '';
   let totalWeighting = 0;
@@ -49,6 +55,10 @@ function createUnitCsvContent(unit) {
   return csvContent;
 }
 
+/**
+ * generates a string ready to be appended ot a encoded string to create a csv
+ * @param {year} year the unit needed to generate the content
+ */
 function createYearCsvContent(year) {
   let csvContent = '';
 
@@ -70,13 +80,21 @@ function createYearCsvContent(year) {
   return csvContent;
 }
 
+/**
+ * will take in a unit and cause a download for a formated csv file
+ * @param {unit} unit the unit being used for the csv
+ */
 export function exportUnitToCSV(unit) {
-  const csvContent = `data:text/csv;charset=utf-8,${createUnitCsvContent(unit)}`;
+  const csvContent = `${csvDataString}${createUnitCsvContent(unit)}`;
   exportContent(unit.title || 'export', 'csv', csvContent);
 }
 
+/**
+ * takes in a year and exports a csv with all the year and unit data
+ * @param {year} year the year being used for the csv
+ */
 export function exportYearToCsv(year) {
-  const csvContent = `data:text/csv/;charset=utf-8,${createYearCsvContent(year)}`;
+  const csvContent = `${csvDataString}${createYearCsvContent(year)}`;
   exportContent(_.defaultTo(year.title, 'export'), 'csv', csvContent);
 }
 
