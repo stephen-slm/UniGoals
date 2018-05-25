@@ -11,6 +11,7 @@ import { PropsRoute, PrivateRoute } from '../Routes';
 import Profile from '../Profile';
 import FourOfour from '../404';
 import Notifications from '../Notifications/Notifications';
+import Footer from '../Footer';
 import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
 import Years from '../Home/Years';
@@ -35,6 +36,12 @@ export default class Application extends React.Component {
     this.history = createBrowserHistory();
   }
 
+  shouldRenderComponent = (component) => {
+    if (this.props.profile.auth) {
+      return component;
+    }
+    return <div />;
+  };
   shouldRenderNavigation = () => {
     if (this.props.profile.auth) {
       return (
@@ -50,32 +57,44 @@ export default class Application extends React.Component {
         />
       );
     }
-    return <div />;
   };
 
   render() {
     return (
       <MuiThemeProvider theme={theme}>
         <Router>
-          <div>
-            {this.shouldRenderNavigation()}
-            <Switch>
-              <PropsRoute exact path="/" component={Login} {...this.props} />
-              <PropsRoute exact path="/login" component={Login} {...this.props} />
-              <PrivateRoute exact path="/home" component={Years} {...this.props} />
-              <PrivateRoute exact path="/notifications" component={Notifications} {...this.props} />
-              <PrivateRoute
-                exact
-                path="/profile"
-                component={Profile}
+          {/* we do this here because it allows us to have a sticky footer */}
+          <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+            <div style={{ flex: '1' }}>
+              {this.shouldRenderComponent(<Navigation
+                history={this.history}
+                routePaths={this.routePaths}
                 profile={this.props.profile}
+                removeProfile={this.props.removeProfile}
                 firebase={this.props.firebase}
-                updateProfile={this.props.updateProfile}
-              />
-              <PrivateRoute exact path="/settings" component={Years} {...this.props} />
-              <PrivateRoute exact path="/year/:yearIndex" component={Year} {...this.props} />
-              <PrivateRoute exact component={FourOfour} {...this.props} />
-            </Switch>
+                version={this.props.version}
+                displayHelp={this.props.displayHelp}
+                showHelpBox={this.props.showHelpBox}
+              />)}
+              <Switch>
+                <PropsRoute exact path="/" component={Login} {...this.props} />
+                <PropsRoute exact path="/login" component={Login} {...this.props} />
+                <PrivateRoute exact path="/home" component={Years} {...this.props} />
+                <PrivateRoute exact path="/notifications" component={Notifications} {...this.props} />
+                <PrivateRoute
+                  exact
+                  path="/profile"
+                  component={Profile}
+                  profile={this.props.profile}
+                  firebase={this.props.firebase}
+                  updateProfile={this.props.updateProfile}
+                />
+                <PrivateRoute exact path="/settings" component={Years} {...this.props} />
+                <PrivateRoute exact path="/year/:yearIndex" component={Year} {...this.props} />
+                <PrivateRoute exact component={FourOfour} {...this.props} />
+              </Switch>
+            </div>
+            {this.shouldRenderComponent(<Footer />)}
           </div>
         </Router>
       </MuiThemeProvider>
