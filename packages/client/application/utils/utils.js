@@ -34,9 +34,7 @@ export function getAchievedFromAssignment(assignment, pure = false) {
     return Number(assignment.achieved.replace(/[^.0-9]/g, ''));
   }
 
-  const total =
-    Number(assignment.achieved.replace(/[^.0-9]/g, '')) *
-    Number(assignment.weighting.replace(/[^.0-9]/g, ''));
+  const total = Number(assignment.achieved.replace(/[^.0-9]/g, '')) * Number(assignment.weighting.replace(/[^.0-9]/g, ''));
   return total / 100;
 }
 
@@ -203,6 +201,7 @@ export function getMaxAchievedFromUnits(units) {
 export function getHappyEmoji() {
   const emojis = [
     '🎉',
+    '🤖',
     '🎆',
     '🎈',
     '❤️',

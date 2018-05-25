@@ -1,16 +1,13 @@
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 import Paper from '@material-ui/core/Paper';
-import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
+import Settings from './Settings';
 import EditableText from '../Utilities/EditableText';
-import DeleteModule from '../Utilities/DeleteModule';
 import Percentages from './Percentages';
 import Ranking from './Ranking';
 
@@ -80,13 +77,7 @@ class Summary extends React.Component {
   constructor(props) {
     super();
 
-    this.updateYearTitleDatabase = this.updateYearTitleDatabase.bind(this);
-    this.deleteSelectedYear = this.deleteSelectedYear.bind(this);
-    this.updateYearTitle = this.updateYearTitle.bind(this);
-    this.showDeleteYear = this.showDeleteYear.bind(this);
-
     this.state = {
-      isDeletingYear: false,
       currentWeek: Summary.getCurrentYearWeek(),
       isSummary: true,
       yearTitle: props.yearTitle,
@@ -99,7 +90,7 @@ class Summary extends React.Component {
     }
   }
 
-  updateYearTitleDatabase(newTitle) {
+  updateYearTitleDatabase = (newTitle) => {
     let title = newTitle;
 
     // If the user exists whiel the text is empty, fill with replacement text
@@ -108,46 +99,33 @@ class Summary extends React.Component {
     this.props.firebase.updateYearTitle(this.props.yearIndex, title);
     this.props.updateYearTitle(this.props.yearIndex, title);
     this.setState({ yearTitle: title });
-  }
+  };
 
   // Deletes the current active year from firebae and redux
-  deleteSelectedYear() {
+  deleteSelectedYear = () => {
     this.props.firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
       .catch((error) => console.log(error.message));
 
-    this.showDeleteYear();
-
     this.props.history.push('/');
-  }
+  };
 
   /**
    * updates the title for the selected/active year in the state
    * @param {string} title the new title for the year in the state
    */
-  updateYearTitle(title) {
+  updateYearTitle = (title) => {
     this.setState({
       yearTitle: title,
     });
-  }
-
-  // Shows the delete year dialog
-  showDeleteYear() {
-    this.setState({ isDeletingYear: !this.state.isDeletingYear });
-  }
+  };
 
   render() {
     const { classes } = this.props;
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <DeleteModule
-          open={this.state.isDeletingYear}
-          title={this.props.yearTitle}
-          onDelete={this.deleteSelectedYear}
-          onClose={this.showDeleteYear}
-        />
         <div>
           <Grid container justify="center" alignItems="center" className={classes.grid}>
             <Grid item xs={1} />
@@ -157,11 +135,13 @@ class Summary extends React.Component {
               </Typography>
             </Grid>
             <Grid item xs={1}>
-              <Tooltip title="Delete Year" placement="right">
-                <IconButton onClick={this.showDeleteYear} className={classes.removeButton} color="secondary">
-                  <Icon>delete</Icon>
-                </IconButton>
-              </Tooltip>
+              <Settings
+                year={{
+                  title: this.props.yearTitle,
+                  units: this.props.units,
+                }}
+                deleteYear={this.deleteSelectedYear}
+              />
             </Grid>
           </Grid>
 
