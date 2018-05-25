@@ -10,9 +10,9 @@ const styles = () => ({
     display: 'inline-block',
   },
   span: {
-    display: 'none',
-    ':hover::before': {
-      boxShadow: '',
+    display: 'block',
+    '&:hover': {
+      border: '1px solid #eaeaea',
     },
   },
 });
