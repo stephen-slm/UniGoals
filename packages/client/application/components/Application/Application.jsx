@@ -57,6 +57,7 @@ export default class Application extends React.Component {
         />
       );
     }
+    return <div />;
   };
 
   render() {
