@@ -72,6 +72,8 @@ path /users {
             /title is YearTitle;
             /units {
                 /title is UnitTitle;
+                /double is Boolean;
+                /dropped is Boolean;
                 /content {
                     /name is UnitName;
                     /achieved is UnitData;

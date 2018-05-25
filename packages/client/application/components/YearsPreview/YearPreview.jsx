@@ -1,19 +1,16 @@
-import React from 'react';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardHeader from '@material-ui/core/CardHeader';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import React from 'react';
 import _ from 'lodash';
 
-// Navigation
-import { Link } from 'react-router-dom';
+import { getAchievedFromUnits } from '../../utils/utils';
 
-// Years paper
-import Card, { CardContent, CardHeader } from 'material-ui/Card';
-import Typography from 'material-ui/Typography';
-
-// Total
-import { calulateTotalGradeUnits } from '../../utils/utils';
-
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     height: theme.spacing.unit * 15,
     width: theme.spacing.unit * 18,
@@ -23,7 +20,7 @@ const styles = theme => ({
   },
 });
 
-const YearPreview = props => {
+const YearPreview = (props) => {
   const { classes } = props;
 
   return (
@@ -42,7 +39,7 @@ const YearPreview = props => {
         />
         <CardContent>
           <Typography variant="caption">
-            Achieved {Number(calulateTotalGradeUnits(props.year.units))}%
+            Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%
           </Typography>
         </CardContent>
       </Link>
@@ -53,7 +50,7 @@ const YearPreview = props => {
 YearPreview.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   year: PropTypes.shape({ title: PropTypes.string, units: PropTypes.shape({}) }).isRequired,
-  index: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
 };
 
 export default withStyles(styles)(YearPreview);

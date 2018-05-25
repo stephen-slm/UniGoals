@@ -1,13 +1,21 @@
-import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import Grid from 'material-ui/Grid';
-import { withStyles } from 'material-ui/styles';
-
+import React from 'react';
 import _ from 'lodash';
 
-const styles = theme => ({
+import {
+  getAchievedFromUnits,
+  getAchievedFromUnit,
+  getMaxAchievedFromUnit,
+  getMaxAchievedFromUnits,
+  getAverageFromUnit,
+  getAverageFromUnits,
+} from '../../utils/utils';
+
+const styles = (theme) => ({
   root: {
     marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
@@ -27,135 +35,6 @@ const styles = theme => ({
 });
 
 class Perentages extends React.Component {
-  /**
-   * Gets the average grade from the unit content, e.g the section of the unit
-   * @param data [["name", "weighting", "grade"]]
-   * @returns {number} The average grade
-   */
-  static calculateAverageGradePercent(data) {
-    if (_.size(data) === 0) {
-      return {
-        average: 0,
-        max: 0,
-      };
-    } else if (_.size(data[Object.keys(data)[0]]) === 0) {
-      return {
-        average: 0,
-        max: 0,
-      };
-    }
-
-    let total = 0;
-    let maxTotalPossible = 0;
-
-    _.forEach(data, content => {
-      if (parseFloat(content.achieved) > 0) {
-        total += parseFloat(content.achieved);
-        maxTotalPossible += parseFloat(content.weighting) * parseFloat(content.achieved);
-      } else {
-        maxTotalPossible += 100 * parseFloat(content.weighting);
-      }
-    });
-
-    // Using _size to get the size of the object, this is because we are using objects not arrays
-    let average = parseFloat(total / _.size(data)).toFixed(2);
-    let max = parseFloat(maxTotalPossible / 100).toFixed(2);
-
-    if (_.isNaN(Number(average))) average = '0.00';
-    if (_.isNaN(Number(max))) max = '0.00';
-
-    return {
-      average: average < 0 ? 0 : average,
-      max: max < 0 ? 0 : max,
-    };
-  }
-
-  /**
-   * Gets the average of all the active units for the user
-   * @param {object} data All the units for the user
-   */
-  static calculateAverageGradePercentSummary(data) {
-    if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
-      return {
-        average: 0,
-        max: 0,
-      };
-    }
-
-    let total = 0;
-    let maxTotalPossible = 0;
-
-    _.forEach(data, unit => {
-      let tableTotal = 0;
-      let tableMax = 0;
-
-      if (_.size(unit.content) > 0) {
-        _.forEach(unit.content, content => {
-          if (parseFloat(content.achieved) > 0) {
-            tableTotal += parseFloat(content.achieved);
-            tableMax += parseFloat(content.achieved);
-          } else {
-            tableMax += 100;
-          }
-        });
-
-        total += tableTotal / _.size(unit.content);
-        maxTotalPossible += tableMax / _.size(unit.content);
-      }
-    });
-
-    let average = parseFloat(total / _.size(data)).toFixed(2);
-    let max = parseFloat(maxTotalPossible / _.size(data)).toFixed(2);
-
-    if (_.isNaN(Number(average))) average = '0.00';
-    if (_.isNaN(Number(max))) max = '0.00';
-
-    return {
-      average: average < 0 ? 0 : average,
-      max: max < 0 ? 0 : max,
-    };
-  }
-
-  /**
-   * Calulates the users unit overal grade.
-   * @param {object} data user units
-   */
-  static calulateTotalGradeSummary(data) {
-    if (_.size(data) === 0 || _.size(data[Object.keys(data)[0]]) === 0) {
-      return 0;
-    }
-
-    let totalAchieved = 0;
-
-    _.forEach(data, unit => {
-      _.forEach(unit.content, unitContent => {
-        if (
-          !_.isNil(unitContent.weighting) &&
-          !_.isNil(unitContent.achieved) &&
-          (unitContent.weighting !== '' && unitContent.achieved !== '')
-        ) {
-          if (parseFloat(unitContent.achieved) > 0) {
-            totalAchieved += parseFloat(unitContent.weighting) * parseFloat(unitContent.achieved);
-          }
-        }
-      });
-    });
-
-    return parseFloat(totalAchieved / 100 / _.size(data)).toFixed(2);
-  }
-
-  static calculateTotalGradeStandard(unit) {
-    let achieved = 0;
-
-    _.forEach(unit, row => {
-      if (parseFloat(row.achieved) > 0 && parseFloat(row.weighting) > 0) {
-        achieved += parseFloat(row.weighting) * parseFloat(row.achieved);
-      }
-    });
-
-    return parseFloat(achieved / 100).toFixed(2);
-  }
-
   constructor() {
     super();
 
@@ -168,11 +47,21 @@ class Perentages extends React.Component {
     let total = 0;
 
     if (this.props.isSummary) {
-      percentages = Perentages.calculateAverageGradePercentSummary(this.props.units);
-      total = Perentages.calulateTotalGradeSummary(this.props.units);
+      percentages = {
+        max: getMaxAchievedFromUnits(this.props.units).toFixed(2),
+        average: getAverageFromUnits(this.props.units).toFixed(2),
+      };
+      total = getAchievedFromUnits(this.props.units).toFixed(2);
     } else {
-      percentages = Perentages.calculateAverageGradePercent(this.props.unit.content);
-      total = Perentages.calculateTotalGradeStandard(this.props.unit.content);
+      percentages = {
+        max: getMaxAchievedFromUnit(this.props.unit).toFixed(2),
+        average: getAverageFromUnit(this.props.unit).toFixed(2),
+      };
+      total = getAchievedFromUnit(this.props.unit).toFixed(2);
+      if (this.props.unit.double) {
+        total /= 2;
+        percentages.max /= 2;
+      }
     }
 
     return (
@@ -193,7 +82,7 @@ class Perentages extends React.Component {
               <Grid container justify="center" spacing={Number(8)}>
                 <Grid item>Average: {Number(_.defaultTo(percentages.average, 0))}%</Grid>
                 <Grid item>Max: {Number(_.defaultTo(percentages.max, 100))}%</Grid>
-                <Grid item>Total: {Number(total)}%</Grid>
+                <Grid item>Total: {Number(total).toFixed(2)}%</Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -209,6 +98,8 @@ Perentages.propTypes = {
   unit: PropTypes.shape({
     content: PropTypes.shape({}),
     title: PropTypes.string,
+    double: PropTypes.bool,
+    dropped: PropTypes.bool,
   }),
   height: PropTypes.number.isRequired,
   isSummary: PropTypes.bool,

@@ -210,6 +210,46 @@ export default function years(state = {}, action) {
       return removeYearState;
     }
 
+    case actionTypes.UPDATE_UNIT_DOUBLE_WEIGHT: {
+      const {
+        yearIndex: updateDoubleYearIndex,
+        double: updateDoubleValue,
+        tableIndex: updateDoubleIndex,
+      } = action;
+
+      if (_.isNil(updateDoubleValue) || !_.isBoolean(updateDoubleValue)) {
+        return state;
+      }
+
+      const updatedUnitWeightDouble = Object.assign({}, state);
+
+      updatedUnitWeightDouble[updateDoubleYearIndex].units[
+        updateDoubleIndex
+      ].double = updateDoubleValue;
+
+      return updatedUnitWeightDouble;
+    }
+
+    case actionTypes.UPDATE_UNIT_DROPPED: {
+      const {
+        yearIndex: updateDroppedYearIndex,
+        dropped: updateDroppedValue,
+        tableIndex: updateDroppedIndex,
+      } = action;
+
+      if (_.isNil(updateDroppedValue) || !_.isBoolean(updateDroppedValue)) {
+        return state;
+      }
+
+      const updateUnitDroppedValue = Object.assign({}, state);
+
+      updateUnitDroppedValue[updateDroppedYearIndex].units[
+        updateDroppedIndex
+      ].dropped = updateDroppedValue;
+
+      return updateUnitDroppedValue;
+    }
+
     default: {
       return state;
     }

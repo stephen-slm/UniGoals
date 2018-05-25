@@ -38,7 +38,7 @@ export default class FirebaseWrapper {
    * @returns {string}
    */
   getUid() {
-    return this.authentication.currentUser.uid;
+    return !_.isNil(this.authentication.currentUser) ? this.authentication.currentUser.uid : null;
   }
 
   /**
@@ -157,9 +157,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   updateUnitTitle(change, yearKey, unitKey) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/title`)
-      .set(change);
+    return this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/title`).set(change);
   }
 
   /**
@@ -169,6 +167,14 @@ export default class FirebaseWrapper {
    */
   updateProfileCourse(change) {
     return this.database.ref(`users/${this.getUid()}/profile/course_name`).set(change);
+  }
+
+  /**
+   * replaces the entire profile
+   * @param profile the profile that is being updated
+   */
+  updateProfile(profile) {
+    return this.database.ref(`users/${this.getUid()}/profile`).set(profile);
   }
 
   /**
@@ -193,9 +199,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   deleteUnitRowById(yearIndex, unitRowKey, tableUnitKey) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableUnitKey}/content/${unitRowKey}`)
-      .remove();
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableUnitKey}/content/${unitRowKey}`).remove();
   }
 
   /**
@@ -214,10 +218,63 @@ export default class FirebaseWrapper {
         const insertUnitRef = this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units`);
         const insertKey = insertUnitRef.push({
           title: 'New Unit',
+          double: false,
           content: {},
         });
         return Promise.resolve(insertKey.key);
       });
+  }
+
+  /**
+   * sets the unit as a double weighted unit
+   * @param {string} yearKey the key of the year
+   * @param {string} unitKey they key of the unit
+   * @returns {firebase.Promise.<*>}
+   */
+  setUnitAsDoubleWeight(yearKey, unitKey) {
+    return this.setUnitDoubleWeightStatus(yearKey, unitKey, true);
+  }
+
+  /**
+   * sets the unit as not a double weighted unit
+   * @param {string} yearKey the key the year
+   * @param {string} unitKey the key of the unit
+   * @returns {firebase.Promise.<*>}
+   */
+  setUnitAsNotDoubleWeight(yearKey, unitKey) {
+    return this.setUnitAsDoubleWeight(yearKey, unitKey, false);
+  }
+
+  /**
+   * updates the double weighted unit value of the unit to the value
+   * @param {string} yearKey the year key
+   * @param {string} unitKey the unit key
+   * @param {boolean} value the boolean value
+   * @returns {firebase.Promise.<*>}
+   */
+  setUnitDoubleWeightStatus(yearIndex, tableIndex, value) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/double`).set(value);
+  }
+
+  /**
+   * updates the dropped unit value of the unit to the value
+   * @param {string} yearKey the year key
+   * @param {string} unitKey the unit key
+   * @param {boolean} value the boolean value
+   * @returns {firebase.Promise.<*>}
+   */
+  setUnitDroppedStatus(yearIndex, tableIndex, value) {
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${tableIndex}/dropped`).set(value);
+  }
+
+  /**
+   * returns the full path to the image of the users profile picture
+   */
+  getProfileImageUrl() {
+    if (!_.isNil(this.authentication.currentUser)) {
+      return this.authentication.currentUser.photoURL;
+    }
+    return '';
   }
 
   /**
@@ -235,11 +292,13 @@ export default class FirebaseWrapper {
         }
 
         const insertingUnitRowRef = this.database.ref(`users/${this.getUid()}/years/${yearKey}/units/${unitKey}/content`);
+
         const insertingUnitRowKey = insertingUnitRowRef.push({
           name: 'Section',
           weighting: '0',
           achieved: '0',
         });
+
         return Promise.resolve(insertingUnitRowKey.key);
       });
   }
@@ -250,9 +309,7 @@ export default class FirebaseWrapper {
    * @returns {firebase.Promise.<void>}
    */
   deleteUnitById(yearIndex, unitIndex) {
-    return this.database
-      .ref(`users/${this.getUid()}/years/${yearIndex}/units/${unitIndex}`)
-      .remove();
+    return this.database.ref(`users/${this.getUid()}/years/${yearIndex}/units/${unitIndex}`).remove();
   }
 
   /**
@@ -297,9 +354,7 @@ export default class FirebaseWrapper {
   }
 
   createNewYear(name) {
-    const newYearRef = this.database
-      .ref(`users/${this.getUid()}/years`)
-      .push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
+    const newYearRef = this.database.ref(`users/${this.getUid()}/years`).push({ units: {}, title: `${_.isNil(name) ? 'Year 1' : name}` });
     return newYearRef;
   }
 

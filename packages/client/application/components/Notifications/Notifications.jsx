@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 
 // Notification
@@ -20,10 +20,24 @@ class Notifications extends React.Component {
 
     const notificationRef = props.firebase.getNotificationRef();
 
-    notificationRef.on('value', snapshot => {
+    notificationRef.on('value', (snapshot) => {
       props.updateNotifications(snapshot.val());
     });
   }
+
+  buildNotifications = (notifications) => {
+    const builtNotifications = _.map(notifications, (notification, index) => (
+      <Notification
+        key={index}
+        removeNotification={this.props.removeNotification}
+        firebase={this.props.firebase}
+        notification={notification}
+        keyIndex={index}
+      />
+    ));
+
+    return _.reverse(builtNotifications);
+  };
 
   render() {
     const { classes, notifications } = this.props;
@@ -33,19 +47,7 @@ class Notifications extends React.Component {
       return <NoNotifications showHelpBox={this.props.showHelpBox} />;
     }
 
-    return (
-      <div className={classes.root}>
-        {_.map(notifications, (notification, index) => (
-          <Notification
-            key={index}
-            removeNotification={this.props.removeNotification}
-            firebase={this.props.firebase}
-            notification={notification}
-            keyIndex={index}
-          />
-        ))}
-      </div>
-    );
+    return <div className={classes.root}>{this.buildNotifications(notifications)}</div>;
   }
 }
 

@@ -1,21 +1,19 @@
-import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import Paper from 'material-ui/Paper';
-import Typography from 'material-ui/Typography';
-import Icon from 'material-ui/Icon';
-import Grid from 'material-ui/Grid';
-import { withStyles } from 'material-ui/styles';
-import Tooltip from 'material-ui/Tooltip';
-
+import React from 'react';
 import _ from 'lodash';
-import Ranking from './Ranking';
-import Percentages from './Percentages';
+
+import Settings from './Settings';
 import EditableText from '../Utilities/EditableText';
-import DeleteModule from '../Utilities/DeleteModule';
+import Percentages from './Percentages';
+import Ranking from './Ranking';
 
 import * as constants from '../../utils/constants';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     margin: '25px auto',
     maxWidth: '80%',
@@ -34,12 +32,15 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
   },
   removeButton: {
-    float: 'right',
+    // float: 'right',
     cursor: 'pointer',
     marginRight: theme.spacing.unit,
   },
   grid: {
     flexGrow: 1,
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: '95%',
+    },
   },
   summarySubtext: {
     textAlign: 'center',
@@ -56,17 +57,18 @@ class Summary extends React.Component {
     const endWeek = 22;
 
     const currentDate = new Date();
-    const week = Math.ceil((((currentDate - new Date(currentDate.getFullYear(), 0, 1)) / 86400000) +
-      new Date(currentDate.getFullYear(), 0, 1).getDay() +
-      1) /
-      7);
+    let week = currentDate - new Date(currentDate.getFullYear(), 0, 1);
+    week /= 86400000;
+    week += new Date(currentDate.getFullYear(), 0, 1).getDay() + 1;
+    week = Math.ceil(week / 7);
 
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';
     } else if (week <= 54 && week >= startingWeek) {
       return week - startingWeek;
     } else if (week >= 1) {
-      return (52 - startingWeek) + week;
+      const returnTime = 52 - startingWeek;
+      return returnTime + week;
     }
 
     return week;
@@ -75,13 +77,7 @@ class Summary extends React.Component {
   constructor(props) {
     super();
 
-    this.updateYearTitleDatabase = this.updateYearTitleDatabase.bind(this);
-    this.deleteSelectedYear = this.deleteSelectedYear.bind(this);
-    this.updateYearTitle = this.updateYearTitle.bind(this);
-    this.showDeleteYear = this.showDeleteYear.bind(this);
-
     this.state = {
-      isDeletingYear: false,
       currentWeek: Summary.getCurrentYearWeek(),
       isSummary: true,
       yearTitle: props.yearTitle,
@@ -94,7 +90,7 @@ class Summary extends React.Component {
     }
   }
 
-  updateYearTitleDatabase(newTitle) {
+  updateYearTitleDatabase = (newTitle) => {
     let title = newTitle;
 
     // If the user exists whiel the text is empty, fill with replacement text
@@ -103,90 +99,77 @@ class Summary extends React.Component {
     this.props.firebase.updateYearTitle(this.props.yearIndex, title);
     this.props.updateYearTitle(this.props.yearIndex, title);
     this.setState({ yearTitle: title });
-  }
+  };
 
   // Deletes the current active year from firebae and redux
-  deleteSelectedYear() {
+  deleteSelectedYear = () => {
     this.props.firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
-      .catch(error => console.log(error.message));
-
-    this.showDeleteYear();
+      .catch((error) => console.log(error.message));
 
     this.props.history.push('/');
-  }
+  };
 
   /**
    * updates the title for the selected/active year in the state
    * @param {string} title the new title for the year in the state
    */
-  updateYearTitle(title) {
+  updateYearTitle = (title) => {
     this.setState({
       yearTitle: title,
     });
-  }
-
-  // Shows the delete year dialog
-  showDeleteYear() {
-    this.setState({ isDeletingYear: !this.state.isDeletingYear });
-  }
+  };
 
   render() {
     const { classes } = this.props;
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <DeleteModule
-          open={this.state.isDeletingYear}
-          title={this.props.yearTitle}
-          onDelete={this.deleteSelectedYear}
-          onClose={this.showDeleteYear}
-        />
-        <Tooltip title="Delete Year" placement="left">
-          <Icon onClick={this.showDeleteYear} className={classes.removeButton} color="secondary">
-            delete
-          </Icon>
-        </Tooltip>
-        <Typography variant="headline" component="h5">
-          Summary
-        </Typography>
+        <div>
+          <Grid container justify="center" alignItems="center" className={classes.grid}>
+            <Grid item xs={1} />
+            <Grid item xs={10}>
+              <Typography variant="headline" component="h5">
+                Summary
+              </Typography>
+            </Grid>
+            <Grid item xs={1}>
+              <Settings
+                year={{
+                  title: this.props.yearTitle,
+                  units: this.props.units,
+                }}
+                deleteYear={this.deleteSelectedYear}
+              />
+            </Grid>
+          </Grid>
 
-        <div className={classes.summarySubtext}>
-          <Typography component="p">
-            {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week:{' '}
-            {this.state.currentWeek}/34
-          </Typography>
-          <EditableText
-            placeholder="Year"
-            maxLength={constants.YEAR.TITLE.MAX}
-            onChange={this.updateYearTitle}
-            onConfirm={this.updateYearTitleDatabase}
-            value={this.state.yearTitle}
-          />
-        </div>
-
-        {/* The heights here need to be calculated based on the num of units up to 5 */}
-        <Grid container className={classes.grid}>
-          <Grid item xs={12}>
-            <Grid container justify="center" spacing={Number(8)}>
-              <Grid item>
-                <Ranking
-                  height={_.size(this.props.units)}
-                  history={this.props.history}
-                  units={this.props.units}
+          <Grid container className={classes.grid}>
+            <Grid item xs={12}>
+              <div className={classes.summarySubtext}>
+                <Typography component="p">
+                  {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}/34
+                </Typography>
+                <EditableText
+                  placeholder="Year"
+                  maxLength={constants.YEAR.TITLE.MAX}
+                  onChange={this.updateYearTitle}
+                  onConfirm={this.updateYearTitleDatabase}
+                  value={this.state.yearTitle}
                 />
+              </div>
+            </Grid>
+            <Grid container justify="center" spacing={Number(16)}>
+              <Grid item>
+                <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
               </Grid>
               <Grid item>
-                <Percentages
-                  height={_.size(this.props.units)}
-                  units={this.props.units}
-                  isSummary={this.state.isSummary}
-                />
+                <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </div>
       </Paper>
     );
   }

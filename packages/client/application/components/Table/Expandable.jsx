@@ -1,15 +1,14 @@
-import React from 'react';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore';
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-} from 'material-ui/ExpansionPanel';
+import React from 'react';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 
-import UnitTable from './UnitTable';
-import { calculateTotalGradeStandard } from '../../utils/utils';
+import UnitTable from '../Unit/index';
+import { getAchievedFromUnit } from '../../utils/utils';
 
 const styles = (theme) => ({
   root: {
@@ -44,7 +43,7 @@ const Expandable = (props) => {
   const { classes } = props;
 
   const passableProps = Object.assign({}, props);
-  const total = calculateTotalGradeStandard(props.unit.content);
+  const total = getAchievedFromUnit(props.unit, props.unit.double);
 
   delete passableProps.classes;
 
@@ -53,10 +52,12 @@ const Expandable = (props) => {
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <div className={classes.column}>
-            <Typography className={classes.heading}>{props.unit.title}</Typography>
+            <Typography className={classes.heading}>
+              {props.unit.title} {props.unit.double ? '(double)' : ''}{' '}
+            </Typography>
           </div>
           <div className={classes.column}>
-            <Typography className={classes.secondaryHeading}>Total: {total}%</Typography>
+            <Typography className={classes.secondaryHeading}>{props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}</Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.details }}>
@@ -71,6 +72,8 @@ Expandable.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   unit: PropTypes.shape({
     title: PropTypes.string,
+    dropped: PropTypes.bool,
+    double: PropTypes.bool,
     content: PropTypes.shape({}),
   }).isRequired,
 };

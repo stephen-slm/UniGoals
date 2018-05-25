@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router';
 
 import Tables from '../Tables/Tables';
@@ -26,7 +26,8 @@ class Year extends React.Component {
   render() {
     const { classes } = this.props;
 
-    const year = this.props.years[this.state.selectedId];
+    const yearIndex = Object.keys(this.props.years)[this.state.selectedId - 1];
+    const year = this.props.years[yearIndex];
 
     return (
       <div className={classes.root}>
@@ -37,12 +38,14 @@ class Year extends React.Component {
           units={year.units}
           profile={this.props.profile}
           history={this.props.history}
-          yearIndex={this.state.selectedId}
+          yearIndex={yearIndex}
           yearTitle={year.title}
         />
         <Tables
+          setUnitDoubleWeightStatus={this.props.setUnitDoubleWeightStatus}
+          setUnitDroppedStatus={this.props.setUnitDroppedStatus}
           insertUnitRow={this.props.insertUnitRow}
-          yearIndex={this.state.selectedId}
+          yearIndex={yearIndex}
           updateYears={this.props.updateYears}
           updateRowContent={this.props.updateRowContent}
           removeUnitRow={this.props.removeUnitRow}
@@ -71,6 +74,8 @@ Year.propTypes = {
   firebase: PropTypes.shape({}).isRequired,
   updateYears: PropTypes.func.isRequired,
   removeYear: PropTypes.func.isRequired,
+  setUnitDoubleWeightStatus: PropTypes.func.isRequired,
+  setUnitDroppedStatus: PropTypes.func.isRequired,
   history: PropTypes.shape().isRequired,
   removeUnitRow: PropTypes.func.isRequired,
   insertUnitRow: PropTypes.func.isRequired,

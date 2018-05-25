@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
+import { withStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     color: 'white',
     flexGrow: 1,
@@ -31,7 +31,7 @@ const styles = theme => ({
   },
 });
 
-const NoNotifications = props => {
+const NoNotifications = (props) => {
   const { classes } = props;
 
   return (
@@ -66,6 +66,9 @@ const NoNotifications = props => {
   );
 };
 
-NoNotifications.propTypes = { classes: PropTypes.shape({}).isRequired, showHelpBox: PropTypes.func.isRequired };
+NoNotifications.propTypes = {
+  classes: PropTypes.shape({}).isRequired,
+  showHelpBox: PropTypes.func.isRequired,
+};
 
 export default withStyles(styles)(NoNotifications);

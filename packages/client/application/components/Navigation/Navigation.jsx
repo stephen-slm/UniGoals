@@ -1,25 +1,20 @@
 import React from 'react';
+import _ from 'lodash';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import Icon from 'material-ui/Icon';
-import Badge from 'material-ui/Badge';
-import IconButton from 'material-ui/IconButton';
+import { withStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Icon from '@material-ui/core/Icon';
+import IconButton from '@material-ui/core/IconButton';
 
-// Bottom navigation
-import BottomNavigation, { BottomNavigationAction } from 'material-ui/BottomNavigation';
-
-// Linking
-import { Link } from 'react-router-dom';
-
+import TemporaryDrawer from './TemporaryDrawer';
 import SignOutBox from './SignOutBox';
 import HelpBox from './HelpBox';
 
 import * as constants from '../../utils/constants';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     color: 'white',
     flexGrow: 1,
@@ -27,33 +22,12 @@ const styles = theme => ({
   flex: {
     flex: 1,
   },
-  mail: {
-    marginRight: theme.spacing.unit,
-  },
   logo: {
     width: 50,
     height: 50,
   },
-  avatar: {
-    width: 64,
-    height: 64,
-  },
-  logoButton: {
-    padding: '0px',
-    minWidth: '0px',
-  },
-  BottomNavigation: {
-    background: theme.palette.primary.main,
-    color: 'white',
-    width: '100%',
-    position: 'fixed',
-    zIndex: 100,
-    right: 0,
-    left: 0,
-    bottom: 0,
-  },
-  bottomNavigationColor: {
-    textDecoration: 'none',
+  menuIcon: {
+    marginLeft: -(theme.spacing.unit * 2),
     color: 'white',
   },
 });
@@ -65,8 +39,10 @@ class Navigation extends React.Component {
     this.state = {
       showNotifications: false,
       showSignOut: false,
+      showSideDraw: false,
       invalidhelpMessage: false,
       notificationCount: 0,
+      avatarAddress: props.firebase.getProfileImageUrl(),
     };
 
     this.getWelcomeMessage = this.getWelcomeMessage.bind(this);
@@ -77,14 +53,12 @@ class Navigation extends React.Component {
 
     const notificationRef = props.firebase.getNotificationRef();
 
-    notificationRef.on('value', snapshot => {
+    notificationRef.on('value', (snapshot) => {
       this.setState({
         notificationCount: _.size(snapshot.val()),
       });
     });
   }
-
-  componentWillReceiveProps(props) {}
 
   getWelcomeMessage() {
     const time = new Date();
@@ -135,10 +109,7 @@ class Navigation extends React.Component {
     const { name, email, given_name: givenName } = this.props.profile;
     const { version } = this.props;
 
-    if (
-      message.length < constants.HELP_MESSAGE.MIN ||
-      message.length > constants.HELP_MESSAGE_MAX
-    ) {
+    if (message.length < constants.HELP_MESSAGE.MIN || message.length > constants.HELP_MESSAGE_MAX) {
       return this.setState({ invalidhelpMessage: true });
     }
 
@@ -159,8 +130,14 @@ class Navigation extends React.Component {
     return this.props.firebase
       .sendHelpMessage(message, name, email)
       .then(() => console.log(`Thank you ${givenName} for submitting your help and or question`))
-      .catch(error => console.log(error.message));
+      .catch((error) => console.log(error.message));
   }
+
+  handleDrawerChange = () => {
+    this.setState({
+      showSideDraw: !this.state.showSideDraw,
+    });
+  };
 
   render() {
     const { classes } = this.props;
@@ -168,68 +145,44 @@ class Navigation extends React.Component {
     return (
       <div>
         <AppBar position="static" color="primary" className={classes.root}>
-          <SignOutBox
-            onClose={this.showSignOutBox}
-            onSignOut={this.signOut}
-            open={this.state.showSignOut}
-            name={this.props.profile.name}
-          />
-          <HelpBox
-            handleSubmit={this.submitHelpMessage}
-            error={this.state.invalidhelpMessage}
-            handleClose={this.props.showHelpBox}
-            open={this.props.displayHelp}
-            minLength={constants.HELP_MESSAGE.MIN}
-            maxLength={constants.HELP_MESSAGE.MAX}
+          <TemporaryDrawer
+            open={this.state.showSideDraw}
+            onClose={this.handleDrawerChange}
+            profile={this.props.profile}
+            url={this.state.avatarAddress}
+            signOutClick={this.showSignOutBox}
+            showHelpBox={this.props.showHelpBox}
+            notificationCount={this.state.notificationCount}
           />
           <Toolbar>
-            <Link href="/" to="/" style={{ textDecoration: 'none' }}>
-              <img
-                src="/components/resources/images/logo.svg"
-                alt="logo"
-                className={classes.logo}
-              />
-            </Link>
+            <SignOutBox
+              onClose={this.showSignOutBox}
+              onSignOut={this.signOut}
+              open={this.state.showSignOut}
+              name={this.props.profile.name}
+            />
+            <HelpBox
+              handleSubmit={this.submitHelpMessage}
+              error={this.state.invalidhelpMessage}
+              handleClose={this.props.showHelpBox}
+              open={this.props.displayHelp}
+              minLength={constants.HELP_MESSAGE.MIN}
+              maxLength={constants.HELP_MESSAGE.MAX}
+            />
+            <IconButton className={classes.menuIcon} onClick={this.handleDrawerChange}>
+              <Icon>menu</Icon>
+            </IconButton>
             <Typography variant="body2" color="inherit" className={classes.flex}>
-              UniGoals
-            </Typography>
-            <Typography component="div" color="inherit">
               {this.getWelcomeMessage()}
             </Typography>
-            <IconButton className={classes.bottomNavigationColor} onClick={this.showSignOutBox}>
-              <Icon>exit_to_app</Icon>
-            </IconButton>
+            <Typography component="div" color="inherit">
+              <div>UniGoals</div>
+              {this.props.version}
+            </Typography>
+            <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
           </Toolbar>
         </AppBar>
-        {this.props.children}
-        <BottomNavigation className={classes.BottomNavigation} showLabel={false}>
-          <Link href="/" to="/" style={{ textDecoration: 'none' }}>
-            <BottomNavigationAction
-              label="Home"
-              value="Home"
-              icon={<Icon className={classes.bottomNavigationColor}>home</Icon>}
-            />
-          </Link>
-          <BottomNavigationAction
-            onClick={this.props.showHelpBox}
-            value="help"
-            icon={<Icon className={classes.bottomNavigationColor}>help</Icon>}
-          />
-          <Link href="/notifications" to="/notifications" style={{ textDecoration: 'none' }}>
-            <BottomNavigationAction
-              value="notifications"
-              icon={
-                this.state.notificationCount > 0 ? (
-                  <Badge badgeContent={this.state.notificationCount} color="error">
-                    <Icon className={classes.bottomNavigationColor}>notifications</Icon>
-                  </Badge>
-                ) : (
-                  <Icon className={classes.bottomNavigationColor}>notifications</Icon>
-                )
-              }
-            />
-          </Link>
-        </BottomNavigation>
+        {!_.isNil(this.props.children) ? this.props.children : null}
       </div>
     );
   }
@@ -242,11 +195,12 @@ Navigation.propTypes = {
   firebase: PropTypes.shape({
     sendHelpMessage: PropTypes.func,
     getNotificationRef: PropTypes.func,
+    getProfileImageUrl: PropTypes.func,
     authentication: PropTypes.shape({
       signOut: PropTypes.func,
     }),
   }).isRequired,
-  children: PropTypes.shape({}).isRequired,
+  children: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   version: PropTypes.string.isRequired,
   removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({

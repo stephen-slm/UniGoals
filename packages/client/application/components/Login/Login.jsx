@@ -1,17 +1,19 @@
+import CircularProgress from '@material-ui/core/CircularProgress';
+import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card';
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import { Redirect } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import Button from 'material-ui/Button';
-import Typography from 'material-ui/Typography';
-import { withStyles } from 'material-ui/styles';
-import Card, { CardContent } from 'material-ui/Card';
-import { CircularProgress } from 'material-ui/Progress';
 
-import * as homePageData from './homePageData';
 import { isMobileDevice } from '../../utils/utils';
+import * as homePageData from './homePageData';
 
+import UnitTable from '../Unit/index';
 import Summary from '../Summary/Summary';
-import UnitTable from '../Table/UnitTable';
 
 const styles = (theme) => ({
   root: {
@@ -39,8 +41,8 @@ const styles = (theme) => ({
 });
 
 class Login extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.authenticate = this.authenticate.bind(this);
     this.updateContentForUser = this.updateContentForUser.bind(this);
@@ -51,6 +53,7 @@ class Login extends React.Component {
       loading: true,
       isMobile: isMobileDevice(),
       isExample: true,
+      redirectToReferrer: props.profile.auth,
     };
   }
 
@@ -88,8 +91,8 @@ class Login extends React.Component {
    * @param {object} user firebase user content
    * @param {boolean} example if is a exmaple user
    */
-  updateContentForUser(user, exampleUser = false) {
-    const profile = Object.assign(user.profile, { exampleUser });
+  updateContentForUser(user, exampleUser = false, auth = false) {
+    const profile = Object.assign(user.profile, { exampleUser, auth });
 
     this.props.updateProfile(profile);
     this.props.updateYears(user.years);
@@ -99,7 +102,7 @@ class Login extends React.Component {
 
   // Handles all errors through a single promise
   handleAuthenticationError(error) {
-    console.log(error.message);
+    console.log(error);
     this.setState({ loading: false });
   }
 
@@ -120,16 +123,16 @@ class Login extends React.Component {
         this.props.firebase
           .createNewUser()
           .then(() => this.props.firebase.getUserContent())
-          .then((content) => this.updateContentForUser(content))
+          .then((content) => this.updateContentForUser(content, false, true))
           .then(() => this.props.firebase.updateLoginCountAndDate())
-          .then(() => resolve())
+          .then(() => this.setState({ redirectToReferrer: true }))
           .catch((error) => reject(error));
       } else {
         this.props.firebase
           .getUserContent()
-          .then((content) => this.updateContentForUser(content))
+          .then((content) => this.updateContentForUser(content, false, true))
           .then(() => this.props.firebase.updateLoginCountAndDate())
-          .then(() => resolve())
+          .then(() => this.setState({ redirectToReferrer: true }))
           .catch((error) => reject(error));
       }
     });
@@ -151,6 +154,14 @@ class Login extends React.Component {
 
   render() {
     const { classes } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/' } };
+    const { redirectToReferrer } = this.state;
+
+    if (redirectToReferrer && !_.isNil(from) && from.pathname !== '/') {
+      return <Redirect to={from} />;
+    } else if (redirectToReferrer) {
+      return <Redirect to="/home" />;
+    }
 
     if (this.state.loading) {
       return (
@@ -169,11 +180,7 @@ class Login extends React.Component {
         <Typography variant="subheading" gutterBottom>
           <Typography component="p">
             Full Course &amp; Unit tracking<br />built by a University{' '}
-            <a
-              href="https://www.linkedin.com/in/stephen-lineker-miller/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">
               Student
             </a>{' '}
             for University Students
@@ -187,11 +194,10 @@ class Login extends React.Component {
         <Card className={classes.card}>
           <CardContent>
             <Typography className={classes.text} compnent="p">
-              UniGoals is a modern University unit tracking tool designed to let you know where you
-              currently stand on your course. Using quick and simple percentages charts to provide
-              fast and accurate content about your course. Simply add your units with there
-              weighting (e.g.coursework, exam, presentations, etc) and quickly see your current
-              percent, average and total maximum grade! Real-time instant results.
+              UniGoals is a modern University unit tracking tool designed to let you know where you currently stand on your course. Using
+              quick and simple percentages charts to provide fast and accurate content about your course. Simply add your units with there
+              weighting (e.g.coursework, exam, presentations, etc) and quickly see your current percent, average and total maximum grade!
+              Real-time instant results.
             </Typography>
             <Summary
               updateYearTitle={this.props.updateYearTitle}
@@ -202,16 +208,15 @@ class Login extends React.Component {
               isExample={this.state.isExample}
               yearIndex="Year 1"
               yearTitle="Example Year"
+              removeYear={() => undefined}
             />
             <Typography className={classes.text} compnent="p">
-              Your own unqiue summary page that displays everything you need to quickly know about
-              your units! Including your <strong>unit ranks</strong>, how they are compared to other
-              units, <strong> Average</strong>, <strong>Max</strong> and{' '}
-              <strong>Total Grade</strong>. Try hovering over the chart and percentages. Each unit
-              looks like the one below, providing a <strong>Title</strong>, <strong>Name</strong>,{' '}
-              <strong>Weighting</strong>, and <strong> Achieved</strong> column. Filling these will
-              allow you to make the most of the site. The chart and percentages will also update in
-              real time as you update the rows.
+              Your own unqiue summary page that displays everything you need to quickly know about your units! Including your
+              <strong> unit ranks</strong>, how they are compared to other units, <strong> Average</strong>, <strong>Max</strong> and
+              <strong> Total Grade</strong>. Try hovering over the chart and percentages. Each unit looks like the one below, providing a
+              <strong> Title</strong>, <strong>Name</strong>, <strong>Weighting</strong>, and <strong> Achieved</strong> column. Filling
+              these will allow you to make the most of the site. The chart and percentages will also update in real time as you update the
+              rows.
             </Typography>
             <UnitTable
               isExample={this.state.isExample}
@@ -241,6 +246,12 @@ Login.propTypes = {
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
+  profile: PropTypes.shape({
+    auth: PropTypes.bool,
+  }).isRequired,
+  location: PropTypes.shape({
+    state: PropTypes.shape(),
+  }).isRequired,
   version: PropTypes.string.isRequired,
   updateProfile: PropTypes.func.isRequired,
   updateYearTitle: PropTypes.func.isRequired,

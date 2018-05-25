@@ -1,14 +1,14 @@
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import Paper from '@material-ui/core/Paper';
+import PropTypes from 'prop-types';
+import uuid from 'uuid/v4';
 import React from 'react';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import Typography from 'material-ui/Typography';
-import Paper from 'material-ui/Paper';
-import { withStyles } from 'material-ui/styles';
-import uuid from 'uuid/v4';
 
-import { calculateTopFiveRankings } from '../../utils/utils';
+import { functionRankUnitByAchieved } from '../../utils/utils';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     marginTop: theme.spacing.unit,
     paddingLeft: theme.spacing.unit,
@@ -31,9 +31,9 @@ const styles = theme => ({
   },
 });
 
-const Ranking = props => {
+const Ranking = (props) => {
   const { classes } = props;
-  const ranking = calculateTopFiveRankings(props.units, props.history);
+  const ranking = functionRankUnitByAchieved(props.units, props.history);
 
   return (
     <Paper style={{ height: props.height * 40 }} className={classes.root} elevation={1}>
@@ -45,7 +45,7 @@ const Ranking = props => {
           ranking.map((rank, index) => (
             <Typography key={uuid()} className={classes.entry} component="span">
               <Typography className={classes.link} href={String(rank.link)} component="a">
-                {index + 1}. {rank.title}
+                {index + 1}. {rank.title} {rank.double ? '(double)' : ''} {rank.dropped ? '(dropped)' : ''}
               </Typography>
             </Typography>
           ))}

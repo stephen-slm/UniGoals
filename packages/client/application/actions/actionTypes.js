@@ -33,3 +33,7 @@ export const REMOVE_YEAR = 'REMOVE_YEAR';
 
 // Help Button
 export const SHOW_HELP_BOX = 'SHOW_HELP_BOX';
+
+// double weighting
+export const UPDATE_UNIT_DOUBLE_WEIGHT = 'UPDATE_UNIT_DOUBLE_WEIGHT';
+export const UPDATE_UNIT_DROPPED = 'UPDATE_UNIT_DROPPED';

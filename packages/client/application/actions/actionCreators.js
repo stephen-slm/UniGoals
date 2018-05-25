@@ -172,6 +172,36 @@ export function updateYearTitle(yearIndex, yearTitle) {
 }
 
 /**
+ *
+ * @param {string} yearIndex the year index
+ * @param {string} tableIndex the table index
+ * @param {boolean} value the new double boolean value
+ */
+export function setUnitDoubleWeightStatus(yearIndex, tableIndex, double) {
+  return {
+    type: actionTypes.UPDATE_UNIT_DOUBLE_WEIGHT,
+    yearIndex,
+    tableIndex,
+    double,
+  };
+}
+
+/**
+ *
+ * @param {string} yearIndex the year index
+ * @param {string} tableIndex the table index
+ * @param {boolean} value the new double boolean value
+ */
+export function setUnitDroppedStatus(yearIndex, tableIndex, dropped) {
+  return {
+    type: actionTypes.UPDATE_UNIT_DROPPED,
+    yearIndex,
+    tableIndex,
+    dropped,
+  };
+}
+
+/**
  * Updates a column with the change, columns are either name, achieved or weighting
  * @param {string} change change to make in the column
  * @param {string} tableIndex the unit key
