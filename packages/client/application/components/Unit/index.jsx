@@ -14,6 +14,7 @@ import React from 'react';
 import _ from 'lodash';
 
 import { getAchievedFromUnit } from '../../utils/utils';
+import firebase from '../../utils/FirebaseWrapper';
 import * as constants from '../../utils/constants';
 
 import Settings from './Settings';
@@ -78,7 +79,7 @@ class UnitTable extends React.Component {
     const { double } = this.props.unit;
 
     this.props.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
-    this.props.firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
+    firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
   };
 
   /**
@@ -89,7 +90,7 @@ class UnitTable extends React.Component {
     const { dropped } = this.props.unit;
 
     this.props.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
-    this.props.firebase.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
+    firebase.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
   };
 
   moveOverShowInsert = () => {
@@ -133,7 +134,7 @@ class UnitTable extends React.Component {
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.isExample) {
       const { tableIndex, yearIndex } = this.props;
-      this.props.firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
+      firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
     }
   };
 
@@ -172,7 +173,7 @@ class UnitTable extends React.Component {
 
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
       this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
-      this.props.firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
+      firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
     }
   };
 
@@ -186,7 +187,7 @@ class UnitTable extends React.Component {
     const { tableIndex: unitTableIndex, yearIndex } = this.props;
 
     this.props.removeUnitTable(yearIndex, unitTableIndex);
-    this.props.firebase.deleteUnitById(yearIndex, unitTableIndex);
+    firebase.deleteUnitById(yearIndex, unitTableIndex);
   };
 
   /**
@@ -195,7 +196,7 @@ class UnitTable extends React.Component {
    */
   updateUnitTitleDatabase = (change) => {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
-      this.props.firebase.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex).catch((error) => console.log(error.message));
+      firebase.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex).catch((error) => console.log(error.message));
     }
   };
 
@@ -223,7 +224,7 @@ class UnitTable extends React.Component {
     if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
       console.log(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
     } else {
-      this.props.firebase
+      firebase
         .insertUnitRowById(yearIndex, tableIndex)
         .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
         .catch((error) => console.log(error.message));
@@ -354,15 +355,6 @@ UnitTable.propTypes = {
   insertUnitRow: PropTypes.func,
   updateUnitTitle: PropTypes.func,
   removeUnitTable: PropTypes.func,
-  firebase: PropTypes.shape({
-    setUnitDoubleWeightStatus: PropTypes.func,
-    setUnitDroppedStatus: PropTypes.func,
-    deleteUnitById: PropTypes.func,
-    updateUnitTitle: PropTypes.func,
-    deleteUnitRowById: PropTypes.func,
-    insertUnitRowById: PropTypes.func,
-    updateUnitRowSection: PropTypes.func,
-  }).isRequired,
   yearIndex: PropTypes.string.isRequired,
   tableIndex: PropTypes.string.isRequired,
   classes: PropTypes.shape({}).isRequired,

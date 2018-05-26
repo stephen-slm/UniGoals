@@ -12,6 +12,7 @@ import Percentages from './Percentages';
 import Ranking from './Ranking';
 
 import * as constants from '../../utils/constants';
+import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
   root: {
@@ -96,14 +97,14 @@ class Summary extends React.Component {
     // If the user exists whiel the text is empty, fill with replacement text
     if (title === '') title = 'Uni 👨‍🎓 👩‍🎓';
 
-    this.props.firebase.updateYearTitle(this.props.yearIndex, title);
+    firebase.updateYearTitle(this.props.yearIndex, title);
     this.props.updateYearTitle(this.props.yearIndex, title);
     this.setState({ yearTitle: title });
   };
 
   // Deletes the current active year from firebae and redux
   deleteSelectedYear = () => {
-    this.props.firebase
+    firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
       .catch((error) => console.log(error.message));
@@ -185,11 +186,6 @@ Summary.propTypes = {
     push: PropTypes.func.isRequired,
   }).isRequired,
   yearTitle: PropTypes.string.isRequired,
-  firebase: PropTypes.shape({
-    deleteYear: PropTypes.func,
-    insertNewYear: PropTypes.func,
-    updateYearTitle: PropTypes.func,
-  }).isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     course_year: PropTypes.string,

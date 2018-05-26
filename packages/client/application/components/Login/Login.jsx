@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
+import firebase from '../../utils/FirebaseWrapper';
 import { isMobileDevice } from '../../utils/utils';
 import * as homePageData from './homePageData';
 
@@ -62,7 +63,7 @@ class Login extends React.Component {
    * back in with a existing session that is persisted.
    */
   componentDidMount() {
-    const { authentication } = this.props.firebase;
+    const { authentication } = firebase;
 
     authentication.getRedirectResult().then((login) => {
       if (!_.isNil(login.user)) {
@@ -120,18 +121,18 @@ class Login extends React.Component {
 
     return new Promise((resolve, reject) => {
       if (!reauth && login.additionalUserInfo.isNewUser) {
-        this.props.firebase
+        firebase
           .createNewUser()
-          .then(() => this.props.firebase.getUserContent())
+          .then(() => firebase.getUserContent())
           .then((content) => this.updateContentForUser(content, false, true))
-          .then(() => this.props.firebase.updateLoginCountAndDate())
+          .then(() => firebase.updateLoginCountAndDate())
           .then(() => this.setState({ redirectToReferrer: true }))
           .catch((error) => reject(error));
       } else {
-        this.props.firebase
+        firebase
           .getUserContent()
           .then((content) => this.updateContentForUser(content, false, true))
-          .then(() => this.props.firebase.updateLoginCountAndDate())
+          .then(() => firebase.updateLoginCountAndDate())
           .then(() => this.setState({ redirectToReferrer: true }))
           .catch((error) => reject(error));
       }
@@ -139,7 +140,7 @@ class Login extends React.Component {
   }
 
   loginWithGoogle() {
-    const { provider, authentication } = this.props.firebase;
+    const { provider, authentication } = firebase;
     this.setState({ loading: true });
 
     if (this.state.isMobile) {
@@ -201,7 +202,6 @@ class Login extends React.Component {
             </Typography>
             <Summary
               updateYearTitle={this.props.updateYearTitle}
-              firebase={this.props.firebase}
               units={homePageData.units}
               profile={homePageData.profile}
               history={this.props.history}
@@ -224,7 +224,6 @@ class Login extends React.Component {
               isExample={this.state.isExample}
               yearIndex="example"
               tableIndex="example"
-              firebase={this.props.firebase}
               unit={homePageData.units[Object.keys(homePageData.units)[2]]}
             />
           </CardContent>
@@ -235,17 +234,6 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  firebase: PropTypes.shape({
-    provider: PropTypes.shape({}),
-    authentication: PropTypes.shape({
-      getRedirectResult: PropTypes.func,
-      signInAndRetrieveDataWithCredential: PropTypes.func,
-    }),
-    createNewUser: PropTypes.func,
-    getUserContent: PropTypes.func,
-    updateLoginCountAndDate: PropTypes.func,
-    generateProfileFromLogin: PropTypes.func,
-  }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   history: PropTypes.shape({}).isRequired,
   profile: PropTypes.shape({

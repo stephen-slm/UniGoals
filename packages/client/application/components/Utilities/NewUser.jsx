@@ -14,6 +14,8 @@ import Slide from '@material-ui/core/Slide';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
+import firebase from '../../utils/FirebaseWrapper';
+
 function Transition(props) {
   return <Slide direction="down" {...props} />;
 }
@@ -63,9 +65,7 @@ class NewUser extends React.Component {
    */
   getUniversityContent() {
     if (_.isNil(this.state.universityContent.courses[0])) {
-      this.props.firebase
-        .getUniversityContents()
-        .then((content) => this.setState({ universityContent: content }));
+      firebase.getUniversityContents().then((content) => this.setState({ universityContent: content }));
     }
   }
 
@@ -104,23 +104,11 @@ class NewUser extends React.Component {
     let invalidCourseYear = false;
     let invalidCourseUni = false;
 
-    if (
-      _.isNil(courseYear) ||
-      _.isNaN(courseYear) ||
-      !_.isNumber(courseYearNum) ||
-      courseYear.length > 2 ||
-      courseYear === ''
-    ) {
+    if (_.isNil(courseYear) || _.isNaN(courseYear) || !_.isNumber(courseYearNum) || courseYear.length > 2 || courseYear === '') {
       invalidCourseYear = true;
     }
 
-    if (
-      _.isNil(courseName) ||
-      _.isNaN(courseName) ||
-      courseName.length < 5 ||
-      courseName.length > 50 ||
-      courseName === ''
-    ) {
+    if (_.isNil(courseName) || _.isNaN(courseName) || courseName.length < 5 || courseName.length > 50 || courseName === '') {
       invalidCourseName = true;
     }
 
@@ -142,7 +130,7 @@ class NewUser extends React.Component {
       });
     }
 
-    return this.props.firebase
+    return firebase
       .addUniversityDetails(courseName, courseYear, courseUniversity)
       .then(() => {
         const profile = Object.assign(this.props.profile, {
@@ -176,8 +164,8 @@ class NewUser extends React.Component {
         <DialogTitle>{`Welcome ${profile.name}`}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Thank you for using UniGoals-alpha! If you have any problems please email:
-            UP840877@myport.ac.uk or click the little help box in the top right hand corner!
+            Thank you for using UniGoals-alpha! If you have any problems please email: UP840877@myport.ac.uk or click the little help box in
+            the top right hand corner!
             <strong> This box will only ever show once!</strong>
             <br />
             <br />
@@ -190,18 +178,12 @@ class NewUser extends React.Component {
             UniGoals
             <br />
             <br />
-            Below is some basic information needed to form your profile. Please fill this in and
-            select continue.
+            Below is some basic information needed to form your profile. Please fill this in and select continue.
             <br />
             <br />
           </DialogContentText>
           <FormControl className={classes.formControl} error={this.state.invalidCourseYear}>
-            <Select
-              value={this.state.year}
-              onChange={this.handleValueChangeYear}
-              name="Year"
-              className={classes.selectEmpty}
-            >
+            <Select value={this.state.year} onChange={this.handleValueChangeYear} name="Year" className={classes.selectEmpty}>
               {_.map(this.state.universityContent.years, (year, index) => (
                 <MenuItem key={index} value={year}>
                   {year}
@@ -211,12 +193,7 @@ class NewUser extends React.Component {
             <FormHelperText>Current Year</FormHelperText>
           </FormControl>
           <FormControl className={classes.formControl} error={this.state.invalidCourseName}>
-            <Select
-              value={this.state.course}
-              onChange={this.handleValueChange}
-              name="Course"
-              className={classes.selectEmpty}
-            >
+            <Select value={this.state.course} onChange={this.handleValueChange} name="Course" className={classes.selectEmpty}>
               {_.map(_.sortBy(this.state.universityContent.courses, (o) => o), (course, index) => (
                 <MenuItem key={index} value={course}>
                   {course}
@@ -226,12 +203,7 @@ class NewUser extends React.Component {
             <FormHelperText>Current Course</FormHelperText>
           </FormControl>
           <FormControl className={classes.formControl} error={this.state.invalidCourseUni}>
-            <Select
-              value={this.state.university}
-              onChange={this.handleValueChangeUni}
-              name="University"
-              className={classes.selectEmpty}
-            >
+            <Select value={this.state.university} onChange={this.handleValueChangeUni} name="University" className={classes.selectEmpty}>
               {_.map(_.sortBy(this.state.universityContent.uk, (o) => o), (university, index) => (
                 <MenuItem key={index} value={university}>
                   {university}
@@ -253,10 +225,6 @@ class NewUser extends React.Component {
 
 NewUser.propTypes = {
   classes: PropTypes.shape({}).isRequired,
-  firebase: PropTypes.shape({
-    getUniversityContents: PropTypes.func,
-    addUniversityDetails: PropTypes.func,
-  }).isRequired,
   updateProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
     email: PropTypes.string,

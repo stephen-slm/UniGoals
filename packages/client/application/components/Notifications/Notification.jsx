@@ -9,6 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Button from '@material-ui/core/Button';
 
+import firebase from '../../utils/FirebaseWrapper';
+
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
@@ -35,7 +37,7 @@ class Notification extends React.Component {
 
   dismissNotification() {
     this.props.removeNotification(this.state.keyIndex);
-    this.props.firebase.dismissNotification(this.state.keyIndex);
+    firebase.dismissNotification(this.state.keyIndex);
   }
 
   parseNotification() {
@@ -64,9 +66,6 @@ Notification.propTypes = {
   notification: PropTypes.shape({
     title: PropTypes.string,
     message: PropTypes.string,
-  }).isRequired,
-  firebase: PropTypes.shape({
-    dismissNotification: PropTypes.func,
   }).isRequired,
   removeNotification: PropTypes.func.isRequired,
   keyIndex: PropTypes.string.isRequired,

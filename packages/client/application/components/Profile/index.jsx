@@ -14,6 +14,7 @@ import Delete from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import firebase from '../../utils/FirebaseWrapper';
 import EditableText from '../Utilities/EditableText';
 import DeleteModule from '../Utilities/DeleteModule';
 
@@ -66,6 +67,13 @@ const styles = (theme) => ({
 });
 
 class Profile extends React.Component {
+  static updateFirebaseProfile(profile) {
+    firebase
+      .updateProfile(profile)
+      .then(() => console.log('saved changes'))
+      .catch((error) => console.log(error));
+  }
+
   state = {
     profile: this.props.profile,
     showDeletingAccount: false,
@@ -76,7 +84,7 @@ class Profile extends React.Component {
     profile.course_university = name;
 
     this.props.updateProfile(profile);
-    this.updateFirebaseProfile(profile);
+    Profile.updateFirebaseProfile(profile);
   };
 
   updateUniversityName = (name) => {
@@ -93,7 +101,7 @@ class Profile extends React.Component {
     profile.course_name = course;
 
     this.props.updateProfile(profile);
-    this.updateFirebaseProfile(profile);
+    Profile.updateFirebaseProfile(profile);
   };
 
   updateUniversityCourse = (course) => {
@@ -124,15 +132,8 @@ class Profile extends React.Component {
       course_name: this.state.profile.course_name,
     });
 
-    this.updateFirebaseProfile(updatedProfile);
+    Profile.updateFirebaseProfile(updatedProfile);
   };
-
-  updateFirebaseProfile(profile) {
-    this.props.firebase
-      .updateProfile(profile)
-      .then(() => console.log('saved changes'))
-      .catch((error) => console.log(error));
-  }
 
   showDeleteAccountBox = () => {
     this.setState({
@@ -141,10 +142,10 @@ class Profile extends React.Component {
   };
 
   deleteAccount = () => {
-    this.props.firebase
+    firebase
       .authenticate()
-      .then((login) => this.props.firebase.getCurrentUser().reauthenticateAndRetrieveDataWithCredential(login.credential))
-      .then(() => this.props.firebase.deleteAccount())
+      .then((login) => firebase.getCurrentUser().reauthenticateAndRetrieveDataWithCredential(login.credential))
+      .then(() => firebase.deleteAccount())
       .then(() => {
         console.log('deleted account');
         this.props.removeProfile();
@@ -156,7 +157,7 @@ class Profile extends React.Component {
   };
 
   render() {
-    const { classes, firebase } = this.props;
+    const { classes } = this.props;
 
     return (
       <div className={classes.root}>
@@ -252,13 +253,6 @@ Profile.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func,
     go: PropTypes.func,
-  }).isRequired,
-  firebase: PropTypes.shape({
-    authenticate: PropTypes.func,
-    getCurrentUser: PropTypes.func,
-    getProfileImageUrl: PropTypes.func,
-    deleteAccount: PropTypes.func,
-    updateProfile: PropTypes.func,
   }).isRequired,
   profile: PropTypes.shape({
     course_name: PropTypes.string,

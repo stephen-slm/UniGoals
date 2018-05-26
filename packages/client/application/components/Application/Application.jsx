@@ -50,7 +50,6 @@ export default class Application extends React.Component {
           routePaths={this.routePaths}
           profile={this.props.profile}
           removeProfile={this.props.removeProfile}
-          firebase={this.props.firebase}
           version={this.props.version}
           displayHelp={this.props.displayHelp}
           showHelpBox={this.props.showHelpBox}
@@ -72,7 +71,6 @@ export default class Application extends React.Component {
                 routePaths={this.routePaths}
                 profile={this.props.profile}
                 removeProfile={this.props.removeProfile}
-                firebase={this.props.firebase}
                 version={this.props.version}
                 displayHelp={this.props.displayHelp}
                 showHelpBox={this.props.showHelpBox}
@@ -87,7 +85,6 @@ export default class Application extends React.Component {
                   path="/profile"
                   component={Profile}
                   profile={this.props.profile}
-                  firebase={this.props.firebase}
                   updateProfile={this.props.updateProfile}
                   removeProfile={this.props.removeProfile}
                 />
@@ -108,7 +105,6 @@ Application.propTypes = {
   displayHelp: PropTypes.bool.isRequired,
   showHelpBox: PropTypes.func.isRequired,
   version: PropTypes.string.isRequired,
-  firebase: PropTypes.shape().isRequired,
   updateNotifications: PropTypes.func.isRequired,
   updateYearTitle: PropTypes.func.isRequired,
   updateProfile: PropTypes.func.isRequired,

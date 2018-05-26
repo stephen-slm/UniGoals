@@ -46,7 +46,6 @@ class Year extends React.Component {
         <Summary
           removeYear={this.props.removeYear}
           updateYearTitle={this.props.updateYearTitle}
-          firebase={this.props.firebase}
           units={year.units}
           profile={this.props.profile}
           history={this.props.history}
@@ -64,7 +63,6 @@ class Year extends React.Component {
           updateUnitTitle={this.props.updateUnitTitle}
           addUnitTable={this.props.addUnitTable}
           removeUnitTable={this.props.removeUnitTable}
-          firebase={this.props.firebase}
           units={year.units}
         />
       </div>
@@ -83,7 +81,6 @@ Year.propTypes = {
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   updateYearTitle: PropTypes.func.isRequired,
-  firebase: PropTypes.shape({}).isRequired,
   updateYears: PropTypes.func.isRequired,
   removeYear: PropTypes.func.isRequired,
   setUnitDoubleWeightStatus: PropTypes.func.isRequired,

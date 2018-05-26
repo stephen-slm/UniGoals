@@ -7,6 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
 
 import * as constants from '../../utils/constants';
+import firebase from '../../utils/FirebaseWrapper';
 import Expandable from '../Table/Expandable';
 
 const styles = (theme) => ({
@@ -53,7 +54,7 @@ class Tables extends React.Component {
     if (_.size(this.props.units) >= constants.UNIT.MAX) {
       console.log(`Only a maximum of ${constants.UNIT.MAX} units at anyone time`);
     } else {
-      this.props.firebase
+      firebase
         .insertUnitById(this.props.yearIndex)
         .then((ref) => this.insertTableAndNavigate(ref))
         .catch((error) => console.log(error.message));
@@ -82,7 +83,6 @@ class Tables extends React.Component {
                 updateUnitTitle={this.props.updateUnitTitle}
                 addUnitTable={this.props.addUnitTable}
                 removeUnitTable={this.props.removeUnitTable}
-                firebase={this.props.firebase}
                 unit={unit}
                 isExample={this.props.isExample}
               />
@@ -95,9 +95,6 @@ class Tables extends React.Component {
 
 Tables.propTypes = {
   yearIndex: PropTypes.string.isRequired,
-  firebase: PropTypes.shape({
-    insertUnitById: PropTypes.func,
-  }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   units: PropTypes.shape({}),
   setUnitDoubleWeightStatus: PropTypes.func.isRequired,

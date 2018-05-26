@@ -3,8 +3,14 @@ import * as _ from 'lodash';
 import * as constants from '../utils/constants';
 import { getHappyEmoji } from './utils';
 
-export default class FirebaseWrapper {
+let instance = null;
+
+class FirebaseWrapper {
   constructor(config) {
+    if (!_.isNil(instance)) {
+      return instance;
+    }
+
     this.configuration = config;
 
     firebase.initializeApp(this.configuration);
@@ -18,6 +24,8 @@ export default class FirebaseWrapper {
      */
     this.authentication = firebase.auth();
     this.provider = new firebase.auth.GoogleAuthProvider();
+
+    instance = this;
   }
 
   /**
@@ -499,3 +507,12 @@ export default class FirebaseWrapper {
       .then(() => Promise.resolve(profile));
   }
 }
+
+export default new FirebaseWrapper({
+  apiKey: 'AIzaSyDBSpRMIl4olTWN0AOMCTMVqeIVkhGio_8',
+  authDomain: 'organic-lacing-185810.firebaseapp.com',
+  databaseURL: 'https://organic-lacing-185810.firebaseio.com',
+  projectId: 'organic-lacing-185810',
+  storageBucket: 'organic-lacing-185810.appspot.com',
+  messagingSenderId: '40609903553',
+});

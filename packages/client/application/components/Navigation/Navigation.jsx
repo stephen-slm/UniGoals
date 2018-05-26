@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
+import firebase from '../../utils/FirebaseWrapper';
+
 import TemporaryDrawer from './TemporaryDrawer';
 import SignOutBox from './SignOutBox';
 import HelpBox from './HelpBox';
@@ -43,7 +45,7 @@ class Navigation extends React.Component {
       showSideDraw: false,
       invalidhelpMessage: false,
       notificationCount: 0,
-      avatarAddress: props.firebase.getProfileImageUrl(),
+      avatarAddress: firebase.getProfileImageUrl(),
     };
 
     this.getWelcomeMessage = this.getWelcomeMessage.bind(this);
@@ -52,7 +54,7 @@ class Navigation extends React.Component {
     this.showSignOutBox = this.showSignOutBox.bind(this);
     this.signOut = this.signOut.bind(this);
 
-    const notificationRef = props.firebase.getNotificationRef();
+    const notificationRef = firebase.getNotificationRef();
 
     notificationRef.on('value', (snapshot) => {
       this.setState({
@@ -96,7 +98,7 @@ class Navigation extends React.Component {
      * out of the application, then the profile of the user will be removed to stop caching
      * issue when they login. Finally the route address will be reset and the page reloaded.
      */
-    this.props.firebase.authentication.signOut();
+    firebase.authentication.signOut();
     this.props.removeProfile();
     this.props.history.go('/');
     window.location.reload();
@@ -128,7 +130,7 @@ class Navigation extends React.Component {
 
     this.setState({ invalidhelpMessage: false });
 
-    return this.props.firebase
+    return firebase
       .sendHelpMessage(message, name, email)
       .then(() => console.log(`Thank you ${givenName} for submitting your help and or question`))
       .catch((error) => console.log(error.message));
@@ -194,14 +196,6 @@ Navigation.propTypes = {
   displayHelp: PropTypes.bool.isRequired,
   showHelpBox: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  firebase: PropTypes.shape({
-    sendHelpMessage: PropTypes.func,
-    getNotificationRef: PropTypes.func,
-    getProfileImageUrl: PropTypes.func,
-    authentication: PropTypes.shape({
-      signOut: PropTypes.func,
-    }),
-  }).isRequired,
   version: PropTypes.string.isRequired,
   removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
