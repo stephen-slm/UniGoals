@@ -140,7 +140,7 @@ class Summary extends React.Component {
                   title: this.props.yearTitle,
                   units: this.props.units,
                 }}
-                deleteYear={this.deleteSelectedYear}
+                deleteYear={this.props.isExample ? () => undefined : this.deleteSelectedYear}
               />
             </Grid>
           </Grid>
@@ -195,8 +195,11 @@ Summary.propTypes = {
     course_year: PropTypes.string,
     course_name: PropTypes.string,
   }).isRequired,
+  isExample: PropTypes.bool,
 };
 
-Summary.defaultProps = {};
+Summary.defaultProps = {
+  isExample: false,
+};
 
 export default withStyles(styles)(Summary);

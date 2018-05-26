@@ -254,10 +254,10 @@ class UnitTable extends React.Component {
           </Grid>
           <Grid item xs={1} style={{ paddingRight: '5px' }}>
             <Settings
+              setUnitDoubleWeightedValue={this.props.isExample ? () => undefined : this.setUnitDoubleWeightedValue}
+              setUnitDroppedValue={this.props.isExample ? () => undefined : this.setUnitDroppedValue}
+              deleteUnitTable={this.props.isExample ? () => undefined : this.deleteUnitTable}
               unit={this.props.unit}
-              deleteUnitTable={this.deleteUnitTable}
-              setUnitDoubleWeightedValue={this.setUnitDoubleWeightedValue}
-              setUnitDroppedValue={this.setUnitDroppedValue}
             />
           </Grid>
         </Grid>

@@ -74,8 +74,8 @@ class Settings extends React.Component {
           <DialogTitle id="form-dialog-title">Settings - {this.props.unit.title}</DialogTitle>
           <DialogContent>
             <Summary
-              onDoubleClick={this.props.setUnitDoubleWeightedValue}
-              onDroppedClick={this.props.setUnitDroppedValue}
+              onDoubleClick={this.props.isExample ? () => undefined : this.props.setUnitDoubleWeightedValue}
+              onDroppedClick={this.props.isExample ? () => undefined : this.props.setUnitDroppedValue}
               isDoubleWeighted={this.props.unit.double}
               isDroppedUnit={this.props.unit.dropped}
             />
