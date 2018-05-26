@@ -219,6 +219,8 @@ class Login extends React.Component {
               rows.
             </Typography>
             <UnitTable
+              setUnitDroppedStatus={() => undefined}
+              setUnitDoubleWeightStatus={() => undefined}
               isExample={this.state.isExample}
               yearIndex="example"
               tableIndex="example"
