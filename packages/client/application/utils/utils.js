@@ -198,6 +198,38 @@ export function getMaxAchievedFromUnits(units) {
   return achieved / getSizeOfValidUnits(units);
 }
 
+export function isUnitComplete(unit) {
+  let completed = true;
+
+  if (_.isNil(unit.content)) {
+    return false;
+  }
+
+  _.forEach(unit.content, (assignment) => {
+    const achieved = Number(assignment.achieved);
+
+    if (!_.isNumber(achieved) || achieved <= 0) completed = false;
+  });
+
+  return completed;
+}
+
+export function isYearCompleted(year) {
+  let completed = true;
+
+  if (_.isNil(year.units)) {
+    return false;
+  }
+
+  _.forEach(year.units, (unit) => {
+    if (!isUnitComplete(unit)) {
+      completed = false;
+    }
+  });
+
+  return completed;
+}
+
 export function getHappyEmoji() {
   const emojis = [
     '🎉',

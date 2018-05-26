@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
-import { getAchievedFromUnits } from '../../utils/utils';
+import { getAchievedFromUnits, isYearCompleted } from '../../utils/utils';
 
 const styles = (theme) => ({
   root: {
@@ -22,14 +22,11 @@ const styles = (theme) => ({
 
 const YearPreview = (props) => {
   const { classes } = props;
+  const completed = isYearCompleted(props.year);
 
   return (
     <Card className={classes.root}>
-      <Link
-        href={`/year/${props.index}`}
-        to={`/year/${props.index}`}
-        style={{ textDecoration: 'none' }}
-      >
+      <Link href={`/year/${props.index}`} to={`/year/${props.index}`} style={{ textDecoration: 'none' }}>
         <CardHeader
           classes={{
             title: classes.title,
@@ -39,7 +36,7 @@ const YearPreview = (props) => {
         />
         <CardContent>
           <Typography variant="caption">
-            Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%
+            Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%, {completed ? 'Completed' : ''}
           </Typography>
         </CardContent>
       </Link>
