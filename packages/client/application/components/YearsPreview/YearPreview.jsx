@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
-import { getAchievedFromUnits, isYearCompleted } from '../../utils/utils';
+import { getAchievedFromUnits } from '../../utils/utils';
 
 const styles = (theme) => ({
   root: {
@@ -22,7 +22,6 @@ const styles = (theme) => ({
 
 const YearPreview = (props) => {
   const { classes } = props;
-  const completed = isYearCompleted(props.year);
 
   return (
     <Card className={classes.root}>
@@ -35,9 +34,7 @@ const YearPreview = (props) => {
           subheader={`units: ${_.size(props.year.units)}`}
         />
         <CardContent>
-          <Typography variant="caption">
-            Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%, {completed ? 'Completed' : ''}
-          </Typography>
+          <Typography variant="caption">Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%</Typography>
         </CardContent>
       </Link>
     </Card>

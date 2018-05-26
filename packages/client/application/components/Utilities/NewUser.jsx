@@ -34,15 +34,10 @@ class NewUser extends React.Component {
   constructor(props) {
     super(props);
 
-    this.addUniversityDetails = this.addUniversityDetails.bind(this);
-    this.handleValueChange = this.handleValueChange.bind(this);
-    this.handleValueChangeYear = this.handleValueChangeYear.bind(this);
-    this.handleValueChangeUni = this.handleValueChangeUni.bind(this);
-
     this.state = {
-      year: this.props.profile.course_year || '',
-      course: this.props.profile.course_name || '',
-      university: this.props.profile.course_university || '',
+      year: props.profile.course_year || '',
+      course: props.profile.course_name || '',
+      university: props.profile.course_university || '',
 
       universityContent: {
         courses: [],
@@ -56,36 +51,36 @@ class NewUser extends React.Component {
     };
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.getUniversityContent();
-  }
+  };
 
   /**
    * Gets all the university content if the content is already empty in the state.
    */
-  getUniversityContent() {
+  getUniversityContent = () => {
     if (_.isNil(this.state.universityContent.courses[0])) {
       firebase.getUniversityContents().then((content) => this.setState({ universityContent: content }));
     }
-  }
+  };
 
-  handleValueChange(course) {
+  handleValueChange = (course) => {
     this.setState({
       course: course.target.value,
     });
-  }
+  };
 
-  handleValueChangeYear(year) {
+  handleValueChangeYear = (year) => {
     this.setState({
       year: year.target.value,
     });
-  }
+  };
 
-  handleValueChangeUni(university) {
+  handleValueChangeUni = (university) => {
     this.setState({
       university: university.target.value,
     });
-  }
+  };
 
   /**
    * When a user is first created, they are asked for there courseName and there courseYear
@@ -94,7 +89,7 @@ class NewUser extends React.Component {
    * some how turns out to be invalid the user will have to reenter it when they login
    * again.
    */
-  addUniversityDetails() {
+  addUniversityDetails = () => {
     const courseName = this.state.course;
     const courseYear = this.state.year;
     const courseUniversity = this.state.university;
@@ -143,7 +138,7 @@ class NewUser extends React.Component {
         this.props.updateProfile(profile);
       })
       .catch((error) => console.log(error));
-  }
+  };
 
   render() {
     const { classes, profile } = this.props;
