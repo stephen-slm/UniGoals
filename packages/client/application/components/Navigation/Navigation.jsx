@@ -1,12 +1,13 @@
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import AppBar from '@material-ui/core/AppBar';
+import Icon from '@material-ui/core/Icon';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
 
 import TemporaryDrawer from './TemporaryDrawer';
 import SignOutBox from './SignOutBox';
@@ -179,7 +180,9 @@ class Navigation extends React.Component {
               <div>UniGoals</div>
               {this.props.version}
             </Typography>
-            <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
+            <Link href="/" to="/">
+              <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
+            </Link>
           </Toolbar>
         </AppBar>
       </div>
