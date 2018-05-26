@@ -67,7 +67,7 @@ class Login extends React.Component {
     authentication.getRedirectResult().then((login) => {
       if (!_.isNil(login.user)) {
         authentication
-          .signInWithCredential(login.credential)
+          .signInAndRetrieveDataWithCredential(login.credential)
           .then(() => this.authenticate(login))
           .catch((error) => this.handleAuthenticationError(error));
       }
@@ -237,7 +237,7 @@ Login.propTypes = {
     provider: PropTypes.shape({}),
     authentication: PropTypes.shape({
       getRedirectResult: PropTypes.func,
-      signInWithCredential: PropTypes.func,
+      signInAndRetrieveDataWithCredential: PropTypes.func,
     }),
     createNewUser: PropTypes.func,
     getUserContent: PropTypes.func,

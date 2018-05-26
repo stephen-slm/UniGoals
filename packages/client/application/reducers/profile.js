@@ -22,6 +22,7 @@ export default function profile(
       return {
         givenName: null,
         familyName: null,
+        auth: false,
       };
     }
     case actionTypes.UPDATE_COURSE_NAME: {

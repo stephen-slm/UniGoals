@@ -66,6 +66,7 @@ path /users {
 
     /{userid} {
         read() { isCurrentUser(userid) }
+        write() { isCurrentUser(userid) }
         /years {
             read() { isCurrentUser(userid) }
             write() { isCurrentUser(userid) }

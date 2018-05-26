@@ -89,6 +89,7 @@ export default class Application extends React.Component {
                   profile={this.props.profile}
                   firebase={this.props.firebase}
                   updateProfile={this.props.updateProfile}
+                  removeProfile={this.props.removeProfile}
                 />
                 <PrivateRoute exact path="/settings" component={Years} {...this.props} />
                 <PrivateRoute exact path="/year/:yearIndex" component={Year} {...this.props} />

@@ -30,7 +30,9 @@ class DeleteModule extends React.Component {
       >
         <DialogTitle>{`Deleting ${this.props.title}`}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{`Are you sure you want to delete ${this.props.title}?`}</DialogContentText>
+          <DialogContentText>
+            {this.props.description === null ? `Are you sure you wish to delete ${this.props.title}?` : this.props.description}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.onClose} color="primary">
@@ -47,6 +49,7 @@ class DeleteModule extends React.Component {
 
 DeleteModule.propTypes = {
   title: PropTypes.string.isRequired,
+  description: PropTypes.string,
   disabled: PropTypes.bool,
   open: PropTypes.bool,
   onClose: PropTypes.func,
@@ -56,6 +59,7 @@ DeleteModule.propTypes = {
 DeleteModule.defaultProps = {
   onClose: () => undefined,
   onDelete: () => undefined,
+  description: null,
   disabled: false,
   open: false,
 };

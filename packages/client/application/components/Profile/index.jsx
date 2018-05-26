@@ -3,16 +3,19 @@
  * @Version 0.0.1
  */
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Save from '@material-ui/icons/Save';
+import Delete from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 import EditableText from '../Utilities/EditableText';
+import DeleteModule from '../Utilities/DeleteModule';
 
 const styles = (theme) => ({
   root: {
@@ -65,6 +68,7 @@ const styles = (theme) => ({
 class Profile extends React.Component {
   state = {
     profile: this.props.profile,
+    showDeletingAccount: false,
   };
 
   updateUniversityNameFirebase = (name) => {
@@ -130,11 +134,41 @@ class Profile extends React.Component {
       .catch((error) => console.log(error));
   }
 
+  showDeleteAccountBox = () => {
+    this.setState({
+      showDeletingAccount: !this.state.showDeletingAccount,
+    });
+  };
+
+  deleteAccount = () => {
+    this.props.firebase
+      .authenticate()
+      .then((login) => this.props.firebase.getCurrentUser().reauthenticateAndRetrieveDataWithCredential(login.credential))
+      .then(() => this.props.firebase.deleteAccount())
+      .then(() => {
+        console.log('deleted account');
+        this.props.removeProfile();
+        this.props.history.push('/');
+        this.props.history.go('/');
+        window.location.reload();
+      })
+      .catch((error) => console.log(error));
+  };
+
   render() {
     const { classes, firebase } = this.props;
 
     return (
       <div className={classes.root}>
+        <DeleteModule
+          description={`Are you sure you wish to delete your account ${
+            this.props.profile.given_name
+          }? This will require you quickly reauthentcate (desktop only) and cannot be undone  😥`}
+          title={`your UniGoals account ${this.props.profile.given_name}`}
+          open={this.state.showDeletingAccount}
+          onClose={this.showDeleteAccountBox}
+          onDelete={this.deleteAccount}
+        />
         <Paper className={classes.profileGrid}>
           <div>
             <Avatar alt={this.state.profile.name} src={firebase.getProfileImageUrl()} className={classes.avatar} />
@@ -201,6 +235,10 @@ class Profile extends React.Component {
             <Save className={classes.iconSmall} />
             Save
           </Button>
+          <Button className={classes.button} color="primary" variant="raised" size="small" onClick={this.showDeleteAccountBox}>
+            <Delete className={classes.iconSmall} />
+            Delete Account
+          </Button>
         </Paper>
       </div>
     );
@@ -210,8 +248,16 @@ class Profile extends React.Component {
 Profile.propTypes = {
   classes: PropTypes.shape().isRequired,
   updateProfile: PropTypes.func.isRequired,
+  removeProfile: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+    go: PropTypes.func,
+  }).isRequired,
   firebase: PropTypes.shape({
+    authenticate: PropTypes.func,
+    getCurrentUser: PropTypes.func,
     getProfileImageUrl: PropTypes.func,
+    deleteAccount: PropTypes.func,
     updateProfile: PropTypes.func,
   }).isRequired,
   profile: PropTypes.shape({
@@ -229,4 +275,4 @@ Profile.propTypes = {
   }).isRequired,
 };
 
-export default withStyles(styles)(Profile);
+export default withRouter(withStyles(styles)(Profile));

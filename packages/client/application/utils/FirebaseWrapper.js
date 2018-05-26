@@ -92,6 +92,13 @@ export default class FirebaseWrapper {
     return Promise.resolve();
   }
 
+  /**
+   * returns the current user
+   */
+  getCurrentUser() {
+    return this.authentication.currentUser;
+  }
+
   // returns all the users content
   getUserContent() {
     return this.database
@@ -175,6 +182,17 @@ export default class FirebaseWrapper {
    */
   updateProfile(profile) {
     return this.database.ref(`users/${this.getUid()}/profile`).set(profile);
+  }
+
+  /**
+   * deletes the current account
+   */
+  deleteAccount() {
+    return this.database
+      .ref(`users/${this.getUid()}`)
+      .remove()
+      .then(() => this.getCurrentUser().delete())
+      .then(() => this.authentication.signOut());
   }
 
   /**
