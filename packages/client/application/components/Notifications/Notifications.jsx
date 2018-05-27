@@ -9,10 +9,16 @@ import NoNotifications from './NoNotifications';
 
 import firebase from '../../utils/FirebaseWrapper';
 
-const styles = () => ({
+const styles = (theme) => ({
   root: {
     color: 'white',
     flexGrow: 1,
+    marginTop: theme.spacing.unit * 2,
+    maxWidth: '40%',
+    margin: '0 auto',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: '65%',
+    },
   },
 });
 

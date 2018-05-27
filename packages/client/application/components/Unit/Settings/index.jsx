@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import DeleteModule from '../../Utilities/DeleteModule';
+import ModuleWrapper from '../../Utilities/ModuleWrapper';
 import Summary from '../Summary';
 
 import * as exportings from '../../../utils/export';
@@ -58,7 +58,7 @@ class Settings extends React.Component {
         <IconButton style={{ float: 'right' }} onClick={this.handleClickOpen}>
           <Icon color="primary">settings</Icon>
         </IconButton>
-        <DeleteModule
+        <ModuleWrapper
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
           title={this.props.unit.title}

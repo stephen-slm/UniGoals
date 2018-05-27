@@ -12,7 +12,7 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class DeleteModule extends React.Component {
+class ModuleWrapper extends React.Component {
   onDelete = () => {
     this.props.onClose();
     this.props.onDelete();
@@ -21,7 +21,6 @@ class DeleteModule extends React.Component {
   render() {
     return (
       <Dialog
-        style={{ visibility: this.props.open ? 'visible' : 'hidden' }}
         open={this.props.open && !this.props.disabled}
         TransitionComponent={Transition}
         onClose={this.props.onClose}
@@ -47,7 +46,7 @@ class DeleteModule extends React.Component {
   }
 }
 
-DeleteModule.propTypes = {
+ModuleWrapper.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   disabled: PropTypes.bool,
@@ -56,7 +55,7 @@ DeleteModule.propTypes = {
   onDelete: PropTypes.func,
 };
 
-DeleteModule.defaultProps = {
+ModuleWrapper.defaultProps = {
   onClose: () => undefined,
   onDelete: () => undefined,
   description: null,
@@ -64,4 +63,4 @@ DeleteModule.defaultProps = {
   open: false,
 };
 
-export default DeleteModule;
+export default ModuleWrapper;

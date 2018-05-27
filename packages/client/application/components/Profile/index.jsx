@@ -16,7 +16,7 @@ import React from 'react';
 
 import firebase from '../../utils/FirebaseWrapper';
 import EditableText from '../Utilities/EditableText';
-import DeleteModule from '../Utilities/DeleteModule';
+import ModuleWrapper from '../Utilities/ModuleWrapper';
 
 const styles = (theme) => ({
   root: {
@@ -161,10 +161,10 @@ class Profile extends React.Component {
 
     return (
       <div className={classes.root}>
-        <DeleteModule
+        <ModuleWrapper
           description={`Are you sure you wish to delete your account ${
             this.props.profile.given_name
-          }? This will require you quickly reauthentcate (desktop only) and cannot be undone  😥`}
+          }? This will require you to quickly reauthentcate (desktop only) and cannot be undone  😥`}
           title={`your UniGoals account ${this.props.profile.given_name}`}
           open={this.state.showDeletingAccount}
           onClose={this.showDeleteAccountBox}
