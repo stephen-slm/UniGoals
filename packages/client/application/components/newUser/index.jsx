@@ -230,7 +230,7 @@ class NewUser extends React.Component {
       });
     }
 
-    this.setState({
+    return this.setState({
       activeStep: this.state.activeStep + 1,
     });
   };
