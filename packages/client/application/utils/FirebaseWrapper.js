@@ -189,7 +189,21 @@ class FirebaseWrapper {
    * @param profile the profile that is being updated
    */
   updateProfile(profile) {
-    return this.database.ref(`users/${this.getUid()}/profile`).set(profile);
+    const prof = _.pick(profile, [
+      'admin',
+      'course_name',
+      'course_university',
+      'course_year',
+      'email',
+      'family_name',
+      'given_name',
+      'hd',
+      'last_login',
+      'login_count',
+      'name',
+    ]);
+
+    return this.database.ref(`users/${this.getUid()}/profile`).set(prof);
   }
 
   /**
@@ -497,10 +511,9 @@ class FirebaseWrapper {
         given_name: profile.displayName.split(' ')[0],
         family_name: profile.displayName.split(' ')[1],
         email: profile.email,
-        picture: profile.photoURL,
         name: profile.displayName,
-        hd: profile.hd,
         last_login: Date.now(),
+        login_count: 1,
       })
       .then(() => this.createSampleUnitsForNewUser())
       .then(() => this.insertWelcomeNotification())

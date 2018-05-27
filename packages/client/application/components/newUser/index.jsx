@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
@@ -65,118 +64,10 @@ class NewUser extends React.Component {
       invalidCourseYear: false,
       invalidCourseUni: false,
     };
-
-    debugger;
   }
 
   componentDidMount = () => {
     this.getUniversityContent();
-  };
-
-  /**
-   * Gets all the university content if the content is already empty in the state.
-   */
-  getUniversityContent = () => {
-    if (_.isNil(this.state.universityContent.courses[0])) {
-      firebase.getUniversityContents().then((content) => this.setState({ universityContent: content }));
-    }
-  };
-
-  handleNext = (activeStep) => {
-    const courseName = this.state.course;
-    const courseYear = this.state.year;
-    const courseUniversity = this.state.university;
-    const courseYearNum = parseInt(this.universityYear, 10);
-
-    let invalidCourseName = false;
-    let invalidCourseYear = false;
-    let invalidCourseUni = false;
-    let shouldContinue = true;
-
-    if (this.state.activeStep === 1) {
-      if (_.isNil(courseYear) || _.isNaN(courseYear) || !_.isNumber(courseYearNum) || courseYear.length > 2 || courseYear === '') {
-        invalidCourseYear = true;
-        shouldContinue = false;
-      }
-    }
-
-    if (this.state.activeStep === 2) {
-      if (_.isNil(courseName) || _.isNaN(courseName) || courseName.length < 5 || courseName.length > 50 || courseName === '') {
-        invalidCourseName = true;
-        shouldContinue = false;
-      }
-    }
-
-    if (this.state.activeStep === 3) {
-      if (
-        _.isNil(courseUniversity) ||
-        _.isNaN(courseUniversity) ||
-        courseUniversity.length < 5 ||
-        courseUniversity.length > 50 ||
-        courseUniversity === ''
-      ) {
-        invalidCourseUni = true;
-        shouldContinue = false;
-      }
-    }
-
-    if (invalidCourseUni || invalidCourseName || invalidCourseYear || !shouldContinue) {
-      return this.setState({
-        invalidCourseName,
-        invalidCourseYear,
-        invalidCourseUni,
-      });
-    }
-
-    if (this.state.activeStep === getSteps() - 1) {
-      return firebase
-        .addUniversityDetails(courseName, courseYear, courseUniversity)
-        .then(() => {
-          const profile = Object.assign(this.props.profile, {
-            course_name: courseName,
-            course_year: courseYear,
-            course_university: courseUniversity,
-            new: false,
-          });
-
-          this.props.updateProfile(profile);
-        })
-        .catch((error) => console.log(error));
-    }
-
-    this.setState({
-      activeStep: this.state.activeStep + 1,
-    });
-  };
-
-  handleBack = () => {
-    this.setState({
-      activeStep: this.state.activeStep - 1,
-    });
-  };
-
-  handleReset = () => {
-    this.setState({
-      activeStep: 0,
-    });
-  };
-
-  handleValueChange = (course) => {
-    this.setState({
-      course: course.target.value,
-    });
-  };
-
-  handleValueChangeYear = (year) => {
-    this.setState({
-      year: year.target.value,
-    });
-  };
-
-  handleValueChangeUni = (university) => {
-    this.setState({
-      university: university.target.value,
-    });
   };
 
   getStepContent = (step, classes) => {
@@ -236,6 +127,113 @@ class NewUser extends React.Component {
         return 'Unknown step';
     }
   };
+
+  getUniversityContent = () => {
+    if (_.isNil(this.state.universityContent.courses[0])) {
+      firebase.getUniversityContents().then((content) => this.setState({ universityContent: content }));
+    }
+  };
+
+  handleBack = () => {
+    this.setState({
+      activeStep: this.state.activeStep - 1,
+    });
+  };
+
+  handleReset = () => {
+    this.setState({
+      activeStep: 0,
+    });
+  };
+
+  handleValueChange = (course) => {
+    this.setState({
+      course: course.target.value,
+    });
+  };
+
+  handleValueChangeYear = (year) => {
+    this.setState({
+      year: year.target.value,
+    });
+  };
+
+  handleValueChangeUni = (university) => {
+    this.setState({
+      university: university.target.value,
+    });
+  };
+
+  completeSetup = () => {
+    const courseName = this.state.course;
+    const courseYear = this.state.year;
+    const courseUniversity = this.state.university;
+
+    return firebase
+      .addUniversityDetails(courseName, courseYear, courseUniversity)
+      .then(() => {
+        const profile = Object.assign(this.props.profile, {
+          course_name: courseName,
+          course_year: courseYear,
+          course_university: courseUniversity,
+          new: false,
+        });
+
+        this.props.updateProfile(profile);
+      })
+      .catch((error) => console.log(error));
+  };
+
+  handleNext = () => {
+    const courseName = this.state.course;
+    const courseYear = this.state.year;
+    const courseUniversity = this.state.university;
+    const courseYearNum = parseInt(this.universityYear, 10);
+
+    let invalidCourseName = false;
+    let invalidCourseYear = false;
+    let invalidCourseUni = false;
+    let shouldContinue = true;
+
+    if (this.state.activeStep === 1) {
+      if (_.isNil(courseYear) || _.isNaN(courseYear) || !_.isNumber(courseYearNum) || courseYear.length > 2 || courseYear === '') {
+        invalidCourseYear = true;
+        shouldContinue = false;
+      }
+    }
+
+    if (this.state.activeStep === 2) {
+      if (_.isNil(courseName) || _.isNaN(courseName) || courseName.length < 5 || courseName.length > 50 || courseName === '') {
+        invalidCourseName = true;
+        shouldContinue = false;
+      }
+    }
+
+    if (this.state.activeStep === 3) {
+      if (
+        _.isNil(courseUniversity) ||
+        _.isNaN(courseUniversity) ||
+        courseUniversity.length < 5 ||
+        courseUniversity.length > 50 ||
+        courseUniversity === ''
+      ) {
+        invalidCourseUni = true;
+        shouldContinue = false;
+      }
+    }
+
+    if (invalidCourseUni || invalidCourseName || invalidCourseYear || !shouldContinue) {
+      return this.setState({
+        invalidCourseName,
+        invalidCourseYear,
+        invalidCourseUni,
+      });
+    }
+
+    this.setState({
+      activeStep: this.state.activeStep + 1,
+    });
+  };
   render() {
     const { classes, profile } = this.props;
     const steps = getSteps();
@@ -277,6 +275,9 @@ class NewUser extends React.Component {
                 <Typography>All steps completed - you&quot;re now ready to use UniGoals</Typography>
                 <Button onClick={this.handleReset} className={classes.button}>
                   Reset
+                </Button>
+                <Button onClick={this.completeSetup} className={classes.button}>
+                  Continue
                 </Button>
               </Paper>
             )}

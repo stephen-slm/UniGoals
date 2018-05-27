@@ -91,9 +91,7 @@ path /users {
             /course_name is NameString;
             /course_university is NameString;
             /given_name is NameString;
-            /hd is NameString;
             /name is NameString;
-            /picture is MessageString;
             /last_login is LastLogin;
             /login_count is Number;
             /login_count {

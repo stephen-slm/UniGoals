@@ -4,8 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import YearsPreview from '../YearsPreview';
-// import NewUser from '../Utilities/NewUser';
-import NewUser from '../newUser';
+import NewUser from '../NewUser';
 
 const styles = (theme) => ({
   root: {
