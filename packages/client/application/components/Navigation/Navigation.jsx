@@ -98,10 +98,13 @@ class Navigation extends React.Component {
      * out of the application, then the profile of the user will be removed to stop caching
      * issue when they login. Finally the route address will be reset and the page reloaded.
      */
-    firebase.authentication.signOut();
-    this.props.removeProfile();
-    this.props.history.go('/');
-    window.location.reload();
+    firebase.authentication
+      .signOut()
+      .then(() => {
+        this.props.removeProfile();
+        this.props.history.go('/');
+      })
+      .catch((error) => console.log(error));
   }
 
   /**
