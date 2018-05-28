@@ -1,17 +1,22 @@
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import { withStyles } from '@material-ui/core/styles';
+import DeleteIcon from '@material-ui/icons/Delete';
+import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React from 'react';
+import _ from 'lodash';
 
 import ModuleWrapper from '../../Utilities/ModuleWrapper';
 import * as exportings from '../../../utils/export';
+
+import { getAchievedFromUnit } from '../../../utils/utils';
 
 const styles = (theme) => ({
   button: {
@@ -70,6 +75,19 @@ class Settings extends React.Component {
               </Grid>
               <Grid item />
             </Grid>
+            <Grid style={{ flex: '1' }}>
+              <Typography variant="subheading">Units</Typography>
+              {_.map(this.props.year.units, (unit) => (
+                <Grid container>
+                  <Grid item xs={10}>
+                    <Typography variant="caption">{unit.title}</Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Typography variant="caption">{getAchievedFromUnit(unit, unit.double).toFixed(2)}%</Typography>
+                  </Grid>
+                </Grid>
+              ))}
+            </Grid>
           </DialogContent>
           <DialogActions style={{ display: 'block' }}>
             <Button style={{ float: 'left' }} onClick={this.showDeleteUnitBox} color="primary">
@@ -91,6 +109,7 @@ Settings.propTypes = {
   classes: PropTypes.shape().isRequired,
   year: PropTypes.shape({
     title: PropTypes.string,
+    units: PropTypes.shape({}),
   }).isRequired,
 };
 
