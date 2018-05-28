@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
-import { getAchievedFromUnit } from '../../utils/utils';
+import { getAchievedFromUnit, getWeightingFromUnit } from '../../utils/utils';
 import firebase from '../../utils/FirebaseWrapper';
 import * as constants from '../../utils/constants';
 
@@ -235,7 +235,7 @@ class UnitTable extends React.Component {
     const { classes } = this.props;
     const totals = {
       achieved: getAchievedFromUnit(this.props.unit, this.props.unit.double).toFixed(2),
-      weighting: 0,
+      weighting: getWeightingFromUnit(this.props.unit).toFixed(0),
     };
 
     return (
@@ -363,12 +363,13 @@ UnitTable.propTypes = {
     title: PropTypes.string,
     double: PropTypes.bool,
     dropped: PropTypes.bool,
-  }).isRequired,
+  }),
   isExample: PropTypes.bool,
 };
 
 UnitTable.defaultProps = {
   isExample: false,
+  unit: [],
   updateRowContent: () => {},
   removeUnitRow: () => {},
   insertUnitRow: () => {},

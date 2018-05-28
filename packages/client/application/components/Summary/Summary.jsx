@@ -17,12 +17,15 @@ import firebase from '../../utils/FirebaseWrapper';
 const styles = (theme) => ({
   root: {
     margin: '25px auto',
-    maxWidth: '80%',
+    maxWidth: '60%',
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
+    [theme.breakpoints.down('md')]: {
+      maxWidth: '70%',
+    },
     [theme.breakpoints.down('sm')]: {
       maxWidth: '90%',
     },
@@ -181,7 +184,7 @@ Summary.propTypes = {
   updateYearTitle: PropTypes.func.isRequired,
   removeYear: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  units: PropTypes.shape({}).isRequired,
+  units: PropTypes.shape({}),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
@@ -196,6 +199,7 @@ Summary.propTypes = {
 
 Summary.defaultProps = {
   isExample: false,
+  units: {},
 };
 
 export default withStyles(styles)(Summary);

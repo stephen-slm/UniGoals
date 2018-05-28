@@ -5,7 +5,7 @@ const BUILD_DIR = path.resolve(__dirname, 'public/components/js');
 const APP_DIR = path.resolve(__dirname, 'application');
 
 const config = {
-  devtool: 'eval',
+  devtool: 'cheap-module-source-map',
   entry: `${APP_DIR}/index.jsx`,
   output: {
     path: BUILD_DIR,

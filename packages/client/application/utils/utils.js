@@ -83,6 +83,17 @@ export function getAchievedFromUnit(unit, pure = false) {
   return achieved;
 }
 
+export function getWeightingFromUnit(unit) {
+  const { content } = unit;
+  let weighting = 0;
+
+  _.forEach(content, (assignment) => {
+    weighting += Number(_.get(assignment, 'weighting', 0));
+  });
+
+  return weighting;
+}
+
 /**
  * gets the average of a unit
  * @param unit the unit being adjusted

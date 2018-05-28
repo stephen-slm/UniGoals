@@ -13,11 +13,14 @@ import Expandable from '../Table/Expandable';
 const styles = (theme) => ({
   root: {
     margin: '0 auto',
-    maxWidth: '75%',
+    maxWidth: '60%',
     marginBottom: theme.spacing.unit * 5,
     paddingBottom: theme.spacing.unit * 3,
+    [theme.breakpoints.down('md')]: {
+      maxWidth: '70%',
+    },
     [theme.breakpoints.down('sm')]: {
-      maxWidth: '95%',
+      maxWidth: '90%',
     },
   },
   button: {

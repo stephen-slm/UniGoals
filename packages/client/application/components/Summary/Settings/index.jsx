@@ -76,8 +76,8 @@ class Settings extends React.Component {
             </Grid>
             <Grid style={{ flex: '1' }}>
               <Typography variant="subheading">Units</Typography>
-              {_.map(this.props.year.units, (unit) => (
-                <Grid container>
+              {_.map(this.props.year.units, (unit, index) => (
+                <Grid container key={index}>
                   <Grid item xs={10}>
                     <Typography variant="caption">{unit.title}</Typography>
                   </Grid>

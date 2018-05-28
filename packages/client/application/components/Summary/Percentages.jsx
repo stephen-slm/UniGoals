@@ -48,14 +48,14 @@ class Perentages extends React.Component {
 
     if (this.props.isSummary) {
       percentages = {
-        max: getMaxAchievedFromUnits(this.props.units).toFixed(2),
-        average: getAverageFromUnits(this.props.units).toFixed(2),
+        max: _.defaultTo(getMaxAchievedFromUnits(this.props.units), 0).toFixed(2),
+        average: _.defaultTo(getAverageFromUnits(this.props.units), 0).toFixed(2),
       };
-      total = getAchievedFromUnits(this.props.units).toFixed(2);
+      total = _.defaultTo(getAchievedFromUnits(this.props.units), 0).toFixed(2);
     } else {
       percentages = {
-        max: getMaxAchievedFromUnit(this.props.unit).toFixed(2),
-        average: getAverageFromUnit(this.props.unit).toFixed(2),
+        max: _.defaultTo(getMaxAchievedFromUnit(this.props.unit), 0).toFixed(2),
+        average: _.defaultTo(getAverageFromUnit(this.props.unit), 0).toFixed(2),
       };
       total = getAchievedFromUnit(this.props.unit).toFixed(2);
       if (this.props.unit.double) {
