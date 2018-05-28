@@ -5,44 +5,30 @@ import { withStyles } from '@material-ui/core/styles';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import Typography from '@material-ui/core/Typography';
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
 import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
-  root: {
-    flexGrow: 1,
-  },
   heading: {
+    marginTop: theme.spacing.unit / 2,
+    flexBasis: '33.33%',
+    flexShrink: 0,
+  },
+  secondaryHeading: {
     fontSize: theme.typography.pxToRem(15),
-    fontWeight: theme.typography.fontWeightRegular,
   },
 });
 
 class Notification extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.dismissNotification = this.dismissNotification.bind(this);
-    this.parseNotification = this.parseNotification.bind(this);
-
-    this.state = {
-      title: props.notification.title,
-      message: this.parseNotification(),
-      keyIndex: props.keyIndex,
-    };
-  }
-
-  dismissNotification() {
-    this.props.removeNotification(this.state.keyIndex);
-    firebase.dismissNotification(this.state.keyIndex);
-  }
-
-  parseNotification() {
-    return this.props.notification.message;
-  }
+  dismissNotification = () => {
+    this.props.removeNotification(this.props.keyIndex);
+    firebase.dismissNotification(this.props.keyIndex);
+  };
 
   render() {
     const { classes } = this.props;
@@ -50,12 +36,20 @@ class Notification extends React.Component {
     return (
       <ExpansionPanel>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>{this.state.title}</Typography>
+          <Typography variant="caption" className={classes.heading}>
+            {new Date(this.props.notification.timestamp).toDateString()}
+          </Typography>
+          <Typography className={classes.secondaryHeading}>{this.props.notification.title}</Typography>
         </ExpansionPanelSummary>
-        <ExpansionPanelDetails style={{ display: 'block' }}>
-          <Typography component="div" dangerouslySetInnerHTML={{ __html: this.state.message }} />
-          <Button onClick={this.dismissNotification}>Dismiss</Button>
+        <ExpansionPanelDetails>
+          <Typography dangerouslySetInnerHTML={{ __html: this.props.notification.message }} />
         </ExpansionPanelDetails>
+        <Divider />
+        <ExpansionPanelActions>
+          <Button size="small" onClick={this.dismissNotification}>
+            Dismiss
+          </Button>
+        </ExpansionPanelActions>
       </ExpansionPanel>
     );
   }
@@ -66,6 +60,7 @@ Notification.propTypes = {
   notification: PropTypes.shape({
     title: PropTypes.string,
     message: PropTypes.string,
+    timestamp: PropTypes.number,
   }).isRequired,
   removeNotification: PropTypes.func.isRequired,
   keyIndex: PropTypes.string.isRequired,

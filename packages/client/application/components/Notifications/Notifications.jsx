@@ -14,10 +14,10 @@ const styles = (theme) => ({
     color: 'white',
     flexGrow: 1,
     marginTop: theme.spacing.unit * 2,
-    maxWidth: '40%',
+    maxWidth: '55%',
     margin: '0 auto',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '65%',
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: '95%',
     },
   },
 });
