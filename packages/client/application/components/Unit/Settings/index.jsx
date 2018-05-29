@@ -59,11 +59,13 @@ class Settings extends React.Component {
           <Icon color="primary">settings</Icon>
         </IconButton>
         <ModuleWrapper
+          description={`Are you sure you wish to delete ${this.props.unit.title}?`}
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
-          title={this.props.unit.title}
-          onDelete={this.props.deleteUnitTable}
+          title={`Deleting ${this.props.unit.title}`}
+          onComplete={this.props.deleteUnitTable}
           onClose={this.showDeleteUnitBox}
+          completeText="Delete"
         />
         <Dialog
           open={this.state.open}

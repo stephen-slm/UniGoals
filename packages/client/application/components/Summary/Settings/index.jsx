@@ -57,11 +57,13 @@ class Settings extends React.Component {
           <Icon color="primary">settings</Icon>
         </IconButton>
         <ModuleWrapper
+          description={`Are you sure you wish to delete ${this.props.year.title}?`}
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
-          title={this.props.year.title}
-          onDelete={this.props.deleteYear}
+          title={`Deleting ${this.props.year.title}`}
+          onComplete={this.props.deleteYear}
           onClose={this.showDeleteUnitBox}
+          completeText="Delete"
         />
         <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Settings - {this.props.year.title}</DialogTitle>

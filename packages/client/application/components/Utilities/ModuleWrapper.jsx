@@ -13,9 +13,9 @@ function Transition(props) {
 }
 
 class ModuleWrapper extends React.Component {
-  onDelete = () => {
+  onComplete = () => {
     this.props.onClose();
-    this.props.onDelete();
+    this.props.onComplete();
   };
 
   render() {
@@ -24,21 +24,19 @@ class ModuleWrapper extends React.Component {
         open={this.props.open && !this.props.disabled}
         TransitionComponent={Transition}
         onClose={this.props.onClose}
-        aria-labelledby={`delete dialog for ${this.props.title}`}
-        aria-describedby={`A delete box used for deleting ${this.props.title}`}
+        aria-labelledby={this.props.title}
+        aria-describedby={this.props.title}
       >
-        <DialogTitle>{`Deleting ${this.props.title}`}</DialogTitle>
+        <DialogTitle>{this.props.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {this.props.description === null ? `Are you sure you wish to delete ${this.props.title}?` : this.props.description}
-          </DialogContentText>
+          <DialogContentText>{this.props.description}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.onClose} color="primary">
-            Close
+            {this.props.closeText}
           </Button>
-          <Button onClick={this.onDelete} color="primary">
-            Delete
+          <Button onClick={this.onComplete} color="primary">
+            {this.props.completeText}
           </Button>
         </DialogActions>
       </Dialog>
@@ -48,19 +46,22 @@ class ModuleWrapper extends React.Component {
 
 ModuleWrapper.propTypes = {
   title: PropTypes.string.isRequired,
-  description: PropTypes.string,
+  description: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  onDelete: PropTypes.func,
+  onComplete: PropTypes.func,
+  closeText: PropTypes.string,
+  completeText: PropTypes.string,
 };
 
 ModuleWrapper.defaultProps = {
   onClose: () => undefined,
-  onDelete: () => undefined,
-  description: null,
+  onComplete: () => undefined,
   disabled: false,
   open: false,
+  closeText: 'Close',
+  completeText: 'Complete',
 };
 
 export default ModuleWrapper;

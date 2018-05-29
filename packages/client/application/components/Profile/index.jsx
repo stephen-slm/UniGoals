@@ -165,10 +165,11 @@ class Profile extends React.Component {
           description={`Are you sure you wish to delete your account ${
             this.props.profile.given_name
           }? This will require you to quickly reauthentcate (desktop only) and cannot be undone  😥`}
-          title={`your UniGoals account ${this.props.profile.given_name}`}
+          title={`Deleting your UniGoals account ${this.props.profile.given_name}`}
           open={this.state.showDeletingAccount}
           onClose={this.showDeleteAccountBox}
-          onDelete={this.deleteAccount}
+          onComplete={this.deleteAccount}
+          completeText="Delete"
         />
         <Paper className={classes.profileGrid}>
           <div>
