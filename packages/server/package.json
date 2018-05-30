@@ -8,7 +8,7 @@
     "build:ts": "tsc",
     "watch:ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json",
-    "start": "npm run build && node ./dist/index.js",
+    "start": "ts-node src/index.ts",
     "start:debug": "node --inspect ./dist/index.js",
     "test": "node ./node_modules/mocha/bin/mocha --exit ./dist/tests/index.test.js",
     "test:travis": "SET TRAVIS=true && node ./node_modules/mocha/bin/mocha --exit ./dist/tests/index.test.js"
@@ -30,6 +30,7 @@
     "@types/node": "^7.0.12",
     "@types/winston": "^2.3.7",
     "babel-eslint": "8.0.3",
+    "ts-node": "^6.0.5",
     "tslint": "^5.8.0",
     "tslint-config-airbnb": "^5.4.2",
     "typescript": "^2.4.0"
