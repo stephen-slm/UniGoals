@@ -87,6 +87,7 @@ path /users {
             read() { isCurrentUser(userid) }
             write() { isCurrentUser(userid) }
             /email is EmailString;
+            /new is Boolean;
             /family_name is NameString;
             /course_name is NameString;
             /course_university is NameString;

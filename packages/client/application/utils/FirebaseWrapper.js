@@ -97,6 +97,7 @@ class FirebaseWrapper {
     this.database.ref(`users/${this.getUid()}/profile/course_name`).set(courseName);
     this.database.ref(`users/${this.getUid()}/profile/course_year`).set(courseYear);
     this.database.ref(`users/${this.getUid()}/profile/course_university`).set(courseUniversity);
+    this.database.ref(`users/${this.getUid()}/profile/new`).set(false);
     return Promise.resolve();
   }
 
@@ -514,6 +515,7 @@ class FirebaseWrapper {
         name: profile.displayName,
         last_login: Date.now(),
         login_count: 1,
+        new: true,
       })
       .then(() => this.createSampleUnitsForNewUser())
       .then(() => this.insertWelcomeNotification())

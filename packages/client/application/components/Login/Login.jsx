@@ -124,7 +124,7 @@ class Login extends React.Component {
         firebase
           .createNewUser()
           .then(() => firebase.getUserContent())
-          .then((content) => this.updateContentForUser(content, false, true))
+          .then((content) => this.updateContentForUser(Object.assign(content, { new: true }), false, true))
           .then(() => firebase.updateLoginCountAndDate())
           .then(() => this.setState({ redirectToReferrer: true }))
           .catch((error) => reject(error));
