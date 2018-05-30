@@ -4,16 +4,28 @@ import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import uuid from 'uuid/v4';
 
+import classNames from 'classnames';
+
 const styles = () => ({
   root: {
-    position: 'relative',
-    display: 'inline-block',
+    overflow: ' hidden',
+    display: ' inline-block',
   },
   span: {
-    display: 'block',
+    border: '1px transparent solid',
+    borderRadius: '3px',
+    paddingLeft: '6px',
+    paddingRight: '6px',
     '&:hover': {
-      border: '1px solid #eaeaea',
+      borderColor: '#a8adb3',
     },
+  },
+  spanConstant: {
+    border: '1px transparent solid',
+    borderColor: '#a8adb3',
+    borderRadius: '3px',
+    paddingLeft: '6px',
+    paddingRight: '6px',
   },
 });
 
@@ -22,14 +34,6 @@ class EditableText extends React.Component {
     super(props);
 
     const value = props.value == null ? props.defaultValue : props.value;
-
-    this.handleInputFocus = this.handleInputFocus.bind(this);
-    this.handleTextChange = this.handleTextChange.bind(this);
-    this.maybeRenderInput = this.maybeRenderInput.bind(this);
-    this.handleKeyEvent = this.handleKeyEvent.bind(this);
-    this.cancelEditing = this.cancelEditing.bind(this);
-    this.toggleEditing = this.toggleEditing.bind(this);
-    this.handleFocus = this.handleFocus.bind(this);
 
     this.state = {
       isEditing: props.isEditing === true && props.disabled === false,
@@ -40,7 +44,7 @@ class EditableText extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps = (nextProps) => {
     const state = {};
     if (nextProps.value != null) {
       state.value = nextProps.value;
@@ -52,14 +56,14 @@ class EditableText extends React.Component {
       state.isEditing = false;
     }
     this.setState(state);
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.isEditing && !prevState.isEditing) {
       this.props.onEdit();
     }
   }
-  cancelEditing() {
+  cancelEditing = () => {
     const { lastValue, value } = this.state;
     this.setState({ isEditing: false, value: lastValue });
     this.props.onChangeState(false);
@@ -67,9 +71,9 @@ class EditableText extends React.Component {
       this.props.onChange(lastValue);
     }
     this.props.onCancel(lastValue);
-  }
+  };
 
-  toggleEditing() {
+  toggleEditing = () => {
     if (this.state.isEditing) {
       const { value } = this.state;
       this.setState({ isEditing: false, lastValue: value });
@@ -79,16 +83,16 @@ class EditableText extends React.Component {
       this.setState({ isEditing: true });
       this.props.onChangeState(true);
     }
-  }
+  };
 
-  handleFocus() {
+  handleFocus = () => {
     if (!this.props.disabled) {
       this.setState({ isEditing: true });
       this.props.onChangeState(true);
     }
-  }
+  };
 
-  handleTextChange(event) {
+  handleTextChange = (event) => {
     const { value } = event.target;
 
     // state value should be updated only when uncontrolled
@@ -96,9 +100,9 @@ class EditableText extends React.Component {
       this.setState({ value });
     }
     this.props.onChange(value);
-  }
+  };
 
-  handleKeyEvent(event) {
+  handleKeyEvent = (event) => {
     const { altKey, shiftKey, which } = event;
     if (which === 27) {
       this.cancelEditing();
@@ -114,18 +118,18 @@ class EditableText extends React.Component {
 
       this.toggleEditing();
     }
-  }
+  };
 
   /**
    * Puts the Cursor at the end of the eletement, we use getElement
    * because the ref is not set fast enough
    */
-  handleInputFocus() {
+  handleInputFocus = () => {
     const inputElement = document.getElementById(`editableEdit-${this.state.inputId}`);
     const { value } = inputElement.value;
     inputElement.value = null;
     inputElement.value = value;
-  }
+  };
 
   maybeRenderInput = (value) => {
     const { maxLength, classes } = this.props;
@@ -153,14 +157,11 @@ class EditableText extends React.Component {
       <input
         autoFocus // eslint-disable-line
         onFocus={this.handleInputFocus}
-        className={this.props.className}
+        className={classNames(classes.spanConstant, this.props.className)}
         size={Number(this.state.value.length)}
         type="text"
         style={{
-          margin: '0px',
-          padding: '0px',
           wordWrap: 'break-word',
-          width: 'auto',
           textAlign: this.state.centerText ? 'center' : 'inherit',
         }}
         id={`editableEdit-${this.state.inputId}`}
@@ -175,7 +176,7 @@ class EditableText extends React.Component {
     const tabIndex = this.state.isEditing || disabled ? null : 0;
 
     return (
-      <Typography component="div" className={classes.root} onFocus={this.handleFocus} tabIndex={tabIndex}>
+      <Typography component="span" className={classes.root} onFocus={this.handleFocus} tabIndex={tabIndex}>
         {this.maybeRenderInput(value)}
       </Typography>
     );
