@@ -88,7 +88,7 @@ class FirebaseWrapper {
 
     const insertingNotificationKey = insertingWelcomeNotification.push({
       title: `Welcome ${this.authentication.currentUser.displayName}!`,
-      message: `Welcome to UniGoals! UniGoals is currently in Alpha at version ${
+      message: `Welcome to UniGoals! Currently in Alpha at version ${
         packageJson.version
       }, if you have any problems please send feedback via the menu.`,
       timestamp: Date.now(),
