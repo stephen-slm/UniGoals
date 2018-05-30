@@ -41,3 +41,4 @@ bundle.js
 serviceAccount.ts
 dist
 package-lock.json
+packages/server/src/components/service.json
