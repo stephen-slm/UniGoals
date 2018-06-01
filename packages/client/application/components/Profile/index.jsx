@@ -3,16 +3,20 @@
  * @Version 0.0.1
  */
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Save from '@material-ui/icons/Save';
+import Delete from '@material-ui/icons/Delete';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import firebase from '../../utils/FirebaseWrapper';
 import EditableText from '../Utilities/EditableText';
+import ModuleWrapper from '../Utilities/ModuleWrapper';
 
 const styles = (theme) => ({
   root: {
@@ -63,8 +67,16 @@ const styles = (theme) => ({
 });
 
 class Profile extends React.Component {
+  static updateFirebaseProfile(profile) {
+    firebase
+      .updateProfile(profile)
+      .then(() => console.log('saved changes'))
+      .catch((error) => console.log(error));
+  }
+
   state = {
     profile: this.props.profile,
+    showDeletingAccount: false,
   };
 
   updateUniversityNameFirebase = (name) => {
@@ -72,7 +84,7 @@ class Profile extends React.Component {
     profile.course_university = name;
 
     this.props.updateProfile(profile);
-    this.updateFirebaseProfile(profile);
+    Profile.updateFirebaseProfile(profile);
   };
 
   updateUniversityName = (name) => {
@@ -89,7 +101,7 @@ class Profile extends React.Component {
     profile.course_name = course;
 
     this.props.updateProfile(profile);
-    this.updateFirebaseProfile(profile);
+    Profile.updateFirebaseProfile(profile);
   };
 
   updateUniversityCourse = (course) => {
@@ -120,21 +132,45 @@ class Profile extends React.Component {
       course_name: this.state.profile.course_name,
     });
 
-    this.updateFirebaseProfile(updatedProfile);
+    Profile.updateFirebaseProfile(updatedProfile);
   };
 
-  updateFirebaseProfile(profile) {
-    this.props.firebase
-      .updateProfile(profile)
-      .then(() => console.log('saved changes'))
+  showDeleteAccountBox = () => {
+    this.setState({
+      showDeletingAccount: !this.state.showDeletingAccount,
+    });
+  };
+
+  deleteAccount = () => {
+    firebase
+      .authenticate()
+      .then((login) => firebase.getCurrentUser().reauthenticateAndRetrieveDataWithCredential(login.credential))
+      .then(() => firebase.deleteAccount())
+      .then(() => {
+        console.log('deleted account');
+        this.props.removeProfile();
+        this.props.history.push('/');
+        this.props.history.go('/');
+        window.location.reload();
+      })
       .catch((error) => console.log(error));
-  }
+  };
 
   render() {
-    const { classes, firebase } = this.props;
+    const { classes } = this.props;
 
     return (
       <div className={classes.root}>
+        <ModuleWrapper
+          description={`Are you sure you wish to delete your account ${
+            this.props.profile.given_name
+          }? This will require you to quickly reauthentcate (desktop only) and cannot be undone  😥`}
+          title={`Deleting your UniGoals account ${this.props.profile.given_name}`}
+          open={this.state.showDeletingAccount}
+          onClose={this.showDeleteAccountBox}
+          onComplete={this.deleteAccount}
+          completeText="Delete"
+        />
         <Paper className={classes.profileGrid}>
           <div>
             <Avatar alt={this.state.profile.name} src={firebase.getProfileImageUrl()} className={classes.avatar} />
@@ -201,6 +237,10 @@ class Profile extends React.Component {
             <Save className={classes.iconSmall} />
             Save
           </Button>
+          <Button className={classes.button} color="primary" variant="raised" size="small" onClick={this.showDeleteAccountBox}>
+            <Delete className={classes.iconSmall} />
+            Delete Account
+          </Button>
         </Paper>
       </div>
     );
@@ -210,9 +250,10 @@ class Profile extends React.Component {
 Profile.propTypes = {
   classes: PropTypes.shape().isRequired,
   updateProfile: PropTypes.func.isRequired,
-  firebase: PropTypes.shape({
-    getProfileImageUrl: PropTypes.func,
-    updateProfile: PropTypes.func,
+  removeProfile: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func,
+    go: PropTypes.func,
   }).isRequired,
   profile: PropTypes.shape({
     course_name: PropTypes.string,
@@ -229,4 +270,4 @@ Profile.propTypes = {
   }).isRequired,
 };
 
-export default withStyles(styles)(Profile);
+export default withRouter(withStyles(styles)(Profile));

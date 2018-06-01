@@ -12,16 +12,20 @@ import Percentages from './Percentages';
 import Ranking from './Ranking';
 
 import * as constants from '../../utils/constants';
+import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
   root: {
     margin: '25px auto',
-    maxWidth: '80%',
+    maxWidth: '60%',
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 3,
     marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 3,
+    [theme.breakpoints.down('md')]: {
+      maxWidth: '70%',
+    },
     [theme.breakpoints.down('sm')]: {
       maxWidth: '90%',
     },
@@ -96,14 +100,14 @@ class Summary extends React.Component {
     // If the user exists whiel the text is empty, fill with replacement text
     if (title === '') title = 'Uni 👨‍🎓 👩‍🎓';
 
-    this.props.firebase.updateYearTitle(this.props.yearIndex, title);
+    firebase.updateYearTitle(this.props.yearIndex, title);
     this.props.updateYearTitle(this.props.yearIndex, title);
     this.setState({ yearTitle: title });
   };
 
   // Deletes the current active year from firebae and redux
   deleteSelectedYear = () => {
-    this.props.firebase
+    firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
       .catch((error) => console.log(error.message));
@@ -140,7 +144,7 @@ class Summary extends React.Component {
                   title: this.props.yearTitle,
                   units: this.props.units,
                 }}
-                deleteYear={this.deleteSelectedYear}
+                deleteYear={this.props.isExample ? () => undefined : this.deleteSelectedYear}
               />
             </Grid>
           </Grid>
@@ -180,23 +184,22 @@ Summary.propTypes = {
   updateYearTitle: PropTypes.func.isRequired,
   removeYear: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  units: PropTypes.shape({}).isRequired,
+  units: PropTypes.shape({}),
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
   yearTitle: PropTypes.string.isRequired,
-  firebase: PropTypes.shape({
-    deleteYear: PropTypes.func,
-    insertNewYear: PropTypes.func,
-    updateYearTitle: PropTypes.func,
-  }).isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
     course_year: PropTypes.string,
     course_name: PropTypes.string,
   }).isRequired,
+  isExample: PropTypes.bool,
 };
 
-Summary.defaultProps = {};
+Summary.defaultProps = {
+  isExample: false,
+  units: {},
+};
 
 export default withStyles(styles)(Summary);

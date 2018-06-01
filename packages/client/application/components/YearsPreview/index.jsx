@@ -26,7 +26,7 @@ const YearsPreview = (props) => (
     {generatedYears(props.years)}
     {_.size(props.years) < constants.YEAR.MAX && (
       <Grid key={_.size(props.years) + 1} item>
-        <YearPrviewAdd insertNewYear={props.insertNewYear} firebase={props.firebase} />
+        <YearPrviewAdd insertNewYear={props.insertNewYear} />
       </Grid>
     )}
   </Fragment>
@@ -35,7 +35,6 @@ const YearsPreview = (props) => (
 YearsPreview.propTypes = {
   years: PropTypes.shape().isRequired,
   insertNewYear: PropTypes.func.isRequired,
-  firebase: PropTypes.shape().isRequired,
 };
 
 export default YearsPreview;

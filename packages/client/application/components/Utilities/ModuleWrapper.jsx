@@ -12,32 +12,31 @@ function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-class DeleteModule extends React.Component {
-  onDelete = () => {
+class ModuleWrapper extends React.Component {
+  onComplete = () => {
     this.props.onClose();
-    this.props.onDelete();
+    this.props.onComplete();
   };
 
   render() {
     return (
       <Dialog
-        style={{ visibility: this.props.open ? 'visible' : 'hidden' }}
         open={this.props.open && !this.props.disabled}
         TransitionComponent={Transition}
         onClose={this.props.onClose}
-        aria-labelledby={`delete dialog for ${this.props.title}`}
-        aria-describedby={`A delete box used for deleting ${this.props.title}`}
+        aria-labelledby={this.props.title}
+        aria-describedby={this.props.title}
       >
-        <DialogTitle>{`Deleting ${this.props.title}`}</DialogTitle>
+        <DialogTitle>{this.props.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{`Are you sure you want to delete ${this.props.title}?`}</DialogContentText>
+          <DialogContentText>{this.props.description}</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={this.props.onClose} color="primary">
-            Close
+            {this.props.closeText}
           </Button>
-          <Button onClick={this.onDelete} color="primary">
-            Delete
+          <Button onClick={this.onComplete} color="primary">
+            {this.props.completeText}
           </Button>
         </DialogActions>
       </Dialog>
@@ -45,19 +44,24 @@ class DeleteModule extends React.Component {
   }
 }
 
-DeleteModule.propTypes = {
+ModuleWrapper.propTypes = {
   title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
   disabled: PropTypes.bool,
   open: PropTypes.bool,
   onClose: PropTypes.func,
-  onDelete: PropTypes.func,
+  onComplete: PropTypes.func,
+  closeText: PropTypes.string,
+  completeText: PropTypes.string,
 };
 
-DeleteModule.defaultProps = {
+ModuleWrapper.defaultProps = {
   onClose: () => undefined,
-  onDelete: () => undefined,
+  onComplete: () => undefined,
   disabled: false,
   open: false,
+  closeText: 'Close',
+  completeText: 'Complete',
 };
 
-export default DeleteModule;
+export default ModuleWrapper;

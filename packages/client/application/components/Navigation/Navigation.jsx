@@ -1,12 +1,15 @@
+import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import Toolbar from '@material-ui/core/Toolbar';
+import AppBar from '@material-ui/core/AppBar';
+import Icon from '@material-ui/core/Icon';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
+
+import firebase from '../../utils/FirebaseWrapper';
 
 import TemporaryDrawer from './TemporaryDrawer';
 import SignOutBox from './SignOutBox';
@@ -42,7 +45,7 @@ class Navigation extends React.Component {
       showSideDraw: false,
       invalidhelpMessage: false,
       notificationCount: 0,
-      avatarAddress: props.firebase.getProfileImageUrl(),
+      avatarAddress: firebase.getProfileImageUrl(),
     };
 
     this.getWelcomeMessage = this.getWelcomeMessage.bind(this);
@@ -51,7 +54,7 @@ class Navigation extends React.Component {
     this.showSignOutBox = this.showSignOutBox.bind(this);
     this.signOut = this.signOut.bind(this);
 
-    const notificationRef = props.firebase.getNotificationRef();
+    const notificationRef = firebase.getNotificationRef();
 
     notificationRef.on('value', (snapshot) => {
       this.setState({
@@ -95,10 +98,13 @@ class Navigation extends React.Component {
      * out of the application, then the profile of the user will be removed to stop caching
      * issue when they login. Finally the route address will be reset and the page reloaded.
      */
-    this.props.firebase.authentication.signOut();
-    this.props.removeProfile();
-    this.props.history.go('/');
-    window.location.reload();
+    firebase.authentication
+      .signOut()
+      .then(() => {
+        this.props.removeProfile();
+        this.props.history.go('/');
+      })
+      .catch((error) => console.log(error));
   }
 
   /**
@@ -127,7 +133,7 @@ class Navigation extends React.Component {
 
     this.setState({ invalidhelpMessage: false });
 
-    return this.props.firebase
+    return firebase
       .sendHelpMessage(message, name, email)
       .then(() => console.log(`Thank you ${givenName} for submitting your help and or question`))
       .catch((error) => console.log(error.message));
@@ -179,10 +185,11 @@ class Navigation extends React.Component {
               <div>UniGoals</div>
               {this.props.version}
             </Typography>
-            <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
+            <Link href="/" to="/">
+              <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
+            </Link>
           </Toolbar>
         </AppBar>
-        {!_.isNil(this.props.children) ? this.props.children : null}
       </div>
     );
   }
@@ -192,18 +199,10 @@ Navigation.propTypes = {
   displayHelp: PropTypes.bool.isRequired,
   showHelpBox: PropTypes.func.isRequired,
   classes: PropTypes.shape({}).isRequired,
-  firebase: PropTypes.shape({
-    sendHelpMessage: PropTypes.func,
-    getNotificationRef: PropTypes.func,
-    getProfileImageUrl: PropTypes.func,
-    authentication: PropTypes.shape({
-      signOut: PropTypes.func,
-    }),
-  }).isRequired,
-  children: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   version: PropTypes.string.isRequired,
   removeProfile: PropTypes.func.isRequired,
   profile: PropTypes.shape({
+    auth: PropTypes.bool,
     name: PropTypes.string,
     picture: PropTypes.string,
     email: PropTypes.string,

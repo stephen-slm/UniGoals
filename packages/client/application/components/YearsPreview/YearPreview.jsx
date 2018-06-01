@@ -25,11 +25,7 @@ const YearPreview = (props) => {
 
   return (
     <Card className={classes.root}>
-      <Link
-        href={`/year/${props.index}`}
-        to={`/year/${props.index}`}
-        style={{ textDecoration: 'none' }}
-      >
+      <Link href={`/year/${props.index}`} to={`/year/${props.index}`} style={{ textDecoration: 'none' }}>
         <CardHeader
           classes={{
             title: classes.title,
@@ -38,9 +34,7 @@ const YearPreview = (props) => {
           subheader={`units: ${_.size(props.year.units)}`}
         />
         <CardContent>
-          <Typography variant="caption">
-            Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%
-          </Typography>
+          <Typography variant="caption">Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%</Typography>
         </CardContent>
       </Link>
     </Card>

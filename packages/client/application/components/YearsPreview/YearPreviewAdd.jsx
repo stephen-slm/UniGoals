@@ -6,6 +6,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
+import firebase from '../../utils/FirebaseWrapper';
+
 const styles = (theme) => ({
   root: {
     height: theme.spacing.unit * 15,
@@ -29,7 +31,7 @@ class YearPreviewAdd extends React.Component {
   }
 
   insertNewYear() {
-    this.props.firebase
+    firebase
       .insertNewYear()
       .then((year) => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
       .catch((error) => console.log(error.message));
@@ -52,9 +54,6 @@ class YearPreviewAdd extends React.Component {
 
 YearPreviewAdd.propTypes = {
   classes: PropTypes.shape({}).isRequired,
-  firebase: PropTypes.shape({
-    insertNewYear: PropTypes.func,
-  }).isRequired,
   insertNewYear: PropTypes.func.isRequired,
 };
 

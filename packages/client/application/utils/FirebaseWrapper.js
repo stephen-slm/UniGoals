@@ -2,9 +2,16 @@ import * as firebase from 'firebase';
 import * as _ from 'lodash';
 import * as constants from '../utils/constants';
 import { getHappyEmoji } from './utils';
+import * as packageJson from '../../package.json';
 
-export default class FirebaseWrapper {
+let instance = null;
+
+class FirebaseWrapper {
   constructor(config) {
+    if (!_.isNil(instance)) {
+      return instance;
+    }
+
     this.configuration = config;
 
     firebase.initializeApp(this.configuration);
@@ -18,6 +25,8 @@ export default class FirebaseWrapper {
      */
     this.authentication = firebase.auth();
     this.provider = new firebase.auth.GoogleAuthProvider();
+
+    instance = this;
   }
 
   /**
@@ -79,7 +88,9 @@ export default class FirebaseWrapper {
 
     const insertingNotificationKey = insertingWelcomeNotification.push({
       title: `Welcome ${this.authentication.currentUser.displayName}!`,
-      message: 'Welcome to UniGoals! Any problems click the help button next to me!',
+      message: `Welcome to UniGoals! Currently in Alpha at version ${
+        packageJson.version
+      }, if you have any problems please send feedback via the menu.`,
       timestamp: Date.now(),
     });
     return Promise.resolve(insertingNotificationKey.key);
@@ -89,7 +100,15 @@ export default class FirebaseWrapper {
     this.database.ref(`users/${this.getUid()}/profile/course_name`).set(courseName);
     this.database.ref(`users/${this.getUid()}/profile/course_year`).set(courseYear);
     this.database.ref(`users/${this.getUid()}/profile/course_university`).set(courseUniversity);
+    this.database.ref(`users/${this.getUid()}/profile/new`).set(false);
     return Promise.resolve();
+  }
+
+  /**
+   * returns the current user
+   */
+  getCurrentUser() {
+    return this.authentication.currentUser;
   }
 
   // returns all the users content
@@ -174,7 +193,32 @@ export default class FirebaseWrapper {
    * @param profile the profile that is being updated
    */
   updateProfile(profile) {
-    return this.database.ref(`users/${this.getUid()}/profile`).set(profile);
+    const prof = _.pick(profile, [
+      'admin',
+      'course_name',
+      'course_university',
+      'course_year',
+      'email',
+      'family_name',
+      'given_name',
+      'hd',
+      'last_login',
+      'login_count',
+      'name',
+    ]);
+
+    return this.database.ref(`users/${this.getUid()}/profile`).set(prof);
+  }
+
+  /**
+   * deletes the current account
+   */
+  deleteAccount() {
+    return this.database
+      .ref(`users/${this.getUid()}`)
+      .remove()
+      .then(() => this.getCurrentUser().delete())
+      .then(() => this.authentication.signOut());
   }
 
   /**
@@ -471,13 +515,22 @@ export default class FirebaseWrapper {
         given_name: profile.displayName.split(' ')[0],
         family_name: profile.displayName.split(' ')[1],
         email: profile.email,
-        picture: profile.photoURL,
         name: profile.displayName,
-        hd: profile.hd,
         last_login: Date.now(),
+        login_count: 1,
+        new: true,
       })
       .then(() => this.createSampleUnitsForNewUser())
       .then(() => this.insertWelcomeNotification())
       .then(() => Promise.resolve(profile));
   }
 }
+
+export default new FirebaseWrapper({
+  apiKey: 'AIzaSyDBSpRMIl4olTWN0AOMCTMVqeIVkhGio_8',
+  authDomain: 'organic-lacing-185810.firebaseapp.com',
+  databaseURL: 'https://organic-lacing-185810.firebaseio.com',
+  projectId: 'organic-lacing-185810',
+  storageBucket: 'organic-lacing-185810.appspot.com',
+  messagingSenderId: '40609903553',
+});

@@ -13,7 +13,7 @@ import { getAchievedFromUnit } from '../../utils/utils';
 const styles = (theme) => ({
   root: {
     margin: '0px auto',
-    maxWidth: '80%',
+    maxWidth: '90%',
     [theme.breakpoints.down('md')]: {
       maxWidth: '100%',
     },

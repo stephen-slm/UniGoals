@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
 import YearsPreview from '../YearsPreview';
-import NewUser from '../Utilities/NewUser';
+import NewUser from '../NewUser';
 
 const styles = (theme) => ({
   root: {
@@ -26,20 +26,12 @@ const Years = (props) => {
 
   return (
     <div>
-      <NewUser
-        profile={props.profile}
-        firebase={props.firebase}
-        updateProfile={props.updateProfile}
-      />
+      <NewUser profile={props.profile} updateProfile={props.updateProfile} />
       <div>
         <Grid className={classes.root}>
           <Grid item xs={12}>
             <Grid container justify="center" spacing={16}>
-              <YearsPreview
-                firebase={props.firebase}
-                years={props.years}
-                insertNewYear={props.insertNewYear}
-              />
+              <YearsPreview years={props.years} insertNewYear={props.insertNewYear} />
             </Grid>
           </Grid>
         </Grid>
@@ -54,7 +46,6 @@ Years.propTypes = {
   }).isRequired,
   classes: PropTypes.shape({}).isRequired,
   profile: PropTypes.shape({}).isRequired,
-  firebase: PropTypes.shape({}).isRequired,
   updateProfile: PropTypes.func.isRequired,
   insertNewYear: PropTypes.func.isRequired,
 };

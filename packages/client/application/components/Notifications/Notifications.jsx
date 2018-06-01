@@ -7,10 +7,18 @@ import _ from 'lodash';
 import Notification from './Notification';
 import NoNotifications from './NoNotifications';
 
-const styles = () => ({
+import firebase from '../../utils/FirebaseWrapper';
+
+const styles = (theme) => ({
   root: {
     color: 'white',
     flexGrow: 1,
+    marginTop: theme.spacing.unit * 2,
+    maxWidth: '55%',
+    margin: '0 auto',
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: '95%',
+    },
   },
 });
 
@@ -18,7 +26,7 @@ class Notifications extends React.Component {
   constructor(props) {
     super(props);
 
-    const notificationRef = props.firebase.getNotificationRef();
+    const notificationRef = firebase.getNotificationRef();
 
     notificationRef.on('value', (snapshot) => {
       props.updateNotifications(snapshot.val());
@@ -27,13 +35,7 @@ class Notifications extends React.Component {
 
   buildNotifications = (notifications) => {
     const builtNotifications = _.map(notifications, (notification, index) => (
-      <Notification
-        key={index}
-        removeNotification={this.props.removeNotification}
-        firebase={this.props.firebase}
-        notification={notification}
-        keyIndex={index}
-      />
+      <Notification key={index} removeNotification={this.props.removeNotification} notification={notification} keyIndex={index} />
     ));
 
     return _.reverse(builtNotifications);
@@ -57,9 +59,6 @@ Notifications.propTypes = {
   updateNotifications: PropTypes.func.isRequired,
   removeNotification: PropTypes.func.isRequired,
   notifications: PropTypes.shape({}).isRequired,
-  firebase: PropTypes.shape({
-    getNotificationRef: PropTypes.func,
-  }).isRequired,
 };
 
 Notifications.defaultProps = {};

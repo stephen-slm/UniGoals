@@ -1,41 +1,70 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
 import Slide from '@material-ui/core/Slide';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
 
-const SignOutBox = props => (
-  <Dialog
-    open={props.open && !props.disabled}
-    TransitionComponent={Transition}
-    onClose={props.onClose}
-    aria-labelledby={`signout dialog for ${props.name}`}
-    aria-describedby={`A signout box used for signing out ${props.name}`}
-  >
-    <DialogTitle>Sign out</DialogTitle>
-    <DialogContent>
-      <DialogContentText>
-        {`Are you sure you want to sign out ${props.name.split(' ')[0]}?`}
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={props.onClose} color="primary">
-        Close
-      </Button>
-      <Button onClick={props.onSignOut} color="primary">
-        Sign out
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
+class SignOutBox extends React.Component {
+  state = {
+    showLoading: false,
+  };
+
+  onSignOut = () => {
+    this.setState({
+      showLoading: !this.state.showLoading,
+    });
+
+    this.props.onSignOut();
+  };
+
+  renderContent() {
+    if (this.state.showLoading) {
+      return (
+        <div style={{ textAlign: 'center' }}>
+          <CircularProgress color="secondary" />
+        </div>
+      );
+    }
+
+    return <DialogContentText>{`Are you sure you want to sign out ${this.props.name.split(' ')[0]}?`}</DialogContentText>;
+  }
+
+  render() {
+    return (
+      <Dialog
+        open={this.props.open && !this.props.disabled}
+        TransitionComponent={Transition}
+        onClose={this.props.onClose}
+        aria-labelledby={`signout dialog for ${this.props.name}`}
+        aria-describedby={`A signout box used for signing out ${this.props.name}`}
+      >
+        <DialogTitle>{this.state.showLoading ? 'Signing out' : 'Sign out'}</DialogTitle>
+        <DialogContent>{this.renderContent()}</DialogContent>
+        <DialogActions>
+          <Button onClick={this.props.onClose} color="primary">
+            Close
+          </Button>
+          {this.state.showLoading ? (
+            <div />
+          ) : (
+            <Button onClick={this.onSignOut} color="primary">
+              Sign out
+            </Button>
+          )}
+        </DialogActions>
+      </Dialog>
+    );
+  }
+}
 
 SignOutBox.propTypes = {
   name: PropTypes.string.isRequired,

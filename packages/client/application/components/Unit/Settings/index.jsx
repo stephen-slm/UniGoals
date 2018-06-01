@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import DeleteModule from '../../Utilities/DeleteModule';
+import ModuleWrapper from '../../Utilities/ModuleWrapper';
 import Summary from '../Summary';
 
 import * as exportings from '../../../utils/export';
@@ -58,12 +58,14 @@ class Settings extends React.Component {
         <IconButton style={{ float: 'right' }} onClick={this.handleClickOpen}>
           <Icon color="primary">settings</Icon>
         </IconButton>
-        <DeleteModule
+        <ModuleWrapper
+          description={`Are you sure you wish to delete ${this.props.unit.title}?`}
           disabled={this.props.isExample}
           open={this.state.isDeletingUnit}
-          title={this.props.unit.title}
-          onDelete={this.props.deleteUnitTable}
+          title={`Deleting ${this.props.unit.title}`}
+          onComplete={this.props.deleteUnitTable}
           onClose={this.showDeleteUnitBox}
+          completeText="Delete"
         />
         <Dialog
           open={this.state.open}
@@ -74,8 +76,8 @@ class Settings extends React.Component {
           <DialogTitle id="form-dialog-title">Settings - {this.props.unit.title}</DialogTitle>
           <DialogContent>
             <Summary
-              onDoubleClick={this.props.setUnitDoubleWeightedValue}
-              onDroppedClick={this.props.setUnitDroppedValue}
+              onDoubleClick={this.props.isExample ? () => undefined : this.props.setUnitDoubleWeightedValue}
+              onDroppedClick={this.props.isExample ? () => undefined : this.props.setUnitDroppedValue}
               isDoubleWeighted={this.props.unit.double}
               isDroppedUnit={this.props.unit.dropped}
             />

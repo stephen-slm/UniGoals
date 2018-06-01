@@ -103,9 +103,7 @@ export default function years(state = {}, action) {
 
       const updateUnitContent = Object.assign({}, state);
 
-      updateUnitContent[yearIndex].units[updateUnitTableIndex].content[updateUnitRowIndex][
-        updateUnitColumnIndex
-      ] = updateUnitChange;
+      updateUnitContent[yearIndex].units[updateUnitTableIndex].content[updateUnitRowIndex][updateUnitColumnIndex] = updateUnitChange;
       return updateUnitContent;
     }
 
@@ -118,11 +116,7 @@ export default function years(state = {}, action) {
 
       if (_.isNil(updateTableIndex) || !_.isString(updateTableIndex)) {
         return state;
-      } else if (
-        _.isNil(updateUnitTitle) ||
-        !_.isString(updateUnitTitle) ||
-        updateUnitTitle.length > constants.UNIT.TITLE.MAX
-      ) {
+      } else if (_.isNil(updateUnitTitle) || !_.isString(updateUnitTitle) || updateUnitTitle.length > constants.UNIT.TITLE.MAX) {
         return state;
       }
 
@@ -143,11 +137,8 @@ export default function years(state = {}, action) {
     case actionTypes.ADD_UNIT_TABLE: {
       const unitTableAdd = Object.assign({}, state);
 
-      console.log(unitTableAdd);
-
       if (_.isNil(unitTableAdd[action.yearIndex].units)) {
         unitTableAdd[action.yearIndex].units = {};
-        console.log(unitTableAdd);
       }
 
       unitTableAdd[action.yearIndex].units[action.key] = { title: 'New Unit', content: {} };
@@ -211,11 +202,7 @@ export default function years(state = {}, action) {
     }
 
     case actionTypes.UPDATE_UNIT_DOUBLE_WEIGHT: {
-      const {
-        yearIndex: updateDoubleYearIndex,
-        double: updateDoubleValue,
-        tableIndex: updateDoubleIndex,
-      } = action;
+      const { yearIndex: updateDoubleYearIndex, double: updateDoubleValue, tableIndex: updateDoubleIndex } = action;
 
       if (_.isNil(updateDoubleValue) || !_.isBoolean(updateDoubleValue)) {
         return state;
@@ -223,19 +210,13 @@ export default function years(state = {}, action) {
 
       const updatedUnitWeightDouble = Object.assign({}, state);
 
-      updatedUnitWeightDouble[updateDoubleYearIndex].units[
-        updateDoubleIndex
-      ].double = updateDoubleValue;
+      updatedUnitWeightDouble[updateDoubleYearIndex].units[updateDoubleIndex].double = updateDoubleValue;
 
       return updatedUnitWeightDouble;
     }
 
     case actionTypes.UPDATE_UNIT_DROPPED: {
-      const {
-        yearIndex: updateDroppedYearIndex,
-        dropped: updateDroppedValue,
-        tableIndex: updateDroppedIndex,
-      } = action;
+      const { yearIndex: updateDroppedYearIndex, dropped: updateDroppedValue, tableIndex: updateDroppedIndex } = action;
 
       if (_.isNil(updateDroppedValue) || !_.isBoolean(updateDroppedValue)) {
         return state;
@@ -243,9 +224,7 @@ export default function years(state = {}, action) {
 
       const updateUnitDroppedValue = Object.assign({}, state);
 
-      updateUnitDroppedValue[updateDroppedYearIndex].units[
-        updateDroppedIndex
-      ].dropped = updateDroppedValue;
+      updateUnitDroppedValue[updateDroppedYearIndex].units[updateDroppedIndex].dropped = updateDroppedValue;
 
       return updateUnitDroppedValue;
     }
