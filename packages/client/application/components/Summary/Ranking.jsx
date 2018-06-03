@@ -16,7 +16,7 @@ const styles = (theme) => ({
     minHeight: '100px',
   },
   title: {
-    textAlign: 'center',
+    textAlign: 'left',
     paddingTop: theme.spacing.unit,
   },
   entry: {
@@ -36,7 +36,7 @@ const Ranking = (props) => {
   const ranking = functionRankUnitByAchieved(props.units, props.history);
 
   return (
-    <Paper style={{ height: props.height * 40 }} className={classes.root} elevation={1}>
+    <div style={{ height: props.height * 40 }} className={classes.root} elevation={1}>
       <Typography className={classes.title} component="p">
         Unit Ranking
       </Typography>
@@ -50,7 +50,7 @@ const Ranking = (props) => {
             </Typography>
           ))}
       </Typography>
-    </Paper>
+    </div>
   );
 };
 

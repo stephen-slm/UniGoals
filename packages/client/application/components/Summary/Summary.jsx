@@ -1,7 +1,10 @@
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Icon from '@material-ui/core/Icon';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
@@ -18,17 +21,17 @@ const styles = (theme) => ({
   root: {
     margin: '25px auto',
     maxWidth: '60%',
+    minWidth: '324px',
     textAlign: 'center',
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
     [theme.breakpoints.down('md')]: {
       maxWidth: '70%',
     },
     [theme.breakpoints.down('sm')]: {
       maxWidth: '90%',
     },
+  },
+  leftText: {
+    paddingLeft: theme.spacing.unit,
   },
   addButton: {
     float: 'left',
@@ -48,6 +51,17 @@ const styles = (theme) => ({
   },
   summarySubtext: {
     textAlign: 'center',
+  },
+  verticalDivider: {
+    borderRight: '1px solid rgba(0, 0, 0, 0.12)',
+    height: '100%',
+    display: 'flex',
+  },
+  dividerSides: {
+    margin: '0 auto',
+  },
+  dividerSidesContainer: {
+    height: '100%',
   },
 });
 
@@ -69,13 +83,13 @@ class Summary extends React.Component {
     if (week < startingWeek && week > endWeek) {
       return 'Summer Time!';
     } else if (week <= 54 && week >= startingWeek) {
-      return week - startingWeek;
+      return `${week - startingWeek}/34`;
     } else if (week >= 1) {
       const returnTime = 52 - startingWeek;
-      return returnTime + week;
+      return `${returnTime + week}/34`;
     }
 
-    return week;
+    return `${week}/34`;
   }
 
   constructor(props) {
@@ -130,15 +144,28 @@ class Summary extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <div>
-          <Grid container justify="center" alignItems="center" className={classes.grid}>
-            <Grid item xs={1} />
-            <Grid item xs={10}>
-              <Typography variant="headline" component="h5">
-                Summary
-              </Typography>
+        <Grid container className={classes.flexGrow}>
+          <Grid container alignItems="center" direction="row" justify="space-between">
+            <Grid item>
+              <Grid container>
+                <Grid container alignItems="flex-start" direction="column" justify="flex-start" className={classes.leftText}>
+                  <Grid item>
+                    <Typography component="span" variant="subheading" style={{ color: 'rgba(0,0,0,0.87)', display: 'inline-block' }}>
+                      Summary -
+                    </Typography>{' '}
+                    <Typography component="span" variant="caption" style={{ color: 'rgba(0,0,0,0.87)', display: 'inline-block' }}>
+                      {this.state.yearTitle}
+                    </Typography>
+                  </Grid>
+                  <Grid item>
+                    <Typography variant="caption">
+                      {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Grid>
             </Grid>
-            <Grid item xs={1}>
+            <Grid item>
               <Settings
                 year={{
                   title: this.props.yearTitle,
@@ -148,32 +175,62 @@ class Summary extends React.Component {
               />
             </Grid>
           </Grid>
-
-          <Grid container className={classes.grid}>
-            <Grid item xs={12}>
-              <div className={classes.summarySubtext}>
-                <Typography component="p">
-                  {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}/34
-                </Typography>
-                <EditableText
-                  placeholder="Year"
-                  maxLength={constants.YEAR.TITLE.MAX}
-                  onChange={this.updateYearTitle}
-                  onConfirm={this.updateYearTitleDatabase}
-                  value={this.state.yearTitle}
-                />
-              </div>
+        </Grid>
+        <Divider />
+        <Grid container>
+          <Grid container alignItems="flex-start" direction="row" justify="space-between">
+            <Grid item className={classes.dividerSides}>
+              <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
             </Grid>
-            <Grid container justify="center" spacing={Number(16)}>
-              <Grid item>
-                <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
-              </Grid>
-              <Grid item>
-                <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
-              </Grid>
+            <Grid item className={classes.verticalDivider} />
+            <Grid item className={classes.dividerSides}>
+              <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
             </Grid>
           </Grid>
-        </div>
+        </Grid>
+
+        {/* <Grid container justify="center" alignItems="center" className={classes.grid}>
+          <Grid item xs={1} />
+          <Grid item xs={10}>
+            <Typography variant="headline" component="h5">
+              Summary
+            </Typography>
+          </Grid>
+          <Grid item xs={1}>
+            <Settings
+              year={{
+                title: this.props.yearTitle,
+                units: this.props.units,
+              }}
+              deleteYear={this.props.isExample ? () => undefined : this.deleteSelectedYear}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid container className={classes.grid}>
+          <Grid item xs={12}>
+            <div className={classes.summarySubtext}>
+              <Typography component="p">
+                {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}
+              </Typography>
+              <EditableText
+                placeholder="Year"
+                maxLength={constants.YEAR.TITLE.MAX}
+                onChange={this.updateYearTitle}
+                onConfirm={this.updateYearTitleDatabase}
+                value={this.state.yearTitle}
+              />
+            </div>
+          </Grid>
+          <Grid container justify="center" spacing={Number(16)}>
+            <Grid item>
+              <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
+            </Grid>
+            <Grid item>
+              <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
+            </Grid>
+          </Grid>
+        </Grid> */}
       </Paper>
     );
   }
