@@ -16,7 +16,7 @@ const styles = (theme) => ({
     minHeight: '100px',
   },
   title: {
-    textAlign: 'center',
+    textAlign: 'left',
     paddingTop: theme.spacing.unit,
   },
   entry: {

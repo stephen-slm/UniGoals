@@ -21,6 +21,13 @@ const styles = (theme) => ({
   button: {
     margin: theme.spacing.unit,
   },
+  settingsButton: {
+    float: 'right',
+    '&:hover': {
+      backgroundColor: 'inherit',
+      color: 'black',
+    },
+  },
 });
 
 class Settings extends React.Component {
@@ -53,8 +60,8 @@ class Settings extends React.Component {
 
     return (
       <div>
-        <IconButton style={{ float: 'right' }} onClick={this.handleClickOpen}>
-          <Icon color="primary">settings</Icon>
+        <IconButton className={classes.settingsButton} onClick={this.handleClickOpen}>
+          <Icon>more_vert</Icon>
         </IconButton>
         <ModuleWrapper
           description={`Are you sure you wish to delete ${this.props.year.title}?`}
