@@ -140,7 +140,6 @@ class Summary extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
-        <SnackbarWrapper message={this.state.message} />
         <Grid container className={classes.flexGrow}>
           <Grid container alignItems="center" direction="row" justify="space-between">
             <Grid item>
