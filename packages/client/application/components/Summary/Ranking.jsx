@@ -36,7 +36,7 @@ const Ranking = (props) => {
   const ranking = functionRankUnitByAchieved(props.units, props.history);
 
   return (
-    <div style={{ height: props.height * 40 }} className={classes.root} elevation={1}>
+    <Paper style={{ height: props.height * 40 }} className={classes.root} elevation={1}>
       <Typography className={classes.title} component="p">
         Unit Ranking
       </Typography>
@@ -50,7 +50,7 @@ const Ranking = (props) => {
             </Typography>
           ))}
       </Typography>
-    </div>
+    </Paper>
   );
 };
 

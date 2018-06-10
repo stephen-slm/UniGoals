@@ -3,18 +3,14 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Icon from '@material-ui/core/Icon';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
 import Settings from './Settings';
-import EditableText from '../Utilities/EditableText';
 import Percentages from './Percentages';
 import Ranking from './Ranking';
 
-import * as constants from '../../utils/constants';
 import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
@@ -144,6 +140,7 @@ class Summary extends React.Component {
 
     return (
       <Paper className={classes.root} elevation={3}>
+        <SnackbarWrapper message={this.state.message} />
         <Grid container className={classes.flexGrow}>
           <Grid container alignItems="center" direction="row" justify="space-between">
             <Grid item>
@@ -177,60 +174,14 @@ class Summary extends React.Component {
           </Grid>
         </Grid>
         <Divider />
-        <Grid container>
-          <Grid container alignItems="flex-start" direction="row" justify="space-between">
-            <Grid item className={classes.dividerSides}>
-              <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
-            </Grid>
-            <Grid item className={classes.verticalDivider} />
-            <Grid item className={classes.dividerSides}>
-              <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
-            </Grid>
+        <Grid container justify="center" spacing={Number(16)}>
+          <Grid item>
+            <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
+          </Grid>
+          <Grid item>
+            <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
           </Grid>
         </Grid>
-
-        {/* <Grid container justify="center" alignItems="center" className={classes.grid}>
-          <Grid item xs={1} />
-          <Grid item xs={10}>
-            <Typography variant="headline" component="h5">
-              Summary
-            </Typography>
-          </Grid>
-          <Grid item xs={1}>
-            <Settings
-              year={{
-                title: this.props.yearTitle,
-                units: this.props.units,
-              }}
-              deleteYear={this.props.isExample ? () => undefined : this.deleteSelectedYear}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container className={classes.grid}>
-          <Grid item xs={12}>
-            <div className={classes.summarySubtext}>
-              <Typography component="p">
-                {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}
-              </Typography>
-              <EditableText
-                placeholder="Year"
-                maxLength={constants.YEAR.TITLE.MAX}
-                onChange={this.updateYearTitle}
-                onConfirm={this.updateYearTitleDatabase}
-                value={this.state.yearTitle}
-              />
-            </div>
-          </Grid>
-          <Grid container justify="center" spacing={Number(16)}>
-            <Grid item>
-              <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
-            </Grid>
-            <Grid item>
-              <Percentages height={_.size(this.props.units)} units={this.props.units} isSummary={this.state.isSummary} />
-            </Grid>
-          </Grid>
-        </Grid> */}
       </Paper>
     );
   }

@@ -65,7 +65,7 @@ class Perentages extends React.Component {
     }
 
     return (
-      <div
+      <Paper
         style={{
           height: this.props.height * 40,
           maxWidth: !this.props.isSummary ? 'none' : undefined,
@@ -87,7 +87,7 @@ class Perentages extends React.Component {
             </Grid>
           </Grid>
         </Typography>
-      </div>
+      </Paper>
     );
   }
 }
