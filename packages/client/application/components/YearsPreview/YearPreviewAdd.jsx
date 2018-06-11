@@ -6,6 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
@@ -33,8 +34,11 @@ class YearPreviewAdd extends React.Component {
   insertNewYear() {
     firebase
       .insertNewYear()
-      .then((year) => this.props.insertNewYear(year.yearKey, year.title, year.unitKey))
-      .catch((error) => console.log(error.message));
+      .then((year) => {
+        this.props.insertNewYear(year.yearKey, year.title, year.unitKey);
+        this.props.snackbar.showMessage(`Added new year ${year.title}`);
+      })
+      .catch((error) => this.props.snackbar.showMessage(error.message));
   }
 
   render() {
@@ -55,8 +59,11 @@ class YearPreviewAdd extends React.Component {
 YearPreviewAdd.propTypes = {
   classes: PropTypes.shape({}).isRequired,
   insertNewYear: PropTypes.func.isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 YearPreviewAdd.defaultProps = {};
 
-export default withStyles(styles)(YearPreviewAdd);
+export default withStyles(styles)(withSnackbar()(YearPreviewAdd));

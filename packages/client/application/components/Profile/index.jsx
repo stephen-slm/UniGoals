@@ -3,20 +3,21 @@
  * @Version 0.0.1
  */
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Save from '@material-ui/icons/Save';
+import { withRouter } from 'react-router-dom';
+import Avatar from '@material-ui/core/Avatar';
 import Delete from '@material-ui/icons/Delete';
+import Paper from '@material-ui/core/Paper';
+import Save from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import firebase from '../../utils/FirebaseWrapper';
-import EditableText from '../Utilities/EditableText';
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import ModuleWrapper from '../Utilities/ModuleWrapper';
+import EditableText from '../Utilities/EditableText';
+import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
   root: {
@@ -64,16 +65,10 @@ const styles = (theme) => ({
     marginRight: theme.spacing.unit,
     fontSize: 20,
   },
+  logMessage: '',
 });
 
 class Profile extends React.Component {
-  static updateFirebaseProfile(profile) {
-    firebase
-      .updateProfile(profile)
-      .then(() => console.log('saved changes'))
-      .catch((error) => console.log(error));
-  }
-
   state = {
     profile: this.props.profile,
     showDeletingAccount: false,
@@ -84,8 +79,15 @@ class Profile extends React.Component {
     profile.course_university = name;
 
     this.props.updateProfile(profile);
-    Profile.updateFirebaseProfile(profile);
+    this.updateFirebaseProfile(profile);
   };
+
+  updateFirebaseProfile(profile) {
+    firebase
+      .updateProfile(profile)
+      .then(() => this.props.snackbar.showMessage('Saved profile changes'))
+      .catch((error) => this.props.snackbar.showMessage(error.message));
+  }
 
   updateUniversityName = (name) => {
     const { profile } = this.state;
@@ -101,7 +103,7 @@ class Profile extends React.Component {
     profile.course_name = course;
 
     this.props.updateProfile(profile);
-    Profile.updateFirebaseProfile(profile);
+    this.updateFirebaseProfile(profile);
   };
 
   updateUniversityCourse = (course) => {
@@ -132,7 +134,7 @@ class Profile extends React.Component {
       course_name: this.state.profile.course_name,
     });
 
-    Profile.updateFirebaseProfile(updatedProfile);
+    this.updateFirebaseProfile(updatedProfile);
   };
 
   showDeleteAccountBox = () => {
@@ -147,13 +149,13 @@ class Profile extends React.Component {
       .then((login) => firebase.getCurrentUser().reauthenticateAndRetrieveDataWithCredential(login.credential))
       .then(() => firebase.deleteAccount())
       .then(() => {
-        console.log('deleted account');
+        this.props.snackbar.showMessage('Deleted account');
         this.props.removeProfile();
         this.props.history.push('/');
         this.props.history.go('/');
         window.location.reload();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => this.props.snackbar.showMessage(error.message));
   };
 
   render() {
@@ -268,6 +270,9 @@ Profile.propTypes = {
     name: PropTypes.string,
     picture: PropTypes.string,
   }).isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
-export default withRouter(withStyles(styles)(Profile));
+export default withRouter(withStyles(styles)(withSnackbar()(Profile)));
