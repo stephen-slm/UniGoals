@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import firebase from '../../utils/FirebaseWrapper';
 
 import TemporaryDrawer from './TemporaryDrawer';
@@ -104,7 +105,7 @@ class Navigation extends React.Component {
         this.props.removeProfile();
         this.props.history.go('/');
       })
-      .catch((error) => console.log(error));
+      .catch((error) => this.props.snackbar.showMessage(error.message));
   }
 
   /**
@@ -135,8 +136,8 @@ class Navigation extends React.Component {
 
     return firebase
       .sendHelpMessage(message, name, email)
-      .then(() => console.log(`Thank you ${givenName} for submitting your help and or question`))
-      .catch((error) => console.log(error.message));
+      .then(() => this.props.snackbar.showMessage(`Thank you ${givenName} for submitting your help and or question`))
+      .catch((error) => this.props.snackbar.showMessage(error.message));
   }
 
   handleDrawerChange = () => {
@@ -212,8 +213,11 @@ Navigation.propTypes = {
   history: PropTypes.shape({
     go: PropTypes.func,
   }).isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 Navigation.defaultProps = {};
 
-export default withStyles(styles)(Navigation);
+export default withStyles(styles)(withSnackbar()(Navigation));

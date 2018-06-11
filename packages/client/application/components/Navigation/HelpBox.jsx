@@ -34,11 +34,9 @@ class HelpBox extends React.Component {
       >
         <DialogTitle>Send Question/Feedback</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            If you have any problems or help please ask below and I will email you back!
-          </DialogContentText>
+          <DialogContentText>If you have any problems or help please ask below and I will email you back!</DialogContentText>
           <TextField
-            inputRef={ref => {
+            inputRef={(ref) => {
               this.helpText = ref;
             }}
             label="Feedback"

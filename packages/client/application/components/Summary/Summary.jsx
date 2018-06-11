@@ -7,8 +7,9 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
-import Settings from './Settings';
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import Percentages from './Percentages';
+import Settings from './Settings';
 import Ranking from './Ranking';
 
 import firebase from '../../utils/FirebaseWrapper';
@@ -120,7 +121,8 @@ class Summary extends React.Component {
     firebase
       .deleteYear(this.props.yearIndex)
       .then(() => this.props.removeYear(this.props.yearIndex))
-      .catch((error) => console.log(error.message));
+      .then(() => this.props.snackbar.showMessage(`Deleted year ${this.props.yearTitle}`))
+      .catch((error) => this.props.snackbar.showMessage(error.message));
 
     this.props.history.push('/');
   };
@@ -202,6 +204,9 @@ Summary.propTypes = {
     course_name: PropTypes.string,
   }).isRequired,
   isExample: PropTypes.bool,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 Summary.defaultProps = {
@@ -209,4 +214,4 @@ Summary.defaultProps = {
   units: {},
 };
 
-export default withStyles(styles)(Summary);
+export default withStyles(styles)(withSnackbar()(Summary));

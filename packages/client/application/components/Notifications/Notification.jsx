@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
 
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
@@ -26,6 +27,7 @@ const styles = (theme) => ({
 
 class Notification extends React.Component {
   dismissNotification = () => {
+    this.props.snackbar.showMessage(`Dismissed notification ${this.props.notification.title}`);
     this.props.removeNotification(this.props.keyIndex);
     firebase.dismissNotification(this.props.keyIndex);
   };
@@ -64,8 +66,9 @@ Notification.propTypes = {
   }).isRequired,
   removeNotification: PropTypes.func.isRequired,
   keyIndex: PropTypes.string.isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
-Notification.defaultProps = {};
-
-export default withStyles(styles)(Notification);
+export default withStyles(styles)(withSnackbar()(Notification));

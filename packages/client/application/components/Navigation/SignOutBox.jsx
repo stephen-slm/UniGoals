@@ -9,6 +9,8 @@ import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
+
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
@@ -23,6 +25,7 @@ class SignOutBox extends React.Component {
       showLoading: !this.state.showLoading,
     });
 
+    this.props.snackbar.showMessage('Signing out');
     this.props.onSignOut();
   };
 
@@ -72,6 +75,9 @@ SignOutBox.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   onSignOut: PropTypes.func,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 SignOutBox.defaultProps = {
@@ -81,4 +87,4 @@ SignOutBox.defaultProps = {
   open: false,
 };
 
-export default SignOutBox;
+export default withSnackbar()(SignOutBox);

@@ -1,23 +1,24 @@
-import React from 'react';
-import _ from 'lodash';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import DialogContent from '@material-ui/core/DialogContent';
+import FormControl from '@material-ui/core/FormControl';
+import StepContent from '@material-ui/core/StepContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Slide from '@material-ui/core/Slide';
 import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
+import StepLabel from '@material-ui/core/StepLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 import Stepper from '@material-ui/core/Stepper';
+import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
+import Dialog from '@material-ui/core/Dialog';
+import Slide from '@material-ui/core/Slide';
 import Paper from '@material-ui/core/Paper';
 import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import StepContent from '@material-ui/core/StepContent';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Select from '@material-ui/core/Select';
+import PropTypes from 'prop-types';
+import React from 'react';
+import _ from 'lodash';
 
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import firebase from '../../utils/FirebaseWrapper';
 
 function Transition(props) {
@@ -181,7 +182,7 @@ class NewUser extends React.Component {
 
         this.props.updateProfile(profile);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => this.props.snackbar.showMessage(error.message));
   };
 
   handleNext = () => {
@@ -298,8 +299,11 @@ NewUser.propTypes = {
     course_university: PropTypes.string,
     new: PropTypes.bool,
   }).isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 NewUser.defaultProps = {};
 
-export default withStyles(styles)(NewUser);
+export default withStyles(styles)(withSnackbar()(NewUser));

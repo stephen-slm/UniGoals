@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+
 import * as routePaths from './routePaths';
 
+import { SnackbarProvider } from '../Utilities/SnackbarWrapper';
 import { PropsRoute, PrivateRoute } from '../Routes';
 
 import Profile from '../Profile';
@@ -62,40 +64,50 @@ export default class Application extends React.Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <Router>
-          {/* we do this here because it allows us to have a sticky footer */}
-          <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
-            <div style={{ flex: '1' }}>
-              {this.shouldRenderComponent(<Navigation
-                history={this.history}
-                routePaths={this.routePaths}
-                profile={this.props.profile}
-                removeProfile={this.props.removeProfile}
-                version={this.props.version}
-                displayHelp={this.props.displayHelp}
-                showHelpBox={this.props.showHelpBox}
-              />)}
-              <Switch>
-                <PropsRoute exact path="/" component={Login} {...this.props} />
-                <PropsRoute exact path="/login" component={Login} {...this.props} />
-                <PrivateRoute exact path="/home" component={Years} {...this.props} />
-                <PrivateRoute exact path="/notifications" component={Notifications} {...this.props} />
-                <PrivateRoute
-                  exact
-                  path="/profile"
-                  component={Profile}
+        <SnackbarProvider
+          snackbarProps={{
+            autoHideDuration: 4000,
+            anchorOrigin: {
+              vertical: 'bottom',
+              horizontal: 'left',
+            },
+          }}
+        >
+          <Router>
+            {/* we do this here because it allows us to have a sticky footer */}
+            <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+              <div style={{ flex: '1' }}>
+                {this.shouldRenderComponent(<Navigation
+                  history={this.history}
+                  routePaths={this.routePaths}
                   profile={this.props.profile}
-                  updateProfile={this.props.updateProfile}
                   removeProfile={this.props.removeProfile}
-                />
-                <PrivateRoute exact path="/settings" component={Years} {...this.props} />
-                <PrivateRoute exact path="/year/:yearIndex" component={Year} {...this.props} />
-                <PrivateRoute exact component={FourOfour} {...this.props} />
-              </Switch>
+                  version={this.props.version}
+                  displayHelp={this.props.displayHelp}
+                  showHelpBox={this.props.showHelpBox}
+                />)}
+                <Switch>
+                  <PropsRoute exact path="/" component={Login} {...this.props} />
+                  <PropsRoute exact path="/login" component={Login} {...this.props} />
+                  <PrivateRoute exact path="/home" component={Years} {...this.props} />
+                  <PrivateRoute exact path="/notifications" component={Notifications} {...this.props} />
+                  <PrivateRoute
+                    exact
+                    path="/profile"
+                    component={Profile}
+                    profile={this.props.profile}
+                    updateProfile={this.props.updateProfile}
+                    removeProfile={this.props.removeProfile}
+                  />
+                  <PrivateRoute exact path="/settings" component={Years} {...this.props} />
+                  <PrivateRoute exact path="/year/:yearIndex" component={Year} {...this.props} />
+                  <PrivateRoute exact component={FourOfour} {...this.props} />
+                </Switch>
+              </div>
+              {this.shouldRenderComponent(<Footer />)}
             </div>
-            {this.shouldRenderComponent(<Footer />)}
-          </div>
-        </Router>
+          </Router>
+        </SnackbarProvider>
       </MuiThemeProvider>
     );
   }

@@ -12,6 +12,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
+import { withSnackbar } from '../../Utilities/SnackbarWrapper';
 import ModuleWrapper from '../../Utilities/ModuleWrapper';
 import * as exportings from '../../../utils/export';
 
@@ -53,6 +54,7 @@ class Settings extends React.Component {
 
   exportToCSV = () => {
     exportings.exportYearToCsv(this.props.year);
+    this.props.snackbar.showMessage(`Exporting year ${this.props.year.title} to csv`);
   };
 
   render() {
@@ -119,10 +121,13 @@ Settings.propTypes = {
     title: PropTypes.string,
     units: PropTypes.shape({}),
   }).isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 Settings.defaultProps = {
   isExample: false,
 };
 
-export default withStyles(styles)(Settings);
+export default withStyles(styles)(withSnackbar()(Settings));
