@@ -53,7 +53,7 @@ class SignOutBox extends React.Component {
         <DialogTitle>{this.state.showLoading ? 'Signing out' : 'Sign out'}</DialogTitle>
         <DialogContent>{this.renderContent()}</DialogContent>
         <DialogActions>
-          <Button onClick={this.props.onClose} color="primary">
+          <Button onClick={this.props.onClose} color="secondary">
             Close
           </Button>
           {this.state.showLoading ? (
