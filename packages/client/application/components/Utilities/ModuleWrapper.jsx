@@ -32,7 +32,7 @@ class ModuleWrapper extends React.Component {
           <DialogContentText>{this.props.description}</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.onClose} color="primary">
+          <Button onClick={this.props.onClose} color="secondary">
             {this.props.closeText}
           </Button>
           <Button onClick={this.onComplete} color="primary">

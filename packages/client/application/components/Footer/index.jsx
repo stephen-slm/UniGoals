@@ -12,6 +12,11 @@ const styles = (theme) => ({
     textAlign: 'center',
     marginBottom: theme.spacing.unit * 2,
   },
+  linker: {
+    color: theme.palette.primary.main,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
 });
 
 const Footer = (props) => {
@@ -24,7 +29,7 @@ const Footer = (props) => {
       </Typography>
       <Typography component="p">
         by a{' '}
-        <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">
+        <a className={classes.linker} href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">
           Student
         </a>{' '}
       </Typography>

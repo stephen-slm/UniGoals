@@ -100,10 +100,10 @@ class Settings extends React.Component {
             </Grid>
           </DialogContent>
           <DialogActions style={{ display: 'block' }}>
-            <Button style={{ float: 'left' }} onClick={this.showDeleteUnitBox} color="primary">
+            <Button style={{ float: 'right' }} onClick={this.showDeleteUnitBox} color="primary">
               Delete
             </Button>
-            <Button style={{ float: 'right' }} onClick={this.handleClose} color="primary">
+            <Button style={{ float: 'left' }} onClick={this.handleClose} color="secondary">
               Close
             </Button>
           </DialogActions>

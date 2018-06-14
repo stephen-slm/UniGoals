@@ -50,7 +50,7 @@ class HelpBox extends React.Component {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={this.props.handleClose} color="primary">
+          <Button onClick={this.props.handleClose} color="secondary">
             Cancel
           </Button>
           <Button onClick={this.submitContent} color="primary">

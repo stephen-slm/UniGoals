@@ -2,6 +2,7 @@
  * @File application\components\Profile\index.jsx
  * @Version 0.0.1
  */
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -31,6 +32,10 @@ const styles = (theme) => ({
     margin: `${theme.spacing.unit * 2}px auto`,
     textAlign: 'center',
     padding: theme.spacing.unit * 2,
+  },
+  loadingBar: {
+    margin: `-${theme.spacing.unit * 2}px -${theme.spacing.unit * 2}px ${theme.spacing.unit * 2.5}px -${theme.spacing.unit * 2}px`,
+    padding: 0,
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -65,13 +70,13 @@ const styles = (theme) => ({
     marginRight: theme.spacing.unit,
     fontSize: 20,
   },
-  logMessage: '',
 });
 
 class Profile extends React.Component {
   state = {
     profile: this.props.profile,
     showDeletingAccount: false,
+    isDeleting: false,
   };
 
   updateUniversityNameFirebase = (name) => {
@@ -144,6 +149,10 @@ class Profile extends React.Component {
   };
 
   deleteAccount = () => {
+    this.setState({
+      isDeleting: true,
+    });
+
     firebase
       .authenticate()
       .then((login) => firebase.getCurrentUser().reauthenticateAndRetrieveDataWithCredential(login.credential))
@@ -155,7 +164,10 @@ class Profile extends React.Component {
         this.props.history.go('/');
         window.location.reload();
       })
-      .catch((error) => this.props.snackbar.showMessage(error.message));
+      .catch((error) => {
+        this.setState({ isDeleting: false });
+        this.props.snackbar.showMessage(error.message);
+      });
   };
 
   render() {
@@ -174,6 +186,7 @@ class Profile extends React.Component {
           completeText="Delete"
         />
         <Paper className={classes.profileGrid}>
+          {this.state.isDeleting && <LinearProgress className={classes.loadingBar} color="secondary" />}
           <div>
             <Avatar alt={this.state.profile.name} src={firebase.getProfileImageUrl()} className={classes.avatar} />
             <Typography variant="headline">{this.state.profile.name}</Typography>
@@ -199,11 +212,12 @@ class Profile extends React.Component {
             <Typography variant="caption">Year: {this.state.profile.course_year}</Typography>
           </div>
         </Paper>
+
         <Paper className={classes.paper}>
           <form className={classes.formContainer} noValidate autoComplete="off">
             <TextField
               id="name"
-              label="name"
+              label="Name"
               className={classes.textField}
               value={this.state.profile.name}
               margin="normal"
@@ -212,7 +226,7 @@ class Profile extends React.Component {
             <TextField
               id="email"
               disabled
-              label="email"
+              label="Email"
               className={classes.textField}
               value={this.state.profile.email}
               margin="normal"
@@ -220,7 +234,7 @@ class Profile extends React.Component {
             />
             <TextField
               id="course_university"
-              label="course_university"
+              label="Course University"
               className={classes.textField}
               value={this.state.profile.course_university}
               margin="normal"
@@ -228,18 +242,18 @@ class Profile extends React.Component {
             />
             <TextField
               id="course_name"
-              label="course_name"
+              label="Course Name"
               className={classes.textField}
               value={this.state.profile.course_name}
               margin="normal"
               onChange={(change) => this.handleFormChange('course_name', change)}
             />
           </form>
-          <Button className={classes.button} color="primary" variant="raised" size="small" onClick={this.handleFormSave}>
+          <Button className={classes.button} color="primary" variant="flat" size="small" onClick={this.handleFormSave}>
             <Save className={classes.iconSmall} />
             Save
           </Button>
-          <Button className={classes.button} color="primary" variant="raised" size="small" onClick={this.showDeleteAccountBox}>
+          <Button className={classes.button} color="secondary" variant="flat" size="small" onClick={this.showDeleteAccountBox}>
             <Delete className={classes.iconSmall} />
             Delete Account
           </Button>

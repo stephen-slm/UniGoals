@@ -29,6 +29,11 @@ const styles = (theme) => ({
     textDecoration: 'underline',
     cursor: 'pointer',
   },
+  linkerSecond: {
+    color: theme.palette.secondary.main,
+    textDecoration: 'underline',
+    cursor: 'pointer',
+  },
 });
 
 const NoNotifications = (props) => {
@@ -41,22 +46,14 @@ const NoNotifications = (props) => {
         <span role="img" aria-label="sad emoji" className={classes.errorTitle}>
           😢
         </span>
-        <p className={classes.errorMessage}>
-          Sorry there does not seem to be any notifications for you to view.
-        </p>
+        <p className={classes.errorMessage}>Sorry there does not seem to be any notifications for you to view.</p>
         <p className={classes.errorSmall}>
           visit the{' '}
           <Link className={classes.linker} href="/" to="/">
             homepage
           </Link>{' '}
           or{' '}
-          <span
-            tabIndex={0}
-            className={classes.linker}
-            onClick={props.showHelpBox}
-            onKeyPress={props.showHelpBox}
-            role="button"
-          >
+          <span tabIndex={0} className={classes.linkerSecond} onClick={props.showHelpBox} onKeyPress={props.showHelpBox} role="button">
             send a help message
           </span>{' '}
           if you expected something different
