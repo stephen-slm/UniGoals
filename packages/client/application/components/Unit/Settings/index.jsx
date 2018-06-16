@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import { withSnackbar } from '../../Utilities/SnackbarWrapper';
 import ModuleWrapper from '../../Utilities/ModuleWrapper';
 import Summary from '../Summary';
 
@@ -44,6 +45,7 @@ class Settings extends React.Component {
 
   exportToCSV = () => {
     exportings.exportUnitToCSV(this.props.unit);
+    this.props.snackbar.showMessage(`Exporting unit ${this.props.unit.title} to csv`);
   };
 
   exportToPDF = () => {
@@ -91,10 +93,10 @@ class Settings extends React.Component {
             </Grid>
           </DialogContent>
           <DialogActions style={{ display: 'block' }}>
-            <Button style={{ float: 'left' }} onClick={this.showDeleteUnitBox} color="primary">
+            <Button style={{ float: 'right' }} onClick={this.showDeleteUnitBox} color="primary">
               Delete
             </Button>
-            <Button style={{ float: 'right' }} onClick={this.handleClose} color="primary">
+            <Button style={{ float: 'left' }} onClick={this.handleClose} color="secondary">
               Close
             </Button>
           </DialogActions>
@@ -115,10 +117,13 @@ Settings.propTypes = {
     double: PropTypes.bool,
     dropped: PropTypes.bool,
   }).isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 Settings.defaultProps = {
   isExample: false,
 };
 
-export default withStyles(styles)(Settings);
+export default withStyles(styles)(withSnackbar()(Settings));

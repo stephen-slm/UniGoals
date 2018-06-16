@@ -2,21 +2,23 @@
  * @File application\components\Profile\index.jsx
  * @Version 0.0.1
  */
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import Avatar from '@material-ui/core/Avatar';
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Save from '@material-ui/icons/Save';
+import { withRouter } from 'react-router-dom';
+import Avatar from '@material-ui/core/Avatar';
 import Delete from '@material-ui/icons/Delete';
+import Paper from '@material-ui/core/Paper';
+import Save from '@material-ui/icons/Save';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import firebase from '../../utils/FirebaseWrapper';
-import EditableText from '../Utilities/EditableText';
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import ModuleWrapper from '../Utilities/ModuleWrapper';
+import EditableText from '../Utilities/EditableText';
+import firebase from '../../utils/FirebaseWrapper';
 
 const styles = (theme) => ({
   root: {
@@ -30,6 +32,10 @@ const styles = (theme) => ({
     margin: `${theme.spacing.unit * 2}px auto`,
     textAlign: 'center',
     padding: theme.spacing.unit * 2,
+  },
+  loadingBar: {
+    margin: `-${theme.spacing.unit * 2}px -${theme.spacing.unit * 2}px ${theme.spacing.unit * 2.5}px -${theme.spacing.unit * 2}px`,
+    padding: 0,
   },
   paper: {
     padding: theme.spacing.unit * 2,
@@ -67,16 +73,10 @@ const styles = (theme) => ({
 });
 
 class Profile extends React.Component {
-  static updateFirebaseProfile(profile) {
-    firebase
-      .updateProfile(profile)
-      .then(() => console.log('saved changes'))
-      .catch((error) => console.log(error));
-  }
-
   state = {
     profile: this.props.profile,
     showDeletingAccount: false,
+    isDeleting: false,
   };
 
   updateUniversityNameFirebase = (name) => {
@@ -84,8 +84,15 @@ class Profile extends React.Component {
     profile.course_university = name;
 
     this.props.updateProfile(profile);
-    Profile.updateFirebaseProfile(profile);
+    this.updateFirebaseProfile(profile);
   };
+
+  updateFirebaseProfile(profile) {
+    firebase
+      .updateProfile(profile)
+      .then(() => this.props.snackbar.showMessage('Saved profile changes'))
+      .catch((error) => this.props.snackbar.showMessage(error.message));
+  }
 
   updateUniversityName = (name) => {
     const { profile } = this.state;
@@ -101,7 +108,7 @@ class Profile extends React.Component {
     profile.course_name = course;
 
     this.props.updateProfile(profile);
-    Profile.updateFirebaseProfile(profile);
+    this.updateFirebaseProfile(profile);
   };
 
   updateUniversityCourse = (course) => {
@@ -132,7 +139,7 @@ class Profile extends React.Component {
       course_name: this.state.profile.course_name,
     });
 
-    Profile.updateFirebaseProfile(updatedProfile);
+    this.updateFirebaseProfile(updatedProfile);
   };
 
   showDeleteAccountBox = () => {
@@ -142,18 +149,25 @@ class Profile extends React.Component {
   };
 
   deleteAccount = () => {
+    this.setState({
+      isDeleting: true,
+    });
+
     firebase
       .authenticate()
       .then((login) => firebase.getCurrentUser().reauthenticateAndRetrieveDataWithCredential(login.credential))
       .then(() => firebase.deleteAccount())
       .then(() => {
-        console.log('deleted account');
+        this.props.snackbar.showMessage('Deleted account');
         this.props.removeProfile();
         this.props.history.push('/');
         this.props.history.go('/');
         window.location.reload();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        this.setState({ isDeleting: false });
+        this.props.snackbar.showMessage(error.message);
+      });
   };
 
   render() {
@@ -172,6 +186,7 @@ class Profile extends React.Component {
           completeText="Delete"
         />
         <Paper className={classes.profileGrid}>
+          {this.state.isDeleting && <LinearProgress className={classes.loadingBar} color="secondary" />}
           <div>
             <Avatar alt={this.state.profile.name} src={firebase.getProfileImageUrl()} className={classes.avatar} />
             <Typography variant="headline">{this.state.profile.name}</Typography>
@@ -197,11 +212,12 @@ class Profile extends React.Component {
             <Typography variant="caption">Year: {this.state.profile.course_year}</Typography>
           </div>
         </Paper>
+
         <Paper className={classes.paper}>
           <form className={classes.formContainer} noValidate autoComplete="off">
             <TextField
               id="name"
-              label="name"
+              label="Name"
               className={classes.textField}
               value={this.state.profile.name}
               margin="normal"
@@ -210,7 +226,7 @@ class Profile extends React.Component {
             <TextField
               id="email"
               disabled
-              label="email"
+              label="Email"
               className={classes.textField}
               value={this.state.profile.email}
               margin="normal"
@@ -218,7 +234,7 @@ class Profile extends React.Component {
             />
             <TextField
               id="course_university"
-              label="course_university"
+              label="Course University"
               className={classes.textField}
               value={this.state.profile.course_university}
               margin="normal"
@@ -226,18 +242,18 @@ class Profile extends React.Component {
             />
             <TextField
               id="course_name"
-              label="course_name"
+              label="Course Name"
               className={classes.textField}
               value={this.state.profile.course_name}
               margin="normal"
               onChange={(change) => this.handleFormChange('course_name', change)}
             />
           </form>
-          <Button className={classes.button} color="primary" variant="raised" size="small" onClick={this.handleFormSave}>
+          <Button className={classes.button} color="primary" variant="flat" size="small" onClick={this.handleFormSave}>
             <Save className={classes.iconSmall} />
             Save
           </Button>
-          <Button className={classes.button} color="primary" variant="raised" size="small" onClick={this.showDeleteAccountBox}>
+          <Button className={classes.button} color="secondary" variant="flat" size="small" onClick={this.showDeleteAccountBox}>
             <Delete className={classes.iconSmall} />
             Delete Account
           </Button>
@@ -268,6 +284,9 @@ Profile.propTypes = {
     name: PropTypes.string,
     picture: PropTypes.string,
   }).isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
-export default withRouter(withStyles(styles)(Profile));
+export default withRouter(withStyles(styles)(withSnackbar()(Profile)));

@@ -17,9 +17,10 @@ import { getAchievedFromUnit, getWeightingFromUnit } from '../../utils/utils';
 import firebase from '../../utils/FirebaseWrapper';
 import * as constants from '../../utils/constants';
 
-import Settings from './Settings';
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import EditableText from '../Utilities/EditableText';
 import Percentages from '../Summary/Percentages';
+import Settings from './Settings';
 
 const styles = (theme) => ({
   root: {
@@ -78,6 +79,7 @@ class UnitTable extends React.Component {
     const { yearIndex, tableIndex } = this.props;
     const { double } = this.props.unit;
 
+    this.props.snackbar.showMessage(`Set unit ${this.props.unit.title} as ${!double ? 'double weighted' : 'standard weighting'}`);
     this.props.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
     firebase.setUnitDoubleWeightStatus(yearIndex, tableIndex, !double);
   };
@@ -89,6 +91,7 @@ class UnitTable extends React.Component {
     const { yearIndex, tableIndex } = this.props;
     const { dropped } = this.props.unit;
 
+    this.props.snackbar.showMessage(`Set unit ${this.props.unit.title} as ${!dropped ? 'dropped unit' : 'active unit'}`);
     this.props.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
     firebase.setUnitDroppedStatus(yearIndex, tableIndex, !dropped);
   };
@@ -134,6 +137,10 @@ class UnitTable extends React.Component {
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.isExample) {
       const { tableIndex, yearIndex } = this.props;
+
+      this.props.snackbar.showMessage(`Updated unit ${this.props.unit.title}
+      row ${this.props.unit.content[rowIndex].name}, ${columnIndex} to ${updatedChange}%`);
+
       firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
     }
   };
@@ -169,9 +176,11 @@ class UnitTable extends React.Component {
   removeRowById = (rowIndex) => {
     if (this.props.isExample) return;
 
+    const rowName = this.props.unit.content[rowIndex].name;
     const { yearIndex, tableIndex } = this.props;
 
     if (!_.isNil(rowIndex) && _.isString(rowIndex)) {
+      this.props.snackbar.showMessage(`Removed row ${rowName === '' ? 'Section' : rowName} from unit ${this.props.unit.title}`);
       this.props.removeUnitRow(yearIndex, rowIndex, tableIndex);
       firebase.deleteUnitRowById(yearIndex, rowIndex, tableIndex);
     }
@@ -183,9 +192,9 @@ class UnitTable extends React.Component {
   deleteUnitTable = () => {
     if (this.props.isExample) return;
 
-    console.log(`Deleted ${this.props.unit.title === null ? 'the' : this.props.unit.title} unit`);
     const { tableIndex: unitTableIndex, yearIndex } = this.props;
 
+    this.props.snackbar.showMessage(`Deleted ${this.props.unit.title === null ? 'the' : this.props.unit.title} unit`);
     this.props.removeUnitTable(yearIndex, unitTableIndex);
     firebase.deleteUnitById(yearIndex, unitTableIndex);
   };
@@ -196,7 +205,11 @@ class UnitTable extends React.Component {
    */
   updateUnitTitleDatabase = (change) => {
     if ((!_.isNil(change) || change !== this.props.unit.title) && !this.props.isExample) {
-      firebase.updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex).catch((error) => console.log(error.message));
+      this.props.snackbar.showMessage(`Updated unit title to ${change}`);
+
+      firebase
+        .updateUnitTitle(change, this.props.yearIndex, this.props.tableIndex)
+        .catch((error) => this.props.snackbar.showMessage(error.message));
     }
   };
 
@@ -222,12 +235,13 @@ class UnitTable extends React.Component {
     const { tableIndex, yearIndex } = this.props;
 
     if (_.size(this.props.unit.content) >= constants.UNIT.ENTRY_MAX) {
-      console.log(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit.`);
+      this.props.snackbar.showMessage(`Only a maximum of ${constants.UNIT.ENTRY_MAX} rows at anyone time per unit`);
     } else {
       firebase
         .insertUnitRowById(yearIndex, tableIndex)
         .then((key) => this.props.insertUnitRow(key, yearIndex, tableIndex))
-        .catch((error) => console.log(error.message));
+        .then(() => this.props.snackbar.showMessage(`Inserted new row for: ${this.props.unit.title}`))
+        .catch((error) => this.props.snackbar.showMessage(error.message));
     }
   };
 
@@ -365,11 +379,14 @@ UnitTable.propTypes = {
     dropped: PropTypes.bool,
   }),
   isExample: PropTypes.bool,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 UnitTable.defaultProps = {
   isExample: false,
-  unit: [],
+  unit: {},
   updateRowContent: () => {},
   removeUnitRow: () => {},
   insertUnitRow: () => {},
@@ -377,4 +394,4 @@ UnitTable.defaultProps = {
   removeUnitTable: () => {},
 };
 
-export default withStyles(styles)(UnitTable);
+export default withStyles(styles)(withSnackbar()(UnitTable));

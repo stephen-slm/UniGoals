@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import Icon from '@material-ui/core/Icon';
 
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import * as constants from '../../utils/constants';
 import firebase from '../../utils/FirebaseWrapper';
 import Expandable from '../Table/Expandable';
@@ -55,12 +56,13 @@ class Tables extends React.Component {
    */
   addTable() {
     if (_.size(this.props.units) >= constants.UNIT.MAX) {
-      console.log(`Only a maximum of ${constants.UNIT.MAX} units at anyone time`);
+      this.props.snackbar.showMessage(`Only a maximum of ${constants.UNIT.MAX} units at anyone time`);
     } else {
       firebase
         .insertUnitById(this.props.yearIndex)
         .then((ref) => this.insertTableAndNavigate(ref))
-        .catch((error) => console.log(error.message));
+        .then(() => this.props.snackbar.showMessage('Added new unit'))
+        .catch((error) => this.props.snackbar.showMessage(error.message));
     }
   }
 
@@ -109,6 +111,9 @@ Tables.propTypes = {
   updateUnitTitle: PropTypes.func.isRequired,
   updateRowContent: PropTypes.func.isRequired,
   isExample: PropTypes.bool,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 Tables.defaultProps = {
@@ -116,4 +121,4 @@ Tables.defaultProps = {
   units: null,
 };
 
-export default withStyles(styles)(Tables);
+export default withStyles(styles)(withSnackbar()(Tables));

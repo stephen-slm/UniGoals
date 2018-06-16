@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
 
+import { withSnackbar } from '../Utilities/SnackbarWrapper';
 import firebase from '../../utils/FirebaseWrapper';
 import { isMobileDevice } from '../../utils/utils';
 import * as homePageData from './homePageData';
@@ -103,7 +104,7 @@ class Login extends React.Component {
 
   // Handles all errors through a single promise
   handleAuthenticationError(error) {
-    console.log(error);
+    this.props.snackbar.showMessage(error.showMessage);
     this.setState({ loading: false });
   }
 
@@ -247,8 +248,11 @@ Login.propTypes = {
   updateYearTitle: PropTypes.func.isRequired,
   updateYears: PropTypes.func.isRequired,
   updateNotifications: PropTypes.func.isRequired,
+  snackbar: PropTypes.shape({
+    showMessage: PropTypes.func,
+  }).isRequired,
 };
 
 Login.defaultProps = {};
 
-export default withStyles(styles)(Login);
+export default withStyles(styles)(withSnackbar()(Login));
