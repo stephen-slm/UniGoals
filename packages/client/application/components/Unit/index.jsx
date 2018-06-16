@@ -137,10 +137,9 @@ class UnitTable extends React.Component {
 
     if ((!_.isNil(updatedChange) || validUpdate) && !this.props.isExample) {
       const { tableIndex, yearIndex } = this.props;
-      
 
       this.props.snackbar.showMessage(`Updated unit ${this.props.unit.title}
-      row ${this.props.unit.content[rowIndex].name}, ${columnIndex} to ${updatedChange}${columnIndex === "name" ? "" : "%"}`);
+      row ${this.props.unit.content[rowIndex].name}, ${columnIndex} to ${updatedChange}${columnIndex === 'name' ? '' : '%'}`);
 
       firebase.updateUnitRowSection(updatedChange, yearIndex, tableIndex, rowIndex, columnIndex);
     }
