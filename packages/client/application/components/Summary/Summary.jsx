@@ -60,6 +60,27 @@ const styles = (theme) => ({
   dividerSidesContainer: {
     height: '100%',
   },
+  nowrapText: {
+    maxWidth: '400px',
+    [theme.breakpoints.down('xs')]: {
+      maxWidth: '250px',
+    },
+    [theme.breakpoints.up('sm')]: {
+      maxWidth: '480px',
+    },
+    [theme.breakpoints.up('md')]: {
+      maxWidth: '600px',
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxWidth: '710px',
+    },
+    [theme.breakpoints.up('xl')]: {
+      maxWidth: '1090px',
+    },
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+  },
 });
 
 class Summary extends React.Component {
@@ -143,7 +164,7 @@ class Summary extends React.Component {
     return (
       <Paper className={classes.root} elevation={3}>
         <Grid container className={classes.flexGrow}>
-          <Grid container alignItems="center" direction="row" justify="space-between">
+          <Grid container alignItems="center" direction="row" justify="space-between" style={{ overflow: 'hidden', width: '100%' }}>
             <Grid item>
               <Grid container>
                 <Grid container alignItems="flex-start" direction="column" justify="flex-start" className={classes.leftText}>
@@ -155,8 +176,8 @@ class Summary extends React.Component {
                       {this.state.yearTitle}
                     </Typography>
                   </Grid>
-                  <Grid item>
-                    <Typography variant="caption">
+                  <Grid item style={{ display: 'inline-block' }}>
+                    <Typography variant="caption" className={classes.nowrapText}>
                       {this.props.profile.course_name} - Year: {this.props.profile.course_year}, week: {this.state.currentWeek}
                     </Typography>
                   </Grid>
