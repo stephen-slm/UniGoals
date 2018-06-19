@@ -16,6 +16,11 @@ const styles = (theme) => ({
     opacity: '0.3',
     color: 'grey',
     cursor: 'pointer',
+    '&:hover': {
+      background: '',
+      boxShadow: '0px 0px 10px rgb(255, 182, 51, 0.85)',
+      transition: '.5s',
+    },
   },
   addPreview: {
     position: 'relative',
