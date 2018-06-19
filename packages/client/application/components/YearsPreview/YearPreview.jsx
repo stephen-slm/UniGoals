@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
 import _ from 'lodash';
+import classNames from 'classnames';
 
 import { getAchievedFromUnits } from '../../utils/utils';
 
@@ -15,6 +16,20 @@ const styles = (theme) => ({
     height: theme.spacing.unit * 15,
     width: theme.spacing.unit * 18,
   },
+  primary: {
+    '&:hover': {
+      background: '',
+      boxShadow: '0px 0px 10px rgb(246,81,29, 0.85)',
+      transition: '.5s',
+    },
+  },
+  secondary: {
+    '&:hover': {
+      background: '',
+      boxShadow: '0px 0px 10px rgb(0,166,237, 0.85)',
+      transition: '.5s',
+    },
+  },
   title: {
     fontSize: theme.spacing.unit * 1.8,
   },
@@ -22,9 +37,10 @@ const styles = (theme) => ({
 
 const YearPreview = (props) => {
   const { classes } = props;
+  const hoverClass = props.index % 2 ? classes.secondary : classes.primary;
 
   return (
-    <Card className={classes.root}>
+    <Card className={classNames(classes.root, hoverClass)} color="primary">
       <Link href={`/year/${props.index}`} to={`/year/${props.index}`} style={{ textDecoration: 'none' }}>
         <CardHeader
           classes={{
