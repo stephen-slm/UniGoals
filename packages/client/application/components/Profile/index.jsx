@@ -185,7 +185,7 @@ class Profile extends React.Component {
           onComplete={this.deleteAccount}
           completeText="Delete"
         />
-        <Paper className={classes.profileGrid}>
+        <Paper square elevation={1} className={classes.profileGrid}>
           {this.state.isDeleting && <LinearProgress className={classes.loadingBar} color="secondary" />}
           <div>
             <Avatar alt={this.state.profile.name} src={firebase.getProfileImageUrl()} className={classes.avatar} />
@@ -213,7 +213,7 @@ class Profile extends React.Component {
           </div>
         </Paper>
 
-        <Paper className={classes.paper}>
+        <Paper square elevation={1} className={classes.paper}>
           <form className={classes.formContainer} noValidate autoComplete="off">
             <TextField
               id="name"

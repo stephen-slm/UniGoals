@@ -162,7 +162,7 @@ class Summary extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Paper className={classes.root} elevation={3}>
+      <Paper square className={classes.root} elevation={1}>
         <Grid container className={classes.flexGrow}>
           <Grid container alignItems="center" direction="row" justify="space-between" style={{ overflow: 'hidden', width: '100%' }}>
             <Grid item>
