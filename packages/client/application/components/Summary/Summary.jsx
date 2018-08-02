@@ -84,6 +84,22 @@ const styles = (theme) => ({
 });
 
 class Summary extends React.Component {
+  constructor(props) {
+    super();
+
+    this.state = {
+      currentWeek: Summary.getCurrentYearWeek(),
+      isSummary: true,
+      yearTitle: props.yearTitle,
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.state.yearTitle !== nextProps.yearTitle) {
+      this.setState({ yearTitle: nextProps.yearTitle });
+    }
+  }
+
   /**
    * Gets the current year week for University, based on the starting week of week 38 of
    * the university.
@@ -108,22 +124,6 @@ class Summary extends React.Component {
     }
 
     return `${week}/34`;
-  }
-
-  constructor(props) {
-    super();
-
-    this.state = {
-      currentWeek: Summary.getCurrentYearWeek(),
-      isSummary: true,
-      yearTitle: props.yearTitle,
-    };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (this.state.yearTitle !== nextProps.yearTitle) {
-      this.setState({ yearTitle: nextProps.yearTitle });
-    }
   }
 
   updateYearTitleDatabase = (newTitle) => {
