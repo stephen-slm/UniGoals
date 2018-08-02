@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
 import PropTypes from 'prop-types';
 import React from 'react';
+import * as _ from 'lodash';
 
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
@@ -18,17 +19,7 @@ import Navigation from '../Navigation/Navigation';
 import Login from '../Login/Login';
 import Years from '../Home/Years';
 import Year from '../Home/Year';
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#F6511D',
-    }, // This is just green.A700 as hex.
-    secondary: {
-      main: '#00A6ED',
-    }, // Purple and green play nicely together.
-  },
-});
+import Settings from '../Settings';
 
 export default class Application extends React.Component {
   constructor(props) {
@@ -62,6 +53,34 @@ export default class Application extends React.Component {
   };
 
   render() {
+    const colors = { primary: '#3A506B', secondary: '#5BC0BE' };
+    let theme = null;
+
+    try {
+      theme = createMuiTheme({
+        palette: {
+          primary: {
+            main: _.isNil(this.props.profile.settings) ? colors.primary : this.props.profile.settings.primarycolor,
+          }, // This is just green.A700 as hex.
+          secondary: {
+            main: _.isNil(this.props.profile.settings) ? colors.secondary : this.props.profile.settings.secondarycolor,
+          }, // Purple and green play nicely together.
+        },
+      });
+    } catch (error) {
+      // couldnt' set the new colors due to n number of reasons
+      theme = createMuiTheme({
+        palette: {
+          primary: {
+            main: colors.primary,
+          }, // This is just green.A700 as hex.
+          secondary: {
+            main: colors.secondary,
+          }, // Purple and green play nicely together.
+        },
+      });
+    }
+
     return (
       <MuiThemeProvider theme={theme}>
         <SnackbarProvider
@@ -99,7 +118,7 @@ export default class Application extends React.Component {
                     updateProfile={this.props.updateProfile}
                     removeProfile={this.props.removeProfile}
                   />
-                  <PrivateRoute exact path="/settings" component={Years} {...this.props} />
+                  <PrivateRoute exact path="/settings" component={Settings} updateProfile={this.props.updateProfile} {...this.props} />
                   <PrivateRoute exact path="/year/:yearIndex" component={Year} {...this.props} />
                   <PrivateRoute exact component={FourOfour} {...this.props} />
                 </Switch>

@@ -1,7 +1,3 @@
-/*
- * @File application\components\Profile\index.jsx
- * @Version 0.0.1
- */
 import LinearProgress from '@material-ui/core/LinearProgress';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -26,6 +22,7 @@ const styles = (theme) => ({
     maxWidth: '75%',
     margin: '0 auto',
     textAlign: 'center',
+    padding: theme.spacing.unit * 2,
   },
   profileGrid: {
     maxWidth: '300px',
@@ -175,6 +172,7 @@ class Profile extends React.Component {
 
     return (
       <div className={classes.root}>
+        <div>Profile</div>
         <ModuleWrapper
           description={`Are you sure you wish to delete your account ${
             this.props.profile.given_name
