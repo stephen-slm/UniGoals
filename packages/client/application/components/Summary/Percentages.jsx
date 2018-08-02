@@ -66,6 +66,7 @@ class Perentages extends React.Component {
 
     return (
       <Paper
+        square
         style={{
           height: this.props.height * 40,
           maxWidth: !this.props.isSummary ? 'none' : undefined,

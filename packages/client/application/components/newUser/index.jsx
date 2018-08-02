@@ -272,7 +272,7 @@ class NewUser extends React.Component {
               ))}
             </Stepper>
             {activeStep === steps.length && (
-              <Paper square elevation={0} className={classes.resetContainer}>
+              <Paper square elevation={1} className={classes.resetContainer}>
                 <Typography>All steps completed - you&quot;re now ready to use UniGoals</Typography>
                 <Button onClick={this.handleReset} className={classes.button}>
                   Reset

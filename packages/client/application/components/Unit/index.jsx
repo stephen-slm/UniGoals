@@ -253,7 +253,7 @@ class UnitTable extends React.Component {
     };
 
     return (
-      <Paper className={classes.root} elevation={3}>
+      <Paper square className={classes.root} elevation={1}>
         <Grid container justify="center" alignItems="center">
           <Grid item xs={1} />
           <Grid item xs={10} style={{ textAlign: 'center' }}>

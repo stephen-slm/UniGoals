@@ -98,6 +98,10 @@ path /users {
             /login_count {
                 read() { false }
             }
+            /settings {
+                /primarycolor is String;
+                /secondarycolor is String;
+            }
         }
         /notifications {
             /message is String;

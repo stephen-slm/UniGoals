@@ -40,7 +40,7 @@ const YearPreview = (props) => {
   const hoverClass = props.index % 2 ? classes.secondary : classes.primary;
 
   return (
-    <Card className={classNames(classes.root, hoverClass)} color="primary">
+    <Card square className={classNames(classes.root, hoverClass)} color="primary">
       <Link href={`/year/${props.index}`} to={`/year/${props.index}`} style={{ textDecoration: 'none' }}>
         <CardHeader
           classes={{

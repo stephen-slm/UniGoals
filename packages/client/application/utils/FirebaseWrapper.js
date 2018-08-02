@@ -205,7 +205,10 @@ class FirebaseWrapper {
       'last_login',
       'login_count',
       'name',
+      'settings',
     ]);
+
+    prof.settings = _.pick(prof.settings, ['primarycolor', 'secondarycolor']);
 
     return this.database.ref(`users/${this.getUid()}/profile`).set(prof);
   }

@@ -19,6 +19,12 @@ const styles = (theme) => ({
       },
     },
   },
+
+  topText: {
+    textAlign: 'center',
+    margin: `${theme.spacing.unit}px auto`,
+    padding: theme.spacing.unit,
+  },
 });
 
 const Years = (props) => {
@@ -26,6 +32,7 @@ const Years = (props) => {
 
   return (
     <div>
+      <div className={classes.topText}>Home</div>
       <NewUser profile={props.profile} updateProfile={props.updateProfile} />
       <div>
         <Grid className={classes.root}>
