@@ -254,7 +254,7 @@ class Settings extends React.Component {
               <TextField
                 margin="normal"
                 id="primarycolor"
-                label="Secondary Color"
+                label="Primary Color"
                 className={classes.textField}
                 value={this.state.profile.settings.primarycolor}
                 onChange={(change) => this.handleColorChange('primarycolor', change)}
