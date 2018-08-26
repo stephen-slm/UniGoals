@@ -133,9 +133,7 @@ class UnitTable extends React.Component {
       // TODO: `${columnIndex} update did not meet requirements`
     }
 
-    const validUpdate = updatedChange !== this.props.unit.content[rowIndex][columnIndex];
-
-    if ((!_.isNil(updatedChange) || validUpdate) && !this.props.isExample) {
+    if (!_.isNil(updatedChange) && !this.props.isExample) {
       const { tableIndex, yearIndex } = this.props;
 
       this.props.snackbar.showMessage(`Updated unit ${this.props.unit.title}
@@ -163,6 +161,7 @@ class UnitTable extends React.Component {
 
     // This means that its the same content as was already there, so there is no need to update
     // when it does not change.
+
     if (!_.isNil(change) || change !== this.props.unit.content[rowIndex][columnIndex]) {
       this.props.updateRowContent(change, yearIndex, tableIndex, rowIndex, columnIndex);
     }
@@ -269,6 +268,7 @@ class UnitTable extends React.Component {
           </Grid>
           <Grid item xs={1} style={{ paddingRight: '5px' }}>
             <Settings
+              isExample={this.props.isExample}
               setUnitDoubleWeightedValue={this.props.isExample ? () => undefined : this.setUnitDoubleWeightedValue}
               setUnitDroppedValue={this.props.isExample ? () => undefined : this.setUnitDroppedValue}
               deleteUnitTable={this.props.isExample ? () => undefined : this.deleteUnitTable}
