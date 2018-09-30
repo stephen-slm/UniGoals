@@ -105,7 +105,7 @@ class Summary extends React.Component {
    * the university.
    */
   static getCurrentYearWeek() {
-    const startingWeek = 40; // September
+    const startingWeek = 39; // September
     const endWeek = 22;
 
     const currentDate = new Date();

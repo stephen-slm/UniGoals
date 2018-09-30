@@ -20,25 +20,7 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              [
-                'env',
-                {
-                  targets: {
-                    browsers: ['last 2 versions'],
-                  },
-                },
-              ],
-              'babel-preset-react',
-              'es2015',
-              'react',
-              'stage-2',
-            ],
-            babelrc: false,
-            comments: true,
-            env: {
-              production: false,
-            },
+            comments: false,
           },
         },
       },
@@ -51,7 +33,12 @@ const config = {
   resolve: {
     extensions: ['.js', '.jsx'],
   },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      production: false,
+    }),
+  ],
   devServer: {
     hot: true,
     contentBase: './public',
