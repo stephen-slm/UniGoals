@@ -17,26 +17,8 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: [
-              [
-                'env',
-                {
-                  targets: {
-                    browsers: ['last 2 versions'],
-                  },
-                },
-              ],
-              'babel-preset-react',
-              'es2015',
-              'react',
-              'stage-2',
-            ],
-            babelrc: false,
             comments: false,
             minified: true,
-            env: {
-              production: true,
-            },
           },
         },
       },

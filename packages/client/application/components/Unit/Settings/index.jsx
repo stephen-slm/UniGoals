@@ -29,7 +29,9 @@ class Settings extends React.Component {
   };
 
   handleClickOpen = () => {
-    this.setState({ open: true });
+    if (!this.props.isExample) {
+      this.setState({ open: true });
+    }
   };
 
   handleClose = () => {

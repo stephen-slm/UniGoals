@@ -183,8 +183,8 @@ class Navigation extends React.Component {
               {this.getWelcomeMessage()}
             </Typography>
             <Typography component="div" color="inherit">
-              <div>UniGoals</div>
-              {this.props.version}
+              <div>UniGoals</div>v{this.props.version}
+              -alpha
             </Typography>
             <Link href="/" to="/">
               <img src="/components/resources/images/logo.svg" alt="logo" className={classes.logo} />
