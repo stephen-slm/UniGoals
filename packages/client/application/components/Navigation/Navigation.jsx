@@ -116,7 +116,7 @@ class Navigation extends React.Component {
     const { name, email, given_name: givenName } = this.props.profile;
     const { version } = this.props;
 
-    if (message.length < constants.HELP_MESSAGE.MIN || message.length > constants.HELP_MESSAGE_MAX) {
+    if (message.length < constants.HELP_MESSAGE.MIN || message.length > constants.HELP_MESSAGE.MAX) {
       return this.setState({ invalidhelpMessage: true });
     }
 

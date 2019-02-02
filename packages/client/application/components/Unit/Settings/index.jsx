@@ -50,10 +50,6 @@ class Settings extends React.Component {
     this.props.snackbar.showMessage(`Exporting unit ${this.props.unit.title} to csv`);
   };
 
-  exportToPDF = () => {
-    exportings.exportToPDF(this.props.unit);
-  };
-
   render() {
     const { classes } = this.props;
 
