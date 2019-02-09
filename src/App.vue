@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <Navigation v-if="this.userAuthenticated"/>
+    <Navigation v-if="userAuthenticated"/>
     <v-content>
       <v-container>
         <router-view/>
@@ -9,7 +9,11 @@
     <v-footer :inset="true" app>
       <v-flex>
         <span class="px-3">
-          &copy; UniGoals {{ currentYear }} -
+          &copy; UniGoals {{ currentYear }} - Made with ❤ in the United Kingdom by a
+          <a
+            href="https://www.linkedin.com/in/stephen-lineker-miller/"
+            target="_blank"
+          >Student</a>
           <span class="caption"></span>
         </span>
       </v-flex>
