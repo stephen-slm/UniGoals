@@ -19,12 +19,12 @@ import HelloWorld from '@/components/HelloWorld.vue';
 export default Vue.extend({
   name: 'home',
 
-  data: () => ({
-    // the name of the authenticated user to display for preview reasons.
-    name: null,
-    // the current profile image of the authenticated user
-    image: null
-  }),
+  data() {
+    return {
+      name: '',
+      image: ''
+    };
+  },
 
   components: {
     HelloWorld
@@ -37,8 +37,8 @@ export default Vue.extend({
     // if we are authenticated and the user object exists, set the name and image from the
     // authenticated object.
     if (!_.isNil(user)) {
-      this.name = user.displayName;
-      this.image = user.photoURL;
+      this.name = user.displayName || '';
+      this.image = user.photoURL || '';
     }
   },
 

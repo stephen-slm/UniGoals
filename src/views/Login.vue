@@ -26,6 +26,7 @@ import { isMobileDevice } from '@/utils';
 
 export default Vue.extend({
   name: 'Login',
+
   data: () => {
     return {
       loading: true,
@@ -33,6 +34,7 @@ export default Vue.extend({
       loadingMessage: 'Getting redirection results if any.'
     };
   },
+
   components: {
     Loading
   },
@@ -176,7 +178,6 @@ export default Vue.extend({
   }
 });
 </script>
-
 
 <style scoped>
 .login {
