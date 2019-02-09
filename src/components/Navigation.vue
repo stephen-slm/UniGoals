@@ -43,13 +43,13 @@ export default {
 
   created() {
     // validate that we are authenticated before we attempt to get the notifications
-    if (_.isNil(firebaseWrapper.getCurrentUser())) {
+    if (!_.isNil(firebaseWrapper.getCurrentUser())) {
       const notificationReference = firebaseWrapper.getNotificationReference();
 
       // If we are authenticated, then when a new notification is added we will automatically update
       // the ui to display the new notification count.
       notificationReference.on('value', snapshot => {
-        notificationCount: _.size(snapshot.val());
+        this.notificationCount = _.size(snapshot.val());
       });
     }
   },
