@@ -19,7 +19,7 @@ import HelloWorld from '@/components/HelloWorld.vue';
 export default Vue.extend({
   name: 'home',
 
-  data() {
+  data: function() {
     return {
       name: '',
       image: ''
@@ -30,7 +30,7 @@ export default Vue.extend({
     HelloWorld
   },
 
-  created() {
+  created: function() {
     // get the currenlty authenticated user.
     const user = firebaseWrapper.getCurrentUser();
 
@@ -43,16 +43,11 @@ export default Vue.extend({
   },
 
   methods: {
-    /**
-     * triggers firebase to logout and disolve all authentication tokens.
-     */
-    async logout() {
+    logout: async function() {
       return await firebaseWrapper.authentication.signOut();
     },
-    /**
-     * Redirects the current user to the home page.
-     */
-    goHome() {
+
+    goHome: function() {
       return this.$router.push({ name: 'home' });
     }
   }

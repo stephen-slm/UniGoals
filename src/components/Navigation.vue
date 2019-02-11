@@ -1,10 +1,74 @@
 <template>
   <div>
-    <v-navigation-drawer app v-model="drawer"></v-navigation-drawer>
+    <v-navigation-drawer app v-model="drawer">
+      <v-list>
+        <v-list-tile avatar>
+          <v-list-tile-avatar>
+            <img class="avatar" alt="Peoples Image" v-bind:src="imageUrl">
+          </v-list-tile-avatar>
+
+          <v-list-tile-content>
+            <v-list-tile-title>{{ name }}</v-list-tile-title>
+            <v-list-tile-sub-title class="caption">{{ email }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-divider dark></v-divider>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>view_quilt</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title class="grey--text">Home</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>notifications</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title class="grey--text">Notifications</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>person</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title class="grey--text">My Profile</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>settings</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title class="grey--text">Settings</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>add</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title class="grey--text">Sign Out</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-divider dark></v-divider>
+        <v-list-tile>
+          <v-list-tile-action>
+            <v-icon>exit_to_app</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title class="grey--text">Send Feedback</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </v-navigation-drawer>
     <v-toolbar app>
       <v-toolbar-title>
         <v-toolbar-side-icon v-if="$vuetify.breakpoint.mdAndDown" @click.stop="drawer = !drawer"/>
-        <span class="hidden-sm-and-down">UniGoals</span>
+        <span class="subheading">{{ getWelcome }}</span>
       </v-toolbar-title>
       <v-spacer/>
 
@@ -29,21 +93,34 @@ import firebaseWrapper from '@/libs/FirebaseWrapper.ts';
 
 export default {
   name: 'ToolBarNavigation',
+
   props: {
     // show is passed through by the application, this is determined if we are authenticated or not,
     // which results in displaying the navigation ui.
     show: false
   },
 
-  data: () => ({
-    // The notification count that will be displayed above the navigation icon within the nav bar.
-    notificationCount: 0,
-    drawer: null
-  }),
+  data: function() {
+    return {
+      // The notification count that will be displayed above the navigation icon within the nav bar.
+      notificationCount: 0,
+      drawer: null,
+      welcomeMessage: '',
+      imageUrl: '',
+      name: '',
+      email: ''
+    };
+  },
 
-  created() {
+  created: function() {
+    const user = firebaseWrapper.getCurrentUser();
+
     // validate that we are authenticated before we attempt to get the notifications
-    if (!_.isNil(firebaseWrapper.getCurrentUser())) {
+    if (!_.isNil(user)) {
+      this.name = user.displayName || '';
+      this.imageUrl = user.photoURL || '';
+      this.email = user.email || '';
+
       const notificationReference = firebaseWrapper.getNotificationReference();
 
       // If we are authenticated, then when a new notification is added we will automatically update
@@ -51,6 +128,17 @@ export default {
       notificationReference.on('value', snapshot => {
         this.notificationCount = _.size(snapshot.val());
       });
+    }
+  },
+
+  computed: {
+    getWelcome: function() {
+      const currentHour = new Date().getHours();
+      const name = this.name.split(' ')[0];
+
+      if (currentHour < 12) return `Morning, ${name}`;
+      if (currentHour < 18) return `Afternoon, ${name}`;
+      return `Evening, ${name}`;
     }
   },
 
