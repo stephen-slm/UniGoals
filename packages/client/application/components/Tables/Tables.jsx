@@ -70,7 +70,7 @@ class Tables extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Paper square elevation={1} className={classes.root}>
+      <Paper square elevation={0} className={classes.root}>
         <Button color="primary" className={classes.button} onClick={this.addTable}>
           <Icon>add</Icon> Add Unit
         </Button>

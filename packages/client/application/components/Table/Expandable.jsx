@@ -12,7 +12,7 @@ import { getAchievedFromUnit } from '../../utils/utils';
 
 const styles = (theme) => ({
   root: {
-    margin: '0px auto',
+    margin: '0 auto',
     maxWidth: '90%',
     [theme.breakpoints.down('md')]: {
       maxWidth: '100%',
@@ -30,7 +30,7 @@ const styles = (theme) => ({
     width: 20,
   },
   column: {
-    flexBasis: '33.33%',
+    flexBasis: '40%',
   },
   details: {
     display: 'block',
@@ -49,15 +49,17 @@ const Expandable = (props) => {
 
   return (
     <div className={classes.root}>
-      <ExpansionPanel>
+      <ExpansionPanel square>
         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
           <div className={classes.column}>
-            <Typography className={classes.heading}>
+            <Typography className={classes.heading} variant="body2">
               {props.unit.title} {props.unit.double ? '(double)' : ''}{' '}
             </Typography>
           </div>
           <div className={classes.column}>
-            <Typography className={classes.secondaryHeading}>{props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}</Typography>
+            <Typography variant="body2" className={classes.secondaryHeading}>
+              {props.unit.dropped ? '(dropped)' : `Total: ${total.toFixed(2)}%`}
+            </Typography>
           </div>
         </ExpansionPanelSummary>
         <ExpansionPanelDetails classes={{ root: classes.details }}>

@@ -12,7 +12,7 @@ const generatedYears = (years) => {
 
   Object.keys(years).forEach((key, index) => {
     readyYears[index] = (
-      <Grid key={key} item>
+      <Grid key={key} item spacing={8}>
         <YearPreview year={years[key]} index={index + 1} />
       </Grid>
     );

@@ -61,9 +61,13 @@ export default class Application extends React.Component {
         palette: {
           primary: {
             main: _.isNil(this.props.profile.settings) ? colors.primary : this.props.profile.settings.primarycolor,
+            light: _.isNil(this.props.profile.settings) ? colors.primary : this.props.profile.settings.primarycolor,
+            dark: _.isNil(this.props.profile.settings) ? colors.primary : this.props.profile.settings.primarycolor,
           }, // This is just green.A700 as hex.
           secondary: {
             main: _.isNil(this.props.profile.settings) ? colors.secondary : this.props.profile.settings.secondarycolor,
+            light: _.isNil(this.props.profile.settings) ? colors.secondary : this.props.profile.settings.secondarycolor,
+            dark: _.isNil(this.props.profile.settings) ? colors.secondary : this.props.profile.settings.secondarycolor,
           }, // Purple and green play nicely together.
         },
       });
@@ -73,13 +77,19 @@ export default class Application extends React.Component {
         palette: {
           primary: {
             main: colors.primary,
+            light: colors.primary,
+            dark: colors.primary,
           }, // This is just green.A700 as hex.
           secondary: {
             main: colors.secondary,
+            light: colors.secondary,
+            dark: colors.secondary,
           }, // Purple and green play nicely together.
         },
       });
     }
+
+    console.log(theme);
 
     return (
       <MuiThemeProvider theme={theme}>
@@ -96,15 +106,17 @@ export default class Application extends React.Component {
             {/* we do this here because it allows us to have a sticky footer */}
             <div style={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
               <div style={{ flex: '1' }}>
-                {this.shouldRenderComponent(<Navigation
-                  history={this.history}
-                  routePaths={this.routePaths}
-                  profile={this.props.profile}
-                  removeProfile={this.props.removeProfile}
-                  version={this.props.version}
-                  displayHelp={this.props.displayHelp}
-                  showHelpBox={this.props.showHelpBox}
-                />)}
+                {this.shouldRenderComponent(
+                  <Navigation
+                    history={this.history}
+                    routePaths={this.routePaths}
+                    profile={this.props.profile}
+                    removeProfile={this.props.removeProfile}
+                    version={this.props.version}
+                    displayHelp={this.props.displayHelp}
+                    showHelpBox={this.props.showHelpBox}
+                  />,
+                )}
                 <Switch>
                   <PropsRoute exact path="/" component={Login} {...this.props} />
                   <PropsRoute exact path="/login" component={Login} {...this.props} />

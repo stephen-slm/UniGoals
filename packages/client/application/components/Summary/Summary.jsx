@@ -196,7 +196,7 @@ class Summary extends React.Component {
           </Grid>
         </Grid>
         <Divider />
-        <Grid container justify="center" spacing={Number(16)}>
+        <Grid container justify="center" spacing={1}>
           <Grid item>
             <Ranking height={_.size(this.props.units)} history={this.props.history} units={this.props.units} />
           </Grid>

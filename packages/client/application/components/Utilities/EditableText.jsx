@@ -141,7 +141,7 @@ class EditableText extends React.Component {
       };
 
       return (
-        <Typography variant={this.props.variant} style={contentStyle} className={classes.span} component={this.props.type}>
+        <Typography variant={this.props.variant} style={contentStyle} className={classes.span}>
           {hasValue ? value : this.props.placeholder}
         </Typography>
       );
@@ -222,8 +222,7 @@ EditableText.defaultProps = {
   minWidth: 80,
   maxLength: Infinity,
   placeholder: 'Click to Edit',
-  type: 'div',
-  variant: 'body1',
+  variant: 'body2',
 };
 
 export default withStyles(styles)(EditableText);

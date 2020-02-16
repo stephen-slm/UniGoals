@@ -24,16 +24,12 @@ const Footer = (props) => {
 
   return (
     <footer className={classes.root}>
-      <Typography component="p">
-        Made with <span style={{ color: '#e25555' }}>&#9829;</span> in the United Kingdom
-      </Typography>
-      <Typography component="p">
-        by a{' '}
+      <Typography variant="body2">
+        @UniGoals {new Date().getFullYear()} -{' '}
         <a className={classes.linker} href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">
-          Student
+          @Creator
         </a>{' '}
       </Typography>
-      <Typography component="p">@UniGoals 2018</Typography>
     </footer>
   );
 };

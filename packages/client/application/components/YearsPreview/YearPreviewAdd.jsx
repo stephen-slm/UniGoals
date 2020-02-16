@@ -52,7 +52,7 @@ class YearPreviewAdd extends React.Component {
     return (
       <Card square className={classes.root} onClick={this.insertNewYear}>
         <CardContent>
-          <Typography className={classes.addPreview} variant="subheading">
+          <Typography className={classes.addPreview} variant="subtitle1">
             Add
           </Typography>
         </CardContent>

@@ -37,7 +37,7 @@ const Years = (props) => {
       <div>
         <Grid className={classes.root}>
           <Grid item xs={12}>
-            <Grid container justify="center" spacing={16}>
+            <Grid container justify="center" spacing={2}>
               <YearsPreview years={props.years} insertNewYear={props.insertNewYear} />
             </Grid>
           </Grid>

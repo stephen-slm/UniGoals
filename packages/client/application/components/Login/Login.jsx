@@ -22,6 +22,9 @@ const styles = (theme) => ({
     textAlign: 'center',
     paddingTop: theme.spacing.unit * 2,
   },
+  title: {
+    color: 'rgba(0, 0, 0, 0.54)',
+  },
   card: {
     marginTop: theme.spacing.unit * 2,
     minWidth: 300,
@@ -30,6 +33,10 @@ const styles = (theme) => ({
     [theme.breakpoints.down('md')]: {
       maxWidth: '90%',
     },
+  },
+  summary: {
+    marginTop: '25px',
+    marginBottom: '50px',
   },
   text: {
     textAlign: 'justify',
@@ -176,12 +183,14 @@ class Login extends React.Component {
     return (
       <div className={classes.root}>
         <img style={{ height: 150 }} src="components/resources/images/logo.svg" alt="Logo" />
-        <Typography variant="display1" gutterBottom>
+        <Typography variant="h4" className={classes.title} gutterBottom>
           UniGoals
         </Typography>
-        <Typography variant="subheading" gutterBottom>
-          <Typography component="p">
-            Full Course &amp; Unit tracking<br />built by a University{' '}
+        <Typography variant="subtitle1" gutterBottom>
+          <Typography variant="body2">
+            Full Course &amp; Unit tracking
+            <br />
+            built by a University{' '}
             <a href="https://www.linkedin.com/in/stephen-lineker-miller/" target="_blank" rel="noopener noreferrer">
               Student
             </a>{' '}
@@ -190,18 +199,19 @@ class Login extends React.Component {
             Version: {this.props.version}
           </Typography>
         </Typography>
-        <Button variant="raised" color="primary" onClick={this.loginWithGoogle}>
+        <Button variant="contained" color="primary" onClick={this.loginWithGoogle}>
           Login | Register
         </Button>
         <Card className={classes.card}>
           <CardContent>
-            <Typography className={classes.text} compnent="p">
+            <Typography className={classes.text} variant="body2" component="div">
               UniGoals is a modern University unit tracking tool designed to let you know where you currently stand on your course. Using
               quick and simple percentages charts to provide fast and accurate content about your course. Simply add your units with there
               weighting (e.g.coursework, exam, presentations, etc) and quickly see your current percent, average and total maximum grade!
               Real-time instant results.
             </Typography>
             <Summary
+              className={classes.summary}
               updateYearTitle={this.props.updateYearTitle}
               units={homePageData.units}
               profile={homePageData.profile}
@@ -211,7 +221,7 @@ class Login extends React.Component {
               yearTitle="Example Year"
               removeYear={() => undefined}
             />
-            <Typography className={classes.text} compnent="p">
+            <Typography className={classes.text} variant="body2" component="div">
               Your own unqiue summary page that displays everything you need to quickly know about your units! Including your
               <strong> unit ranks</strong>, how they are compared to other units, <strong> Average</strong>, <strong>Max</strong> and
               <strong> Total Grade</strong>. Try hovering over the chart and percentages. Each unit looks like the one below, providing a

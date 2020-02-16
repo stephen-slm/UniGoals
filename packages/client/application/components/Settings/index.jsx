@@ -273,11 +273,11 @@ class Settings extends React.Component {
               <span style={{ color: this.state.profile.settings.secondarycolor }}>Preview</span>
             </div>
           </form>
-          <Button className={classes.button} color="primary" variant="flat" size="small" onClick={this.handleFormSave}>
+          <Button color="primary" size="small" onClick={this.handleFormSave}>
             <Save className={classes.iconSmall} />
             Save
           </Button>
-          <Button className={classes.button} color="secondary" variant="flat" size="small" onClick={this.resetDefaults}>
+          <Button color="secondary" size="small" onClick={this.resetDefaults}>
             <Undo className={classes.iconSmall} />
             Reset Defaults
           </Button>

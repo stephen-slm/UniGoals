@@ -24,6 +24,7 @@ const styles = (theme) => ({
   },
   link: {
     textDecoration: 'none',
+    color: 'inherit',
   },
   wrapper: {
     paddingRight: theme.spacing.unit * 5,
@@ -37,14 +38,14 @@ const Ranking = (props) => {
 
   return (
     <Paper square style={{ height: props.height * 40 }} className={classes.root} elevation={1}>
-      <Typography className={classes.title} component="p">
+      <Typography className={classes.title} component="p" variant="body2">
         Unit Ranking
       </Typography>
-      <Typography className={classes.wrapper} component="div">
+      <Typography className={classes.wrapper} component="div" variant="body2">
         {!_.isNil(ranking) &&
           ranking.map((rank, index) => (
-            <Typography key={uuid()} className={classes.entry} component="span">
-              <Typography className={classes.link} href={String(rank.link)} component="a">
+            <Typography key={uuid()} className={classes.entry} component="div" variant="body2">
+              <Typography className={classes.link} href={String(rank.link)} component="a" variant="body2">
                 {index + 1}. {rank.title} {rank.double ? '(double)' : ''} {rank.dropped ? '(dropped)' : ''}
               </Typography>
             </Typography>

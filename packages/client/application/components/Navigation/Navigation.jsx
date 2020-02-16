@@ -182,7 +182,7 @@ class Navigation extends React.Component {
             <Typography variant="body2" color="inherit" className={classes.flex}>
               {this.getWelcomeMessage()}
             </Typography>
-            <Typography component="div" color="inherit">
+            <Typography component="div" variant="body2" color="inherit">
               <div>UniGoals</div>v{this.props.version}
               -alpha
             </Typography>

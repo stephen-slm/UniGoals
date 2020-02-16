@@ -81,7 +81,7 @@ class Settings extends React.Component {
               isDoubleWeighted={this.props.unit.double}
               isDroppedUnit={this.props.unit.dropped}
             />
-            <Grid container spacing={8} justify="center" alignItems="center" style={{ flexGrow: 1 }}>
+            <Grid container spacing={1} justify="center" alignItems="center" style={{ flexGrow: 1 }}>
               <Grid item>
                 <Button color="primary" className={classes.button} onClick={this.exportToCSV}>
                   Export CSV

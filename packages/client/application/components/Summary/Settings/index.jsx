@@ -77,7 +77,7 @@ class Settings extends React.Component {
         <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">Settings - {this.props.year.title}</DialogTitle>
           <DialogContent>
-            <Grid container spacing={8} justify="center" alignItems="center" style={{ flexGrow: 1 }}>
+            <Grid container spacing={1} justify="center" alignItems="center" style={{ flexGrow: 1 }}>
               <Grid item>
                 <Button color="primary" className={classes.button} onClick={this.exportToCSV}>
                   Export CSV

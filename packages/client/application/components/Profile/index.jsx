@@ -174,9 +174,7 @@ class Profile extends React.Component {
       <div className={classes.root}>
         <div>Profile</div>
         <ModuleWrapper
-          description={`Are you sure you wish to delete your account ${
-            this.props.profile.given_name
-          }? This will require you to quickly reauthentcate (desktop only) and cannot be undone  😥`}
+          description={`Are you sure you wish to delete your account ${this.props.profile.given_name}? This will require you to quickly reauthentcate (desktop only) and cannot be undone  😥`}
           title={`Deleting your UniGoals account ${this.props.profile.given_name}`}
           open={this.state.showDeletingAccount}
           onClose={this.showDeleteAccountBox}
@@ -187,7 +185,7 @@ class Profile extends React.Component {
           {this.state.isDeleting && <LinearProgress className={classes.loadingBar} color="secondary" />}
           <div>
             <Avatar alt={this.state.profile.name} src={firebase.getProfileImageUrl()} className={classes.avatar} />
-            <Typography variant="headline">{this.state.profile.name}</Typography>
+            <Typography variant="h5">{this.state.profile.name}</Typography>
             <div>
               <EditableText
                 placeholder="University Name"
@@ -206,8 +204,12 @@ class Profile extends React.Component {
                 value={this.state.profile.course_name}
               />
             </div>
-            <Typography variant="caption">Login Count: {this.state.profile.login_count}</Typography>
-            <Typography variant="caption">Year: {this.state.profile.course_year}</Typography>
+            <Typography component="div" variant="caption" color="inherit">
+              Login Count: {this.state.profile.login_count}
+            </Typography>
+            <Typography variant="caption" color="inherit">
+              Year: {this.state.profile.course_year}
+            </Typography>
           </div>
         </Paper>
 
@@ -247,11 +249,11 @@ class Profile extends React.Component {
               onChange={(change) => this.handleFormChange('course_name', change)}
             />
           </form>
-          <Button className={classes.button} color="primary" variant="flat" size="small" onClick={this.handleFormSave}>
+          <Button className={classes.button} color="primary" size="small" onClick={this.handleFormSave}>
             <Save className={classes.iconSmall} />
             Save
           </Button>
-          <Button className={classes.button} color="secondary" variant="flat" size="small" onClick={this.showDeleteAccountBox}>
+          <Button className={classes.button} color="secondary" size="small" onClick={this.showDeleteAccountBox}>
             <Delete className={classes.iconSmall} />
             Delete Account
           </Button>

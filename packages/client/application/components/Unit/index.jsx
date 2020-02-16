@@ -262,8 +262,7 @@ class UnitTable extends React.Component {
               onChange={this.updateUnitTitle}
               onConfirm={this.updateUnitTitleDatabase}
               value={this.props.unit.title}
-              variant="headline"
-              type="h5"
+              variant="h5"
             />
           </Grid>
           <Grid item xs={1} style={{ paddingRight: '5px' }}>
@@ -278,20 +277,21 @@ class UnitTable extends React.Component {
         </Grid>
         <Percentages height={2} unit={this.props.unit} backdrop={false} />
         <Typography
-          component="div"
+          variant="body1"
           className={classes.tableWrapper}
           onMouseEnter={this.moveOverShowInsert}
           onMouseLeave={this.moveHideShowInsert}
           onTouchStart={this.moveOverShowInsert}
           style={{ gridColumn: 'col / span 4', gridRow: '3' }}
         >
-          <Table className={classes.table}>
+          <Table size="small" className={classes.table}>
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>% Weighting</TableCell>
-                <TableCell>% Achieved</TableCell>
+                <TableCell variant="body">Name</TableCell>
+                <TableCell variant="body">% Weighting</TableCell>
+                <TableCell variant="body">% Achieved</TableCell>
                 <TableCell
+                  variant="body"
                   style={{
                     visibility: this.state.showInsertRow ? 'visible' : 'hidden',
                   }}

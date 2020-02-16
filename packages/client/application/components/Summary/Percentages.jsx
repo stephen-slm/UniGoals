@@ -74,13 +74,13 @@ class Perentages extends React.Component {
         className={classes.root}
         elevation={this.props.backdrop ? 1 : 0}
       >
-        <Typography className={classes.title} component="p">
+        <Typography className={classes.title} variant="body2" component="p">
           Percentages
         </Typography>
-        <Typography component="div">
+        <Typography variant="body2" component="div">
           <Grid container className={classes.grid}>
             <Grid item xs={12}>
-              <Grid container justify="center" spacing={Number(8)}>
+              <Grid container justify="center" spacing={1}>
                 <Grid item>Average: {Number(_.defaultTo(percentages.average, 0))}%</Grid>
                 <Grid item>Max: {Number(_.defaultTo(percentages.max, 100))}%</Grid>
                 <Grid item>Total: {Number(total).toFixed(2)}%</Grid>

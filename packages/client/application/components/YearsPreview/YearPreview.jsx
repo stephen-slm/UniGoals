@@ -41,13 +41,14 @@ const YearPreview = (props) => {
 
   return (
     <Card square className={classNames(classes.root, hoverClass)} color="primary">
-      <Link href={`/year/${props.index}`} to={`/year/${props.index}`} style={{ textDecoration: 'none' }}>
+      <Link href={`/year/${props.index}`} to={`/year/${props.index}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <CardHeader
           classes={{
             title: classes.title,
           }}
           title={props.year.title}
           subheader={`units: ${_.size(props.year.units)}`}
+          subheaderTypographyProps={{ variant: 'body2' }}
         />
         <CardContent>
           <Typography variant="caption">Achieved {getAchievedFromUnits(props.year.units).toFixed(2)}%</Typography>
